@@ -334,7 +334,7 @@ function App() {
             </div>
           )}
 
-          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", color: "#5a4b1a", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
             <strong>Key Insight:</strong> Upsets drop off sharply after Round 1 ({roundStats.R64.count} upsets), but the later rounds still produce {roundStats.R32.count + roundStats.S16.count + roundStats.E8.count + roundStats.FF.count + roundStats.CH.count} total upsets. 2022 was the wildest overall with {yearCounts[2022]} upsets across all rounds, fueled by Saint Peter's and UNC's incredible runs.
           </div>
         </div>
@@ -396,7 +396,7 @@ function App() {
               );
             })}
           </div>
-          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", color: "#5a4b1a", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
             <strong>Key Insight:</strong> <strong>1-seeds get upset the most across all rounds combined</strong> ({loserTotals[1] || 0} times) because they're targeted in every round of the bracket. But in R64, 8-seeds and 6-seeds are the most vulnerable. The danger shifts in later rounds to the top seeds who face battle-tested underdogs.
           </div>
         </div>
@@ -425,7 +425,7 @@ function App() {
               );
             })}
           </div>
-          <div style={{ marginTop: 16, padding: 14, background: "#d4edda", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 16, padding: 14, background: "#d4edda", color: "#1a5c2a", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
             <strong>Key Insight:</strong> The most remarkable Cinderella runs include (11) Loyola Chicago reaching the Final Four in 2018, (11) UCLA reaching the Final Four in 2021, (9) FAU reaching the Final Four in 2023, (8) North Carolina reaching the Championship in 2022, (11) NC State reaching the Final Four in 2024, and (7) Clemson reaching the Championship in 2025. Double-digit seeds making deep runs is no longer rare - it happened in 7 of 9 tournaments.
           </div>
         </div>
@@ -472,7 +472,7 @@ function App() {
               </tbody>
             </table>
           </div>
-          <div style={{ marginTop: 16, padding: 14, background: "#fde8e8", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+          <div style={{ marginTop: 16, padding: 14, background: "#fde8e8", color: "#7a1a1a", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
             <strong>Key Insight:</strong> In Round of 64, <strong>8-seeds</strong> and <strong>6-seeds</strong> get upset the most. But in the later rounds, <strong>1-seeds</strong> become the primary upset targets because they're always the higher seed in any matchup. Across all rounds, 1-seeds have been upset {loserTotals[1] || 0} times - nearly twice per tournament on average.
           </div>
         </div>
