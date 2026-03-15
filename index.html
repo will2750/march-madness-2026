@@ -200,16 +200,16 @@ function App() {
     }
   ];
 
-  // Seed line summary from official bracket
+  // Seed line summary — enriched with real 2026 injuries, KenPom, and SOS data
   const projected2026 = [
-    { seed: 1, teams: ["Duke", "Florida", "Michigan", "Arizona"], risk: "low", note: "1-seeds have been upset " + (loserTotals[1]||0) + " times across all rounds in 9 years. Duke is the overall #1 seed. Expect 1-2 to fall before the Final Four." },
-    { seed: 2, teams: ["UConn", "Houston", "Iowa St.", "Purdue"], risk: "medium", note: "2-seeds face 15-seed danger in R64 (3 upsets in 9 years). Furman and Tennessee St. are capable mid-majors." },
-    { seed: 3, teams: ["Michigan St.", "Illinois", "Virginia", "Gonzaga"], risk: "medium", note: "3-seeds face 14-seeds in R64. North Dakota St., Penn, Wright St. are live underdogs. Virginia is vulnerable." },
-    { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "4-seeds lose to 13-seeds frequently (" + (r64Matchups["13v4"]||0) + " times in 9 yrs). Cal Baptist, Troy, Hofstra, Hawaii all capable." },
-    { seed: 5, teams: ["St. John's", "Vanderbilt", "Texas Tech", "Wisconsin"], risk: "high", note: "5-seeds are historically the most upset-prone in R64. The '12 over 5' is a bracket staple." },
-    { seed: 6, teams: ["Louisville", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "6 vs 11 is THE most upset-heavy matchup. VCU, South Florida, and First Four winners are dangerous." },
-    { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "7-seeds face 10-seeds with high-major talent: UCF, Texas A&M, Santa Clara, Missouri." },
-    { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is essentially a coin flip, and the winner faces a 1-seed in R32." },
+    { seed: 1, teams: ["Duke (32-2)", "Florida", "Michigan (29-2)", "Arizona (32-2)"], risk: "low", note: "1-seeds upset " + (loserTotals[1]||0) + "x in 9 yrs. INJURIES: Duke lost Caleb Foster (broken foot, out until Final Four) — Ngongba (foot) is day-to-day. Michigan lost L.J. Cason (torn ACL). Duke is KenPom #1 (best defense, top-5 offense, +40 net) but depth is thinner. Arizona is KenPom #3 with the Big 12 title and 32-2 record. Expect 1-2 to fall before the FF." },
+    { seed: 2, teams: ["UConn (29-5)", "Houston (28-6)", "Iowa St. (27-7)", "Purdue (27-8)"], risk: "medium", note: "15-over-2 has hit in 3 of 9 tournaments. Iowa State has top-5 defensive efficiency (Tamin Lipsey: 5.0 AST, 2.2 STL per game). Houston is elite defensively (28-6). UConn lost Big East final to St. John's and may be vulnerable early. Purdue and Iowa St. could've been 3-seeds — they should feel lucky here." },
+    { seed: 3, teams: ["Michigan St.", "Illinois", "Virginia", "Gonzaga"], risk: "medium", note: "INJURY: Gonzaga's Braden Huff (17.8 PPG, 5.6 RPG) out since January with a knee injury — Mark Few says he's 'a long ways away.' Return for tournament opener is possible but uncertain. Without Huff, Gonzaga's ceiling drops significantly. Virginia has been upset 3 times as a 3/4-seed since 2018 (UMBC, Ohio, Furman). 14-over-3 has hit 3x in 9 yrs." },
+    { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "INJURY: Kansas' Darryn Peterson (19.8 PPG, projected #1 pick) missed 11 games with cramping/hamstring issues. He's available but his health is a ticking time bomb. Alabama is high-variance and inconsistent. 13-over-4 has happened " + (r64Matchups["13v4"]||0) + "x in 9 yrs. Hofstra can shoot, Cal Baptist and Troy are live underdogs." },
+    { seed: 5, teams: ["St. John's (28-6)", "Vanderbilt (26-8)", "Texas Tech (22-10)", "Wisconsin (24-10)"], risk: "high", note: "INJURY: Texas Tech lost JT Toppin for the season — their defense COLLAPSED from 24th to 119th in adj. efficiency. Christian Anderson (19.2 PPG, 43% 3P) carries the offense but the defense is gone. Wisconsin has 4 wins over KenPom top-10 teams (90+ pts each) but is erratic. 12-over-5 hit in 8 of 9 years (" + (r64Matchups["12v5"]||0) + "/" + 36 + "). Akron (29-5) and McNeese (28-5) are dangerous." },
+    { seed: 6, teams: ["Louisville (22-9)", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "INJURY MINEFIELD: UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG, broken thumb). BYU lost Richie Saunders (torn ACL). Louisville's Mikel Brown Jr. (back injury) missed ACC tourney — says he's 'getting there' but unconfirmed. 6-vs-11 is the #1 upset matchup (" + (r64Matchups["11v6"]||0) + "/" + 36 + "). VCU won the A-10 title; South Florida went 25-8. Three of four 6-seeds have injury issues." },
+    { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "Saint Mary's is a terrible draw for any 2-seed: 11th-best 3P%, #1 FT% nationally, 7th-best scoring. They're 3-1 in R64 over the last 4 appearances. Kentucky was upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022 — they're beatable. 10-over-7 has hit " + (r64Matchups["10v7"]||0) + "x in 9 yrs with at least 1 per tournament." },
+    { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is a coin flip (" + (r64Matchups["9v8"]||0) + "/" + 36 + " upsets). The 8/9 winner vs 1-seed in R32 is one of March's best upset pipelines — it happened in 5 of 9 tournaments (Wisconsin over Villanova '17, Loyola over Illinois '21, UNC over Baylor '22). Clemson made the Final Four last year as a 7-seed — they know how to win in March." },
   ];
 
   const riskColors = { low: "#198754", medium: "#ffc107", high: "#dc3545" };
@@ -908,33 +908,39 @@ function App() {
             <div style={{ fontSize: 11, color: "#888", marginBottom: 12 }}>Expect 8-12 total R64 upsets per tournament. Here are the best bets.</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { pick: "12 Northern Iowa over 5 St. John's", region: "East", heat: 3,
-                  why: "The 12-over-5 upset has happened " + (r64Matchups["12v5"]||0) + " times in 36 games (" + Math.round((r64Matchups["12v5"]||0)/36*100) + "%). It hit in 8 of 9 tournaments. Northern Iowa's Missouri Valley pedigree fits the Cinderella mold — slow-paced, disciplined mid-majors thrive in March. St. John's has been inconsistent in conference play.",
-                  history: "2024: James Madison (12) beat Wisconsin (5). 2025: McNeese (12) beat Clemson (5). 2019: Murray State (12) beat Marquette (5)." },
-                { pick: "12 McNeese over 5 Vanderbilt", region: "South", heat: 3,
-                  why: "Having two 12-vs-5 games doubles your chances of nailing this staple upset. McNeese won 30+ games and already pulled a 12-over-5 last year, beating Clemson 69-67 in 2025. Vanderbilt is a tournament newcomer with no recent March experience.",
-                  history: "2025: McNeese St. (12) over Clemson (5) 69-67. McNeese already has proven they belong." },
+                { pick: "12 Akron (29-5) over 5 Texas Tech (22-10)", region: "Midwest", heat: 3,
+                  why: "INJURY-FUELED UPSET: Texas Tech lost JT Toppin for the season, and their defense collapsed from 24th to 119th in adjusted efficiency. Christian Anderson (19.2 PPG, 43% 3P) carries the offense, but the defense that made Tech dangerous is gone. Akron is 29-5, won the MAC title, and the 12-over-5 has hit in 8 of 9 tournaments (" + (r64Matchups["12v5"]||0) + "/" + 36 + ", " + Math.round((r64Matchups["12v5"]||0)/36*100) + "% rate).",
+                  history: "2025: McNeese (12) beat Clemson (5) 69-67. 2024: James Madison (12) beat Wisconsin (5) 72-61. Tech's defense without Toppin is not tournament-caliber." },
                 { pick: "11 VCU over 6 North Carolina", region: "South", heat: 3,
-                  why: "The 6-vs-11 matchup is THE most upset-heavy in March: " + (r64Matchups["11v6"]||0) + " upsets in 36 games (" + Math.round((r64Matchups["11v6"]||0)/36*100) + "%). Multiple 11-seeds win every single year. VCU has elite March pedigree (2011 Final Four), and UNC as a 6-seed signals vulnerability.",
-                  history: "2024: NC State (11) beat Texas Tech (6), then ran to the Elite 8. 2022: Three 11-seeds won R64. 2017: Three 11-seeds won." },
-                { pick: "11 South Florida over 6 Louisville", region: "East", heat: 2,
-                  why: "With 11-seeds winning at a " + Math.round((r64Matchups["11v6"]||0)/36*100) + "% clip against 6-seeds, always pick at least one — ideally two. South Florida's AAC experience against power-conference teams prepares them well. Louisville has been up and down all season.",
-                  history: "2023: Pittsburgh (11) beat Iowa State (6). 2021: Syracuse (11) beat San Diego State (6), UCLA (11) beat BYU (6)." },
+                  why: "INJURY-FUELED UPSET: UNC lost star freshman Caleb Wilson (19.8 PPG, 9.4 RPG) to a broken thumb — their best player is gone for the tournament. VCU won the A-10 title and has elite March pedigree (2011 Final Four). The 6-vs-11 matchup is THE most upset-heavy in the tournament: " + (r64Matchups["11v6"]||0) + " upsets in 36 games (" + Math.round((r64Matchups["11v6"]||0)/36*100) + "%). This is the strongest injury-backed upset in the bracket.",
+                  history: "2024: NC State (11) beat Texas Tech (6), then ran to the Elite 8. 2022: Three different 11-seeds won R64. Without Wilson, UNC is a shell of itself." },
+                { pick: "12 McNeese (28-5) over 5 Vanderbilt (26-8)", region: "South", heat: 3,
+                  why: "McNeese is 28-5, won the Southland Conference, and already pulled a 12-over-5 last year — beating Clemson 69-67 in the 2025 tournament. This is a team that knows how to win in March. Vanderbilt has zero recent NCAA tournament experience and is untested in this environment. Two 12-vs-5 games on the board doubles your chances.",
+                  history: "2025: McNeese (12) over Clemson (5) 69-67. McNeese has been here before and won. Vanderbilt hasn't been to the tourney in years." },
+                { pick: "12 Northern Iowa over 5 St. John's (28-6)", region: "East", heat: 3,
+                  why: "Northern Iowa won the Missouri Valley Conference title and plays at the second-slowest tempo in the country. Slow-paced, ultra-disciplined mid-majors force opponents to play ugly, half-court basketball — the recipe for upsets. Their defense ranks top 25 nationally. St. John's just lost the Big East final and could be deflated. UNI is back in the tourney for the first time in a decade and playing with house money.",
+                  history: "Northern Iowa plays the style that produces upsets: slow tempo, take care of the ball, force opponents into set-defense scoring. Classic 12-over-5 profile." },
+                { pick: "11 South Florida (25-8) over 6 Louisville (22-9)", region: "East", heat: 3,
+                  why: "INJURY-FUELED UPSET: Louisville's star Mikel Brown Jr. missed the entire ACC tournament with a back injury. He says he's 'getting there' but is not confirmed for R64. Without Brown, Louisville dropped games they shouldn't have. South Florida went 25-8 under first-year coach Bryan Hodgson with AAC-tested toughness. The 11-vs-6 line hits at " + Math.round((r64Matchups["11v6"]||0)/36*100) + "% — always pick at least two.",
+                  history: "2023: Pittsburgh (11) beat Iowa State (6). 2021: Syracuse (11) beat San Diego State (6), UCLA (11) beat BYU (6). Louisville without Brown is beatable." },
+                { pick: "11 Texas/NC State over 6 BYU", region: "West", heat: 2,
+                  why: "INJURY-FUELED UPSET: BYU lost sharpshooter Richie Saunders to a season-ending torn ACL in mid-February. The First Four winner (Texas or NC State) comes in battle-tested from a do-or-die game. NC State made the Elite 8 as an 11-seed in 2024. Three of four 6-seeds (UNC, Louisville, BYU) have significant injuries — the 6-line is compromised this year.",
+                  history: "2024: NC State (11) beat Texas Tech (6), Marquette (3), then Duke (4) to reach the Elite 8 — starting from a First Four game. The play-in survivor pipeline is real." },
                 { pick: "13 Hofstra over 4 Alabama", region: "Midwest", heat: 2,
-                  why: "13-over-4 has happened " + (r64Matchups["13v4"]||0) + " times in 9 years — roughly once per tournament. Alabama is a high-variance team prone to cold shooting nights. Hofstra can knock down threes and slow the pace.",
+                  why: "13-over-4 has happened " + (r64Matchups["13v4"]||0) + " times in 9 years — roughly once per tournament. Alabama is high-variance, prone to cold shooting nights, and lacks the defensive consistency to close out a well-prepared mid-major. Hofstra can shoot threes and control tempo.",
                   history: "2024: Yale (13) over Auburn (4) 78-76. 2023: Furman (13) over Virginia (4) 68-67. 2021: Ohio (13) over Virginia (4) 62-58." },
-                { pick: "10 UCF over 7 UCLA", region: "East", heat: 2,
-                  why: "10-seeds beat 7-seeds " + (r64Matchups["10v7"]||0) + " times in 36 games (" + Math.round((r64Matchups["10v7"]||0)/36*100) + "%). At least one 10-seed has won every single tournament in the dataset. UCF has AAC tournament experience and UCLA is outside their comfort zone as a 7-seed.",
-                  history: "2025: Arkansas (10) over Kansas (7), New Mexico (10) over Marquette (7). 2024: Colorado (10) over Florida (7) 102-100." },
                 { pick: "10 Santa Clara over 7 Kentucky", region: "Midwest", heat: 2,
-                  why: "Santa Clara is a well-coached WCC team used to playing slow, controlled basketball against bigger opponents. Kentucky as a 7-seed is beatable — they were upset by Oakland (14-seed) in 2024 and Saint Peter's (15-seed) in 2022.",
-                  history: "2024: Oakland (14) over Kentucky (3) 80-76. 2022: Saint Peter's (15) over Kentucky (2) 85-79. UK is upset-prone." },
-                { pick: "15 Furman over 2 UConn", region: "East", heat: 1,
-                  why: "15-seeds have beaten 2-seeds in 3 of the last 9 tournaments — this is no longer a novelty. Furman has upset pedigree: they knocked off Virginia as a 13-seed in 2023 (68-67). UConn, while talented, could be overlooking a dangerous opponent.",
-                  history: "2023: Princeton (15) over Arizona (2) 59-55. 2022: Saint Peter's (15) over Kentucky (2) 85-79. 2021: Oral Roberts (15) over Ohio State (2) 75-72." },
-                { pick: "14 Penn over 3 Illinois", region: "South", heat: 1,
-                  why: "14-over-3 upsets are rare (" + (r64Matchups["14v3"]||0) + " in 36 games) but devastating when they hit. Penn from the Ivy League fits the 'smart, disciplined underdog' profile. Illinois has a tendency to play to their competition level.",
-                  history: "2024: Oakland (14) over Kentucky (3). 2021: Abilene Christian (14) over Texas (3). 2016: Stephen F. Austin (14) over West Virginia (3)." },
+                  why: "Santa Clara is one of THREE WCC teams in the field (with Gonzaga and Saint Mary's) — the WCC earned its most bids since 2013. They play slow, controlled, half-court basketball against bigger opponents. Kentucky as a 7-seed has been upset by a 14-seed (Oakland '24) and a 15-seed (Saint Peter's '22). 10-over-7 hits " + Math.round((r64Matchups["10v7"]||0)/36*100) + "% of the time with at least one per tournament.",
+                  history: "2024: Oakland (14) over Kentucky (3) 80-76. 2022: Saint Peter's (15) over Kentucky (2) 85-79. UK has been upset-prone in March recently." },
+                { pick: "10 UCF over 7 UCLA", region: "East", heat: 2,
+                  why: "10-seeds beat 7-seeds " + (r64Matchups["10v7"]||0) + " times in 36 games (" + Math.round((r64Matchups["10v7"]||0)/36*100) + "%). At least one 10-seed has won every single tournament since 2016. UCF has AAC tournament experience and UCLA has underperformed as a 7-seed away from Pauley Pavilion.",
+                  history: "2025: Arkansas (10) over Kansas (7), New Mexico (10) over Marquette (7). 2024: Colorado (10) over Florida (7) 102-100 in OT." },
+                { pick: "15 Furman (22-12) over 2 UConn (29-5)", region: "East", heat: 1,
+                  why: "15-over-2 has hit in 3 of the last 9 tournaments (33% of years) — this is a real threat now. Furman (22-12) won the Southern Conference title and has March pedigree: they knocked off Virginia as a 13-seed in 2023 (68-67). UConn just lost the Big East final to St. John's and could be vulnerable in a letdown spot.",
+                  history: "2023: Princeton (15) over Arizona (2) 59-55. 2022: Saint Peter's (15) over Kentucky (2) 85-79 — then ran to the Elite 8. 2021: Oral Roberts (15) over Ohio State (2) 75-72." },
+                { pick: "14 Wright St. over 3 Virginia", region: "Midwest", heat: 1,
+                  why: "Virginia has been upset as a 1-seed (UMBC, 2018), a 4-seed (Ohio, 2021), and a 4-seed again (Furman as 13-seed, 2023). No blue blood has been more upset-prone in the 3-14 range. 14-over-3 has happened " + (r64Matchups["14v3"]||0) + " times in 9 years. Wright State won the Horizon League and plays suffocating defense.",
+                  history: "2018: UMBC (16) over Virginia (1) 74-54. 2021: Ohio (13) over Virginia (4) 62-58. 2023: Furman (13) over Virginia (4) 68-67. No team in the field is more upset-prone." },
               ].map((p, i) => (
                 <div key={i} style={{ padding: "12px 14px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${p.heat >= 3 ? "#dc3545" : p.heat >= 2 ? "#e67e22" : "#6c757d"}` }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", marginBottom: 4, gap: isMobile ? 2 : 0 }}>
@@ -961,24 +967,27 @@ function App() {
             <div style={{ fontSize: 11, color: "#888", marginBottom: 12 }}>The upsets that separate winning brackets from the pack.</div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { pick: "9 TCU over 1 Duke in R32", round: "Round of 32", region: "East", heat: 3,
-                  why: "The 8/9 winner vs 1-seed R32 matchup is one of March's most reliable upset pipelines. In the last 9 tournaments, a 1-seed has fallen in R32 five times: Wisconsin (8) over Villanova '17, Loyola (8) over Illinois '21, North Carolina (8) over Baylor '22, and Maryland (4) over UNC '25. TCU (or Ohio State) gets battle-tested in the play-in round and comes in hot.",
-                  history: "2022: (8) North Carolina beat (1) Baylor 93-86 in R32, then went all the way to the Championship game as an 8-seed." },
-                { pick: "10 Texas A&M to the Sweet 16", round: "Sweet 16 Run", region: "South", heat: 2,
-                  why: "If Texas A&M (10) beats Saint Mary's (7), they'd face the winner of Houston (2) vs Idaho (15). A 10-seed reaching the Sweet 16 isn't rare — Miami (FL) did it in 2022 (beat 7 USC then 2 Auburn) and Arkansas did it in 2025 (beat 7 Kansas then 2 St. John's).",
-                  history: "2025: Arkansas (10) beat Kansas (7), then upset St. John's (2) to reach S16. 2022: Miami (10) beat USC (7), then upset Auburn (2)." },
-                { pick: "VCU or Northern Iowa to the Sweet 16", round: "Sweet 16 Run", region: "South/East", heat: 2,
-                  why: "Every single tournament since 2016 has had at least one seed 10 or higher reach the Sweet 16. Loyola Chicago (11) went to the Final Four in 2018. UCLA (11) reached the Final Four in 2021. NC State (11) made the Elite 8 in 2024. VCU and Northern Iowa both have the mid-major DNA for a deep run.",
-                  history: "2024: NC State (11) to E8. 2023: FAU (9) to E8. 2022: Saint Peter's (15) to E8. 2021: UCLA (11) to FF. 2018: Loyola Chicago (11) to FF." },
-                { pick: "Michigan or Arizona falls by the Sweet 16", round: "1-Seed Upset", region: "Midwest/West", heat: 2,
-                  why: "On average, 1-2 one-seeds get knocked out before the Final Four every tournament. 1-seeds have been upset " + (loserTotals[1]||0) + " total times across all rounds in 9 years. Michigan (entering as a 1 with a relatively untested lineup) and Arizona (in a loaded West bracket) are the most vulnerable.",
+                { pick: "9 TCU over 1 Duke (32-2) in R32", round: "Round of 32", region: "East", heat: 3,
+                  why: "INJURY-FUELED: Duke lost Caleb Foster to a broken foot (out until the Final Four at earliest) and Patrick Ngongba (foot) is day-to-day. Cameron Boozer (22.7 PPG, 10.2 RPG, national POY) is elite, but Duke's depth is severely compromised. The 8/9 winner vs 1-seed pipeline has produced upsets in 5 of 9 tournaments. TCU or Ohio St. gets battle-tested in R64 and faces a banged-up Blue Devil squad.",
+                  history: "2022: UNC (8) beat Baylor (1) 93-86 in R32 — then went to the Championship game. 2021: Loyola (8) beat Illinois (1). Duke without Foster is missing their backup PG and primary ball-handler behind Cayden Boozer." },
+                { pick: "Gonzaga (3) upset without Braden Huff", round: "Round of 32", region: "West", heat: 3,
+                  why: "INJURY-FUELED: Gonzaga's Braden Huff (17.8 PPG, 5.6 RPG) has been out since January 15 with a left knee injury. Mark Few called him 'a long ways away' in February. His return for the tournament opener is possible but deeply uncertain. Graham Ike has carried the load, but without Huff's inside scoring, Gonzaga's ceiling drops dramatically. If they survive R64 vs Kennesaw St., a R32 matchup with Wisconsin (24-10, 4 wins over KenPom top 10) could end them.",
+                  history: "Gonzaga without Huff: still won the WCC, but the margin for error is razor-thin. Wisconsin scored 90+ in all 4 wins over top-10 opponents — they can bury anyone when locked in." },
+                { pick: "VCU to the Sweet 16 (through injured UNC)", round: "Sweet 16 Run", region: "South", heat: 3,
+                  why: "VCU (A-10 champs) over UNC (missing Caleb Wilson, 19.8 PPG) in R64 is one of the strongest injury-backed upset picks. If VCU wins, they'd face 3-seed Illinois or 14-seed Penn in R32 — a very winnable game. Every tournament since 2016 has had at least one double-digit seed in the Sweet 16. VCU's 2011 Final Four DNA makes them the ideal Cinderella.",
+                  history: "2024: NC State (11) to E8. 2023: FAU (9) to E8. 2022: Saint Peter's (15) to E8. 2021: UCLA (11) to FF. 2018: Loyola Chicago (11) to FF. VCU has the pedigree." },
+                { pick: "Michigan (29-2) falls by the Sweet 16", round: "1-Seed Upset", region: "Midwest", heat: 2,
+                  why: "INJURY: Michigan lost L.J. Cason (torn ACL), a key bench contributor averaging 8.4 PPG. They're KenPom #2 with elite defense, but their depth is thinner. The Midwest bracket is loaded: Alabama (4), Tennessee (6), Kentucky (7), and Iowa State (2) are all dangerous. On average, 1-2 one-seeds get knocked out before the Final Four — 1-seeds have been upset " + (loserTotals[1]||0) + " total times across all rounds in 9 years.",
                   history: "2023: Houston (1) lost to Miami (5) in S16. 2022: Baylor (1) lost to UNC (8) in R32, Arizona (1) lost to Houston (5) in S16. 2021: Illinois (1) fell to Loyola (8) in R32." },
-                { pick: "Kentucky or Saint Mary's Sweet 16 run", round: "Sweet 16", region: "Midwest/South", heat: 2,
-                  why: "7-seeds that survive R64 often carry momentum deep. South Carolina (7) reached the Final Four in 2017 after beating Duke (2) in R32. Clemson (7) made the Final Four in 2025 after beating Houston (3) and Tennessee (2). Kentucky has the talent; Saint Mary's has the system.",
-                  history: "2025: Clemson (7) beat Houston (3) in S16, Tennessee (2) in E8, Duke (1) in FF. 2017: South Carolina (7) beat Duke (2) in R32, Baylor (4) in S16." },
-                { pick: "A 2-seed falls in R64", round: "Round of 64", region: "Any", heat: 1,
-                  why: "With 3 instances of 15-over-2 in the last 9 tournaments (33% of years), this is no longer a long shot. Iowa State, Purdue, and UConn are the most vulnerable 2-seeds. Furman (vs UConn) already upset Virginia in the tournament as recently as 2023.",
-                  history: "2023: Princeton (15) over Arizona (2). 2022: Saint Peter's (15) over Kentucky (2) — then ran to the Elite 8. 2021: Oral Roberts (15) over Ohio State (2)." },
+                { pick: "Saint Mary's (7) to the Sweet 16 or further", round: "Sweet 16", region: "South", heat: 2,
+                  why: "Saint Mary's is statistically one of the most dangerous 7-seeds in years: 11th-best 3P%, #1 free-throw shooting percentage in Division I, and 7th-best scoring nationally. They're 3-1 in R64 over their last 4 tournament appearances. If they beat Texas A&M (10), they'd face Houston (2) — a tough draw, but 7-seeds that survive R64 often carry momentum. Clemson (7) made the Final Four last year.",
+                  history: "2025: Clemson (7) beat Houston (3) in S16, Tennessee (2) in E8, Duke (1) in FF. 2017: South Carolina (7) beat Duke (2) in R32, Baylor (4) in S16. The 7-seed pipeline is real." },
+                { pick: "Kansas (4) early exit — Peterson health watch", round: "Round of 64/32", region: "East", heat: 2,
+                  why: "INJURY RISK: Darryn Peterson (19.8 PPG, projected #1 NBA pick) missed 11 of 31 regular-season games with cramping and hamstring problems. When Peterson plays, Kansas is dangerous. When he doesn't (or leaves early with cramps, as he has multiple times), they're vulnerable. Cal Baptist (13) as a first-round opponent and the winner of St. John's/Northern Iowa in R32 could both capitalize on a Peterson absence.",
+                  history: "2024: Yale (13) over Auburn (4) 78-76. Peterson's health is a coin flip — he's called his cramping episodes 'traumatic.' One bad game and Kansas is done." },
+                { pick: "Clemson (8) as a dark horse to the Sweet 16", round: "Sweet 16 Run", region: "South", heat: 2,
+                  why: "Clemson made the Final Four last year as a 7-seed, beating Houston (3), Tennessee (2), and Duke (1) along the way. They know how to win in March. As an 8-seed, they face Iowa (9) — essentially a coin flip — and the winner gets 1-seed Florida. Clemson has the experience and the belief system to pull it off again.",
+                  history: "2025: Clemson (7) went on a historic run: beat Houston (3) in S16 64-52, Tennessee (2) in E8 63-55, Duke (1) in FF 70-66. March pedigree matters." },
               ].map((p, i) => (
                 <div key={i} style={{ padding: "12px 14px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${p.heat >= 3 ? "#6f42c1" : p.heat >= 2 ? "#0d6efd" : "#6c757d"}` }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", marginBottom: 4, gap: isMobile ? 2 : 0 }}>
@@ -1039,6 +1048,35 @@ function App() {
             </div>
           </div>
 
+          {/* Injury Impact Summary */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Key Injury Watch</h3>
+            <div style={{ fontSize: 11, color: "#888", marginBottom: 8 }}>Teams missing key players are historically more vulnerable to upsets. Here's the injury report heading into the tournament.</div>
+            <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+              {[
+                { team: "Duke (1)", player: "Caleb Foster", injury: "Broken foot — out until Final Four at earliest. Ngongba (foot) day-to-day.", impact: "high", detail: "Foster is their backup PG. Duke won the ACC tourney without him, but depth is thin if Ngongba also sits." },
+                { team: "North Carolina (6)", player: "Caleb Wilson", injury: "Broken thumb — OUT for tournament", impact: "high", detail: "19.8 PPG, 9.4 RPG. Their best player and a projected top-5 NBA pick. UNC is a fundamentally different team without him." },
+                { team: "BYU (6)", player: "Richie Saunders", injury: "Torn ACL — OUT for season", impact: "high", detail: "Key sharpshooter and all-conference selection. BYU's spacing and perimeter game took a major hit." },
+                { team: "Louisville (6)", player: "Mikel Brown Jr.", injury: "Back — missed ACC tourney, hopeful for NCAA return", impact: "medium", detail: "Projected lottery pick. Says he's 'getting there' but not confirmed. Louisville went 22-9 but struggled without him." },
+                { team: "Gonzaga (3)", player: "Braden Huff", injury: "Left knee — out since Jan 15, possible tourney return", impact: "medium", detail: "17.8 PPG, 5.6 RPG. Mark Few says 'a long ways away.' Graham Ike has carried the team but the ceiling is lower." },
+                { team: "Texas Tech (5)", player: "JT Toppin", injury: "OUT for season", impact: "high", detail: "Defense dropped from 24th to 119th in adj. efficiency without him. Christian Anderson (19.2 PPG) can score but can't fix the defense alone." },
+                { team: "Michigan (1)", player: "L.J. Cason", injury: "Torn ACL — OUT for season", impact: "low", detail: "8.4 PPG bench contributor. Michigan is still KenPom #2, but their depth is now thinner." },
+                { team: "Kansas (4)", player: "Darryn Peterson", injury: "Cramping/hamstring — available but fragile", impact: "medium", detail: "19.8 PPG, projected #1 pick. Missed 11 of 31 games. When he plays, Kansas is elite. When he cramps out, they're a first-round exit." },
+              ].map((inj, i) => (
+                <div key={i} style={{ display: "flex", alignItems: isMobile ? "flex-start" : "center", gap: 8, padding: "8px 12px", background: "#fff", borderRadius: 8, boxShadow: "0 1px 2px rgba(0,0,0,0.04)", flexDirection: isMobile ? "column" : "row" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: isMobile ? "auto" : 140 }}>
+                    <div style={{ width: 8, height: 8, borderRadius: "50%", background: inj.impact === "high" ? "#dc3545" : inj.impact === "medium" ? "#ffc107" : "#198754", flexShrink: 0 }} />
+                    <span style={{ fontWeight: 700, fontSize: 12, color: "#1a1a2e" }}>{inj.team}</span>
+                  </div>
+                  <div style={{ flex: 1, fontSize: 11, color: "#555" }}>
+                    <strong>{inj.player}</strong>: {inj.injury}
+                  </div>
+                  <div style={{ fontSize: 10, color: "#888", maxWidth: isMobile ? "100%" : 280 }}>{inj.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
           {/* Quick Pick Suggestions */}
           <div style={{ marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Quick Pick Suggestions for 2026</h3>
@@ -1046,44 +1084,44 @@ function App() {
               <div style={{ background: "#d4edda", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#155724", marginBottom: 6 }}>Safe Picks</div>
                 <div style={{ fontSize: 12, color: "#155724", lineHeight: 1.7 }}>
-                  Duke (#1 overall) & Florida (defending champ) to Elite 8<br/>
-                  Houston & Iowa St. win R64 comfortably<br/>
-                  Michigan St. & Gonzaga to the Sweet 16<br/>
-                  At least 3 of 4 one-seeds in the Sweet 16
+                  Arizona (32-2, KenPom #3) & Florida to Elite 8<br/>
+                  Houston (28-6, elite defense) & Iowa St. (top-5 def eff.) win R64<br/>
+                  Michigan St. & Illinois to the Sweet 16<br/>
+                  Duke still favored despite Foster injury (Boozer is that good)
                 </div>
               </div>
               <div style={{ background: "#f8d7da", borderRadius: 10, padding: 14 }}>
-                <div style={{ fontWeight: 700, fontSize: 13, color: "#721c24", marginBottom: 6 }}>Upset Picks (R64)</div>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#721c24", marginBottom: 6 }}>Injury-Fueled Upsets</div>
                 <div style={{ fontSize: 12, color: "#721c24", lineHeight: 1.7 }}>
-                  Northern Iowa (12) over St. John's (5) — classic 12/5<br/>
-                  VCU (11) over North Carolina (6) — 11/6 money matchup<br/>
-                  Hofstra (13) or Cal Baptist (13) over a 4-seed<br/>
-                  UCF (10) or Santa Clara (10) over their 7-seed
+                  VCU (11) over UNC (6) — Wilson (19.8 PPG) is OUT<br/>
+                  Akron 29-5 (12) over Texas Tech (5) — defense collapsed w/o Toppin<br/>
+                  S. Florida (11) over Louisville (6) — Brown Jr. uncertain<br/>
+                  Texas/NC State (11) over BYU (6) — Saunders ACL tear
                 </div>
               </div>
               <div style={{ background: "#e2d5f1", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#4a1d8e", marginBottom: 6 }}>Cinderella Runs (R32+)</div>
                 <div style={{ fontSize: 12, color: "#4a1d8e", lineHeight: 1.7 }}>
-                  VCU or Northern Iowa to the Sweet 16 (mid-major DNA)<br/>
-                  TCU or Iowa (8/9 winner) upsets Duke in R32<br/>
-                  Furman upset Virginia in '23 — can they shock UConn?<br/>
-                  Kentucky (7) or Saint Mary's (7) to the Elite 8
+                  VCU to the Sweet 16 (through injured UNC, then Illinois)<br/>
+                  8/9 winner upsets Duke in R32 (Foster out, depth thin)<br/>
+                  Saint Mary's (#1 FT%, top-7 scoring) deep run as a 7<br/>
+                  Clemson (8) — made FF last year, knows how to win in March
                 </div>
               </div>
               <div style={{ background: "#fff3cd", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#856404", marginBottom: 6 }}>Champion Profile</div>
                 <div style={{ fontSize: 12, color: "#856404", lineHeight: 1.7 }}>
                   7 of 9 champs (78%) were 1 or 2 seeds<br/>
-                  Duke (overall #1) fits the dominant defense mold<br/>
-                  UConn won it all in '23 & '24 — dynasty back as a 2?<br/>
-                  Houston & Florida are the other top title contenders
+                  Duke (KenPom #1, best defense + top-5 offense, +40 net rating)<br/>
+                  Arizona (32-2, Big 12 champs, KenPom #3)<br/>
+                  Houston & Florida round out the title favorites
                 </div>
               </div>
             </div>
           </div>
 
           <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>Source:</strong> Official 2026 NCAA Tournament bracket, released Selection Sunday 3/15/26 on CBS. First Four games: March 17-18. Round of 64: March 19-20. Final Four: April 4 at Lucas Oil Stadium, Indianapolis. Championship: April 6.
+            <strong>Sources:</strong> Official 2026 NCAA Tournament bracket (Selection Sunday 3/15/26). Injury data from ESPN, CBS Sports, SI, and team athletics sites. KenPom efficiency ratings as of 3/15/26. Historical upset data from 9 tournaments (2016-2025). First Four: March 17-18. Round of 64: March 19-20. Final Four: April 4 at Lucas Oil Stadium, Indianapolis.
           </div>
         </div>
       )}
