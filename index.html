@@ -15,7 +15,7 @@
 <body>
   <div id="root"></div>
   <script type="text/babel">
-    const { useState } = React;
+    const { useState, useEffect } = React;
 
 // All upsets: [year, round, winSeed, winner, loseSeed, loser, wScore, lScore]
 const data = [
@@ -47,6 +47,20 @@ function App() {
   const [view, setView] = useState("byRound");
   const [selectedRound, setSelectedRound] = useState(null);
   const [selectedSeed, setSelectedSeed] = useState(null);
+  const [isMobile, setIsMobile] = useState(typeof window !== "undefined" && window.innerWidth < 640);
+
+  const [userName, setUserName] = useState(() => {
+    try { return localStorage.getItem("mm_bracket_name") || ""; } catch(e) { return ""; }
+  });
+  const [showShareMsg, setShowShareMsg] = useState(false);
+
+  // Responsive listener
+  if (typeof window !== "undefined") {
+    window.addEventListener("resize", () => {
+      const mobile = window.innerWidth < 640;
+      if (mobile !== isMobile) setIsMobile(mobile);
+    });
+  }
 
   // Stats by round
   const roundStats = {};
@@ -212,22 +226,316 @@ function App() {
     { emoji: "7.", title: "4-seeds are paper tigers", stat: `${(loserTotals[4] || 0)} total upsets of 4-seeds across all rounds`, detail: "4-seeds face dangerous 13-seeds in R64 and battle-tested 5/12 winners in R32. They're frequently overvalued." },
   ];
 
+  // === INTERACTIVE BRACKET STATE ===
+  // Build a fresh empty bracket from Lunardi data
+  const buildFreshBracket = () => {
+    const init = {};
+    regions.forEach((reg, ri) => {
+      const ordered = [
+        reg.matchups.find(m => m.hi === 1),
+        reg.matchups.find(m => m.hi === 8),
+        reg.matchups.find(m => m.hi === 5),
+        reg.matchups.find(m => m.hi === 4),
+        reg.matchups.find(m => m.hi === 6),
+        reg.matchups.find(m => m.hi === 3),
+        reg.matchups.find(m => m.hi === 7),
+        reg.matchups.find(m => m.hi === 2),
+      ];
+      init[reg.name] = {
+        R64: ordered.map(m => ({ a: { seed: m.hi, team: m.hiTeam }, b: { seed: m.lo, team: m.loTeam }, winner: null })),
+        R32: [null, null, null, null],
+        S16: [null, null],
+        E8: [null],
+      };
+    });
+    init.FF = [null, null];
+    init.CH = [null];
+    init.champion = null;
+    return init;
+  };
+
+  // Encode bracket picks as a compact string for sharing
+  const encodeBracket = (b) => {
+    // For each game with a winner, store "a" or "b" (which team won)
+    let code = "";
+    regions.forEach(reg => {
+      b[reg.name].R64.forEach(g => { code += g.winner ? (g.winner.team === g.a.team ? "a" : "b") : "_"; });
+      b[reg.name].R32.forEach(g => { code += (g && g.winner) ? (g.winner.team === g.a.team ? "a" : "b") : "_"; });
+      b[reg.name].S16.forEach(g => { code += (g && g.winner) ? (g.winner.team === g.a.team ? "a" : "b") : "_"; });
+      code += (b[reg.name].E8[0] && b[reg.name].E8[0].winner) ? (b[reg.name].E8[0].winner.team === b[reg.name].E8[0].a.team ? "a" : "b") : "_";
+    });
+    b.FF.forEach(g => { code += (g && g.winner) ? (g.winner.team === g.a.team ? "a" : "b") : "_"; });
+    code += (b.CH[0] && b.CH[0].winner) ? (b.CH[0].winner.team === b.CH[0].a.team ? "a" : "b") : "_";
+    return code;
+  };
+
+  // Decode a bracket code and replay picks onto a fresh bracket
+  const decodeBracket = (code) => {
+    if (!code || code.length < 63) return null;
+    const fresh = buildFreshBracket();
+    let idx = 0;
+    try {
+      regions.forEach(reg => {
+        // R64: 8 games
+        for (let gi = 0; gi < 8; gi++) {
+          const ch = code[idx++];
+          if (ch === "a" || ch === "b") {
+            const team = ch === "a" ? fresh[reg.name].R64[gi].a : fresh[reg.name].R64[gi].b;
+            fresh[reg.name].R64[gi].winner = team;
+            const r32Idx = Math.floor(gi / 2);
+            const slot = gi % 2 === 0 ? "a" : "b";
+            if (!fresh[reg.name].R32[r32Idx]) fresh[reg.name].R32[r32Idx] = { a: null, b: null, winner: null };
+            fresh[reg.name].R32[r32Idx][slot] = team;
+          }
+        }
+        // R32: 4 games
+        for (let gi = 0; gi < 4; gi++) {
+          const ch = code[idx++];
+          if (ch === "a" || ch === "b") {
+            const g = fresh[reg.name].R32[gi];
+            if (g && g.a && g.b) {
+              const team = ch === "a" ? g.a : g.b;
+              g.winner = team;
+              const s16Idx = Math.floor(gi / 2);
+              const slot = gi % 2 === 0 ? "a" : "b";
+              if (!fresh[reg.name].S16[s16Idx]) fresh[reg.name].S16[s16Idx] = { a: null, b: null, winner: null };
+              fresh[reg.name].S16[s16Idx][slot] = team;
+            }
+          }
+        }
+        // S16: 2 games
+        for (let gi = 0; gi < 2; gi++) {
+          const ch = code[idx++];
+          if (ch === "a" || ch === "b") {
+            const g = fresh[reg.name].S16[gi];
+            if (g && g.a && g.b) {
+              const team = ch === "a" ? g.a : g.b;
+              g.winner = team;
+              const slot = gi === 0 ? "a" : "b";
+              if (!fresh[reg.name].E8[0]) fresh[reg.name].E8[0] = { a: null, b: null, winner: null };
+              fresh[reg.name].E8[0][slot] = team;
+            }
+          }
+        }
+        // E8: 1 game
+        const ch = code[idx++];
+        if (ch === "a" || ch === "b") {
+          const g = fresh[reg.name].E8[0];
+          if (g && g.a && g.b) {
+            const team = ch === "a" ? g.a : g.b;
+            g.winner = team;
+            const ffIdx = (reg.name === "East" || reg.name === "South") ? 0 : 1;
+            const ffSlot = (reg.name === "East" || reg.name === "Midwest") ? "a" : "b";
+            if (!fresh.FF[ffIdx]) fresh.FF[ffIdx] = { a: null, b: null, winner: null };
+            fresh.FF[ffIdx][ffSlot] = team;
+          }
+        }
+      });
+      // FF: 2 games
+      for (let gi = 0; gi < 2; gi++) {
+        const ch = code[idx++];
+        if (ch === "a" || ch === "b") {
+          const g = fresh.FF[gi];
+          if (g && g.a && g.b) {
+            const team = ch === "a" ? g.a : g.b;
+            g.winner = team;
+            const slot = gi === 0 ? "a" : "b";
+            if (!fresh.CH[0]) fresh.CH[0] = { a: null, b: null, winner: null };
+            fresh.CH[0][slot] = team;
+          }
+        }
+      }
+      // CH: 1 game
+      const chCh = code[idx++];
+      if (chCh === "a" || chCh === "b") {
+        const g = fresh.CH[0];
+        if (g && g.a && g.b) {
+          const team = chCh === "a" ? g.a : g.b;
+          g.winner = team;
+          fresh.champion = team;
+        }
+      }
+    } catch(e) { return null; }
+    return fresh;
+  };
+
+  const [bracket, setBracket] = useState(() => {
+    // 1. Check URL for shared bracket
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const shared = params.get("b");
+      const sharedName = params.get("n");
+      if (shared) {
+        const decoded = decodeBracket(shared);
+        if (decoded) {
+          if (sharedName) decoded._viewingName = decodeURIComponent(sharedName);
+          decoded._isShared = true;
+          return decoded;
+        }
+      }
+    } catch(e) {}
+    // 2. Check localStorage for saved bracket
+    try {
+      const saved = localStorage.getItem("mm_bracket_2026");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.East) return parsed;
+      }
+    } catch(e) {}
+    // 3. Fresh bracket
+    return buildFreshBracket();
+  });
+
+  // Save bracket to localStorage whenever it changes
+  useEffect(() => {
+    if (bracket._isShared) return; // Don't overwrite local data when viewing shared
+    try {
+      localStorage.setItem("mm_bracket_2026", JSON.stringify(bracket));
+    } catch(e) {}
+  }, [bracket]);
+
+  // Save name to localStorage
+  useEffect(() => {
+    try { localStorage.setItem("mm_bracket_name", userName); } catch(e) {}
+  }, [userName]);
+
+  // Generate share URL
+  const getShareUrl = () => {
+    const code = encodeBracket(bracket);
+    const base = window.location.origin + window.location.pathname;
+    const nameParam = userName ? `&n=${encodeURIComponent(userName)}` : "";
+    return `${base}?b=${code}${nameParam}`;
+  };
+
+  const copyShareLink = () => {
+    const url = getShareUrl();
+    navigator.clipboard.writeText(url).then(() => {
+      setShowShareMsg(true);
+      setTimeout(() => setShowShareMsg(false), 2500);
+    }).catch(() => {
+      // Fallback
+      const ta = document.createElement("textarea");
+      ta.value = url;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+      setShowShareMsg(true);
+      setTimeout(() => setShowShareMsg(false), 2500);
+    });
+  };
+
+  // Load your own bracket (clear shared view)
+  const loadMyBracket = () => {
+    try {
+      const saved = localStorage.getItem("mm_bracket_2026");
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (parsed && parsed.East) { setBracket(parsed); return; }
+      }
+    } catch(e) {}
+    setBracket(buildFreshBracket());
+    // Clear URL params
+    window.history.replaceState({}, "", window.location.pathname);
+  };
+
+  const pickWinner = (region, round, gameIdx, team) => {
+    setBracket(prev => {
+      const next = JSON.parse(JSON.stringify(prev));
+      if (round === "R64") {
+        next[region].R64[gameIdx].winner = team;
+        // Auto-populate R32 matchup
+        const r32Idx = Math.floor(gameIdx / 2);
+        const slot = gameIdx % 2 === 0 ? "a" : "b";
+        if (!next[region].R32[r32Idx]) next[region].R32[r32Idx] = { a: null, b: null, winner: null };
+        next[region].R32[r32Idx][slot] = team;
+        // Clear downstream if pick changed
+        next[region].R32[r32Idx].winner = null;
+        const s16Idx = Math.floor(r32Idx / 2);
+        const s16Slot = r32Idx % 2 === 0 ? "a" : "b";
+        if (next[region].S16[s16Idx]) { next[region].S16[s16Idx][s16Slot] = null; next[region].S16[s16Idx].winner = null; }
+        if (next[region].E8[0]) { next[region].E8[0] = { a: null, b: null, winner: null }; }
+      } else if (round === "R32") {
+        next[region].R32[gameIdx].winner = team;
+        const s16Idx = Math.floor(gameIdx / 2);
+        const slot = gameIdx % 2 === 0 ? "a" : "b";
+        if (!next[region].S16[s16Idx]) next[region].S16[s16Idx] = { a: null, b: null, winner: null };
+        next[region].S16[s16Idx][slot] = team;
+        next[region].S16[s16Idx].winner = null;
+        if (next[region].E8[0]) { next[region].E8[0] = { a: null, b: null, winner: null }; }
+      } else if (round === "S16") {
+        next[region].S16[gameIdx].winner = team;
+        const slot = gameIdx === 0 ? "a" : "b";
+        if (!next[region].E8[0]) next[region].E8[0] = { a: null, b: null, winner: null };
+        next[region].E8[0][slot] = team;
+        next[region].E8[0].winner = null;
+      } else if (round === "E8") {
+        next[region].E8[0].winner = team;
+        // Feed into Final Four
+        const ffIdx = (region === "East" || region === "South") ? 0 : 1;
+        const ffSlot = (region === "East" || region === "Midwest") ? "a" : "b";
+        if (!next.FF[ffIdx]) next.FF[ffIdx] = { a: null, b: null, winner: null };
+        next.FF[ffIdx][ffSlot] = team;
+        next.FF[ffIdx].winner = null;
+        if (next.CH[0]) next.CH[0] = { a: null, b: null, winner: null };
+        next.champion = null;
+      } else if (round === "FF") {
+        next.FF[gameIdx].winner = team;
+        const slot = gameIdx === 0 ? "a" : "b";
+        if (!next.CH[0]) next.CH[0] = { a: null, b: null, winner: null };
+        next.CH[0][slot] = team;
+        next.CH[0].winner = null;
+        next.champion = null;
+      } else if (round === "CH") {
+        next.CH[0].winner = team;
+        next.champion = team;
+      }
+      return next;
+    });
+  };
+
+  const resetBracket = () => {
+    const fresh = buildFreshBracket();
+    setBracket(fresh);
+    try { localStorage.removeItem("mm_bracket_2026"); } catch(e) {}
+    window.history.replaceState({}, "", window.location.pathname);
+  };
+
+  // Count total picks made
+  const totalPicks = (() => {
+    let count = 0;
+    regions.forEach(reg => {
+      bracket[reg.name].R64.forEach(g => { if (g.winner) count++; });
+      bracket[reg.name].R32.forEach(g => { if (g && g.winner) count++; });
+      bracket[reg.name].S16.forEach(g => { if (g && g.winner) count++; });
+      if (bracket[reg.name].E8[0] && bracket[reg.name].E8[0].winner) count++;
+    });
+    bracket.FF.forEach(g => { if (g && g.winner) count++; });
+    if (bracket.CH[0] && bracket.CH[0].winner) count++;
+    return count;
+  })();
+
   const tabs = [
     { key: "byRound", label: "By Round" },
     { key: "vulnerable", label: "Most Vulnerable" },
     { key: "cinderellas", label: "Cinderella Runs" },
     { key: "heatmap", label: "Heatmap" },
     { key: "picks2026", label: "2026 Picks" },
+    { key: "bracket", label: "My Bracket" },
   ];
 
   return (
-    <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", maxWidth: 960, margin: "0 auto", padding: "24px 20px", background: "#fafbfc", minHeight: "100vh" }}>
+    <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", maxWidth: 960, margin: "0 auto", padding: isMobile ? "16px 10px" : "24px 20px", background: "#fafbfc", minHeight: "100vh" }}>
       {/* Header */}
       <div style={{ marginBottom: 20 }}>
         <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-          <div style={{ width: 44, height: 44, borderRadius: 10, background: "linear-gradient(135deg, #e94560 0%, #6f42c1 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, fontWeight: 800 }}>M</div>
+          <div style={{ width: isMobile ? 44 : 52, height: isMobile ? 44 : 52, borderRadius: 10, background: "linear-gradient(135deg, #e94560 0%, #ff8c00 50%, #6f42c1 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", color: "#fff", flexShrink: 0, padding: 3, lineHeight: 1 }}>
+            <span style={{ fontSize: isMobile ? 8 : 9, fontWeight: 800, letterSpacing: 0.5, textTransform: "uppercase" }}>March</span>
+            <span style={{ fontSize: isMobile ? 13 : 16, fontWeight: 900, letterSpacing: -0.5, lineHeight: 1 }}>MAD</span>
+            <span style={{ fontSize: isMobile ? 6 : 7, fontWeight: 700, letterSpacing: 0.3, opacity: 0.9 }}>NESS '26</span>
+          </div>
           <div>
-            <h1 style={{ fontSize: 24, fontWeight: 800, color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
+            <h1 style={{ fontSize: isMobile ? 18 : 24, fontWeight: 800, color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
               March Madness Upset Analysis
             </h1>
             <p style={{ color: "#888", fontSize: 13, margin: 0 }}>
@@ -237,9 +545,9 @@ function App() {
         </div>
 
         {/* Round summary chips */}
-        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+        <div style={{ display: "flex", gap: isMobile ? 4 : 6, flexWrap: "wrap" }}>
           {ROUNDS.map(r => (
-            <div key={r} style={{ padding: "4px 12px", borderRadius: 16, background: ROUND_BG[r], border: `1.5px solid ${ROUND_COLORS[r]}`, fontSize: 11, fontWeight: 700, color: ROUND_COLORS[r] }}>
+            <div key={r} style={{ padding: isMobile ? "3px 8px" : "4px 12px", borderRadius: 16, background: ROUND_BG[r], border: `1.5px solid ${ROUND_COLORS[r]}`, fontSize: isMobile ? 9 : 11, fontWeight: 700, color: ROUND_COLORS[r] }}>
               {ROUND_NAMES[r]}: {roundStats[r].count}
             </div>
           ))}
@@ -247,14 +555,14 @@ function App() {
       </div>
 
       {/* Tabs */}
-      <div style={{ display: "flex", gap: 0, marginBottom: 24, flexWrap: "wrap" }}>
+      <div style={{ display: "flex", gap: isMobile ? 4 : 0, marginBottom: 24, flexWrap: "wrap" }}>
         {tabs.map((t, i) => (
           <button key={t.key} onClick={() => { setView(t.key); setSelectedRound(null); setSelectedSeed(null); }}
             style={{
-              padding: "10px 16px", fontSize: 12, fontWeight: view === t.key ? 700 : 500,
+              padding: isMobile ? "8px 10px" : "10px 16px", fontSize: isMobile ? 11 : 12, fontWeight: view === t.key ? 700 : 500,
               background: view === t.key ? "#1a1a2e" : "#e8ecf0",
               color: view === t.key ? "#fff" : "#555", border: "none", cursor: "pointer",
-              borderRadius: i === 0 ? "8px 0 0 8px" : i === tabs.length - 1 ? "0 8px 8px 0" : 0,
+              borderRadius: isMobile ? 6 : (i === 0 ? "8px 0 0 8px" : i === tabs.length - 1 ? "0 8px 8px 0" : 0),
               letterSpacing: 0.2, transition: "background 0.15s, color 0.15s",
             }}>
             {t.label}
@@ -267,12 +575,12 @@ function App() {
         <div>
           {/* Year x Round grid */}
           <div style={{ overflowX: "auto", marginBottom: 20 }}>
-            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 12 }}>
+            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: isMobile ? 10 : 12 }}>
               <thead>
                 <tr>
-                  <th style={{ padding: 8, background: "#1a1a2e", color: "#fff", textAlign: "center" }}>Year</th>
+                  <th style={{ padding: isMobile ? 4 : 8, background: "#1a1a2e", color: "#fff", textAlign: "center" }}>Year</th>
                   {ROUNDS.map(r => (
-                    <th key={r} style={{ padding: 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: 70 }}>{ROUND_NAMES[r]}</th>
+                    <th key={r} style={{ padding: isMobile ? 4 : 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: isMobile ? 44 : 70 }}>{isMobile ? r : ROUND_NAMES[r]}</th>
                   ))}
                   <th style={{ padding: 8, background: "#333", color: "#fff", textAlign: "center" }}>Total</th>
                 </tr>
@@ -307,11 +615,11 @@ function App() {
           </div>
 
           {/* Click a round to see games */}
-          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: isMobile ? 4 : 8, marginBottom: 12, flexWrap: "wrap" }}>
             {ROUNDS.map(r => (
               <button key={r} onClick={() => setSelectedRound(selectedRound === r ? null : r)}
                 style={{
-                  padding: "8px 16px", borderRadius: 8, fontSize: 12, cursor: "pointer",
+                  padding: isMobile ? "6px 10px" : "8px 16px", borderRadius: 8, fontSize: isMobile ? 10 : 12, cursor: "pointer",
                   background: selectedRound === r ? ROUND_COLORS[r] : "#fff",
                   color: selectedRound === r ? (r === "E8" ? "#333" : "#fff") : ROUND_COLORS[r],
                   border: `2px solid ${ROUND_COLORS[r]}`, fontWeight: 600,
@@ -436,12 +744,12 @@ function App() {
         <div>
           <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>How often each seed line gets upset, broken down by round. Darker = more upsets.</p>
           <div style={{ overflowX: "auto" }}>
-            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 12 }}>
+            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: isMobile ? 10 : 12 }}>
               <thead>
                 <tr>
-                  <th style={{ padding: 8, background: "#1a1a2e", color: "#fff" }}>Loser Seed</th>
+                  <th style={{ padding: isMobile ? 4 : 8, background: "#1a1a2e", color: "#fff" }}>{isMobile ? "Seed" : "Loser Seed"}</th>
                   {ROUNDS.map(r => (
-                    <th key={r} style={{ padding: 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: 70 }}>{ROUND_NAMES[r]}</th>
+                    <th key={r} style={{ padding: isMobile ? 4 : 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: isMobile ? 36 : 70 }}>{isMobile ? r : ROUND_NAMES[r]}</th>
                   ))}
                   <th style={{ padding: 8, background: "#333", color: "#fff", textAlign: "center" }}>Total</th>
                 </tr>
@@ -493,9 +801,9 @@ function App() {
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {bracketTips.map((tip, i) => (
                 <div key={i} style={{ padding: "12px 16px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: "4px solid #0d6efd" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
-                    <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>{tip.emoji} {tip.title}</div>
-                    <div style={{ fontSize: 11, color: "#0d6efd", fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{tip.stat}</div>
+                  <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", justifyContent: "space-between", alignItems: isMobile ? "flex-start" : "flex-start", marginBottom: 4, gap: isMobile ? 2 : 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: isMobile ? 13 : 14, color: "#1a1a2e" }}>{tip.emoji} {tip.title}</div>
+                    <div style={{ fontSize: 11, color: "#0d6efd", fontWeight: 600, whiteSpace: isMobile ? "normal" : "nowrap", marginLeft: isMobile ? 0 : 12 }}>{tip.stat}</div>
                   </div>
                   <div style={{ fontSize: 12, color: "#666", lineHeight: 1.5 }}>{tip.detail}</div>
                 </div>
@@ -531,7 +839,7 @@ function App() {
           {/* Region-by-Region Breakdown */}
           <div style={{ marginBottom: 24 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Lunardi's Bracket: Region-by-Region Upset Watch</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
               {regions.map((reg, ri) => {
                 const regionColors = ["#0d6efd", "#dc3545", "#198754", "#6f42c1"];
                 const regionBgs = ["#e8f0fe", "#fde8e8", "#e8f5e9", "#f3e8fd"];
@@ -585,8 +893,8 @@ function App() {
                 { pick: "15 UMBC over 2 Houston", region: "South", why: "UMBC pulled the first-ever 16-over-1 upset in 2018. As a 15-seed, they're even more dangerous. 15-seeds have won 3 times in 9 years.", heat: 1 },
               ].map((p, i) => (
                 <div key={i} style={{ padding: "10px 14px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${p.heat >= 3 ? "#dc3545" : p.heat >= 2 ? "#e67e22" : "#6c757d"}` }}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
-                    <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>{p.pick}</div>
+                  <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", marginBottom: 4, gap: isMobile ? 2 : 0 }}>
+                    <div style={{ fontWeight: 700, fontSize: isMobile ? 12 : 13, color: "#1a1a2e" }}>{p.pick}</div>
                     <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
                       <span style={{ fontSize: 10, color: "#888" }}>{p.region}</span>
                       <div style={{ display: "flex", gap: 1 }}>
@@ -608,16 +916,16 @@ function App() {
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {projected2026.map((p, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "12px 16px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${riskColors[p.risk]}` }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6, flexWrap: isMobile ? "wrap" : "nowrap" }}>
                     <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{p.seed}</div>
-                    <div style={{ flex: 1 }}>
-                      <div style={{ fontSize: 13, fontWeight: 600 }}>{p.teams.join(" / ")}</div>
+                    <div style={{ flex: 1, minWidth: isMobile ? "calc(100% - 50px)" : "auto" }}>
+                      <div style={{ fontSize: isMobile ? 12 : 13, fontWeight: 600 }}>{p.teams.join(isMobile ? " / " : " / ")}</div>
                     </div>
-                    <div style={{ padding: "3px 10px", borderRadius: 12, background: riskBg[p.risk], color: riskColors[p.risk], fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>
+                    <div style={{ padding: "3px 10px", borderRadius: 12, background: riskBg[p.risk], color: riskColors[p.risk], fontSize: 11, fontWeight: 700, textTransform: "uppercase", marginLeft: isMobile ? 42 : 0 }}>
                       {p.risk} upset risk
                     </div>
                   </div>
-                  <div style={{ fontSize: 12, color: "#666", marginLeft: 42, lineHeight: 1.5 }}>{p.note}</div>
+                  <div style={{ fontSize: isMobile ? 11 : 12, color: "#666", marginLeft: 42, lineHeight: 1.5 }}>{p.note}</div>
                 </div>
               ))}
             </div>
@@ -626,7 +934,7 @@ function App() {
           {/* Quick Pick Suggestions */}
           <div style={{ marginBottom: 20 }}>
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Quick Pick Suggestions for 2026</h3>
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
               <div style={{ background: "#d4edda", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#155724", marginBottom: 6 }}>Safe Picks</div>
                 <div style={{ fontSize: 12, color: "#155724", lineHeight: 1.7 }}>
@@ -671,6 +979,207 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* INTERACTIVE BRACKET VIEW */}
+      {view === "bracket" && (() => {
+        const regionColors = { East: "#0d6efd", South: "#dc3545", Midwest: "#198754", West: "#6f42c1" };
+        const regionBgs = { East: "#e8f0fe", South: "#fde8e8", Midwest: "#e8f5e9", West: "#f3e8fd" };
+        const roundLabels = { R64: "Round of 64", R32: "Round of 32", S16: "Sweet 16", E8: "Elite 8" };
+
+        const TeamBtn = ({ team, isWinner, onClick, disabled }) => {
+          if (!team) return <div style={{ padding: "8px 12px", background: "#f0f0f0", borderRadius: 6, fontSize: 12, color: "#bbb", textAlign: "center" }}>TBD</div>;
+          return (
+            <button onClick={disabled ? undefined : onClick} style={{
+              padding: "8px 12px", borderRadius: 6, fontSize: 12, fontWeight: isWinner ? 700 : 500,
+              background: isWinner ? "#198754" : "#fff", color: isWinner ? "#fff" : "#333",
+              border: isWinner ? "2px solid #198754" : "2px solid #e0e0e0",
+              cursor: disabled ? "default" : "pointer", width: "100%", textAlign: "left",
+              transition: "all 0.15s", opacity: disabled && !isWinner ? 0.5 : 1,
+            }}>
+              <span style={{ display: "inline-block", width: 20, height: 20, lineHeight: "20px", borderRadius: "50%", background: isWinner ? "rgba(255,255,255,0.25)" : "#1a1a2e", color: "#fff", textAlign: "center", fontSize: 10, fontWeight: 700, marginRight: 8 }}>{team.seed}</span>
+              {team.team}
+            </button>
+          );
+        };
+
+        const GameCard = ({ game, onPick, roundKey }) => {
+          if (!game) return null;
+          const aWins = game.winner && game.winner.team === game.a.team;
+          const bWins = game.winner && game.winner.team === game.b.team;
+          return (
+            <div style={{ background: "#fff", borderRadius: 8, padding: 8, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", display: "flex", flexDirection: "column", gap: 4 }}>
+              <TeamBtn team={game.a} isWinner={aWins} onClick={() => onPick(game.a)} disabled={!game.a || !game.b} />
+              <TeamBtn team={game.b} isWinner={bWins} onClick={() => onPick(game.b)} disabled={!game.a || !game.b} />
+            </div>
+          );
+        };
+
+        return (
+          <div>
+            {/* Shared bracket banner */}
+            {bracket._isShared && (
+              <div style={{ padding: "12px 16px", background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)", borderRadius: 10, marginBottom: 16, color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 8 }}>
+                <div>
+                  <div style={{ fontWeight: 700, fontSize: 14 }}>
+                    {bracket._viewingName ? `${bracket._viewingName}'s Bracket` : "Shared Bracket"}
+                  </div>
+                  <div style={{ fontSize: 11, opacity: 0.8 }}>You're viewing someone else's picks</div>
+                </div>
+                <button onClick={loadMyBracket} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 12, background: "#fff", color: "#764ba2", border: "none", cursor: "pointer", fontWeight: 700 }}>
+                  Open My Bracket
+                </button>
+              </div>
+            )}
+
+            {/* Bracket Header */}
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12, flexWrap: "wrap", gap: 8 }}>
+              <div>
+                <div style={{ fontSize: 18, fontWeight: 700, color: "#1a1a2e" }}>
+                  {bracket._isShared ? (bracket._viewingName || "Shared") + "'s 2026 Bracket" : (userName ? `${userName}'s 2026 Bracket` : "My 2026 Bracket")}
+                </div>
+                <div style={{ fontSize: 12, color: "#888" }}>{totalPicks} of 63 picks made &middot; {bracket._isShared ? "View only" : "Click a team to advance them"}</div>
+              </div>
+              {!bracket._isShared && (
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                  <button onClick={copyShareLink} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 12, background: totalPicks > 0 ? "#0d6efd" : "#ccc", color: "#fff", border: "none", cursor: totalPicks > 0 ? "pointer" : "default", fontWeight: 600, position: "relative" }}>
+                    {showShareMsg ? "Link Copied!" : "Share Bracket"}
+                  </button>
+                  <button onClick={resetBracket} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 12, background: "#f8d7da", color: "#721c24", border: "none", cursor: "pointer", fontWeight: 600 }}>
+                    Reset
+                  </button>
+                </div>
+              )}
+            </div>
+
+            {/* Name input */}
+            {!bracket._isShared && (
+              <div style={{ marginBottom: 16 }}>
+                <input
+                  type="text"
+                  placeholder="Enter your name to personalize your bracket..."
+                  value={userName}
+                  onChange={(e) => setUserName(e.target.value)}
+                  style={{ width: "100%", maxWidth: 320, padding: "8px 12px", borderRadius: 8, border: "2px solid #e0e0e0", fontSize: 13, color: "#333", background: "#fff", outline: "none" }}
+                />
+              </div>
+            )}
+
+            {/* Progress bar */}
+            <div style={{ height: 6, background: "#e0e0e0", borderRadius: 3, marginBottom: 20, overflow: "hidden" }}>
+              <div style={{ height: "100%", width: `${(totalPicks / 63) * 100}%`, background: totalPicks === 63 ? "#198754" : "linear-gradient(90deg, #0d6efd, #6f42c1)", borderRadius: 3, transition: "width 0.3s" }} />
+            </div>
+
+            {/* Region brackets */}
+            {regions.map((reg, ri) => {
+              const regData = bracket[reg.name];
+              const regPicks = regData.R64.filter(g => g.winner).length
+                + regData.R32.filter(g => g && g.winner).length
+                + regData.S16.filter(g => g && g.winner).length
+                + (regData.E8[0] && regData.E8[0].winner ? 1 : 0);
+              return (
+                <div key={ri} style={{ marginBottom: 20, borderRadius: 12, overflow: "hidden", border: `2px solid ${regionColors[reg.name]}` }}>
+                  <div style={{ padding: "10px 14px", background: regionColors[reg.name], color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{reg.name} Region <span style={{ fontWeight: 400, opacity: 0.8 }}>({reg.site})</span></div>
+                    <div style={{ fontSize: 11, opacity: 0.8 }}>{regPicks}/15 picks</div>
+                  </div>
+                  <div style={{ padding: isMobile ? 8 : 12, background: regionBgs[reg.name] }}>
+                    {/* R64 */}
+                    <div style={{ marginBottom: 12 }}>
+                      <div style={{ fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", marginBottom: 6 }}>Round of 64</div>
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 6 }}>
+                        {regData.R64.map((game, gi) => (
+                          <GameCard key={gi} game={game} roundKey="R64" onPick={(team) => pickWinner(reg.name, "R64", gi, team)} />
+                        ))}
+                      </div>
+                    </div>
+                    {/* R32 */}
+                    {regData.R32.some(g => g && (g.a || g.b)) && (
+                      <div style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", marginBottom: 6 }}>Round of 32</div>
+                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 6 }}>
+                          {regData.R32.map((game, gi) => (
+                            <GameCard key={gi} game={game} roundKey="R32" onPick={(team) => pickWinner(reg.name, "R32", gi, team)} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* S16 */}
+                    {regData.S16.some(g => g && (g.a || g.b)) && (
+                      <div style={{ marginBottom: 12 }}>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", marginBottom: 6 }}>Sweet 16</div>
+                        <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 6 }}>
+                          {regData.S16.map((game, gi) => (
+                            <GameCard key={gi} game={game} roundKey="S16" onPick={(team) => pickWinner(reg.name, "S16", gi, team)} />
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    {/* E8 */}
+                    {regData.E8[0] && (regData.E8[0].a || regData.E8[0].b) && (
+                      <div>
+                        <div style={{ fontSize: 11, fontWeight: 700, color: "#888", textTransform: "uppercase", marginBottom: 6 }}>Elite 8 — Region Champion</div>
+                        <div style={{ maxWidth: 300 }}>
+                          <GameCard game={regData.E8[0]} roundKey="E8" onPick={(team) => pickWinner(reg.name, "E8", 0, team)} />
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Final Four */}
+            {bracket.FF.some(g => g && (g.a || g.b)) && (
+              <div style={{ marginBottom: 20, borderRadius: 12, overflow: "hidden", border: "2px solid #e94560" }}>
+                <div style={{ padding: "10px 14px", background: "linear-gradient(135deg, #e94560 0%, #6f42c1 100%)", color: "#fff", fontWeight: 700, fontSize: 14 }}>
+                  Final Four
+                </div>
+                <div style={{ padding: isMobile ? 8 : 12, background: "#fef3f5" }}>
+                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 6 }}>
+                    {bracket.FF.map((game, gi) => (
+                      <div key={gi}>
+                        <div style={{ fontSize: 10, color: "#888", marginBottom: 4, fontWeight: 600 }}>
+                          {gi === 0 ? "East / South" : "Midwest / West"}
+                        </div>
+                        <GameCard game={game} roundKey="FF" onPick={(team) => pickWinner(null, "FF", gi, team)} />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Championship */}
+            {bracket.CH[0] && (bracket.CH[0].a || bracket.CH[0].b) && (
+              <div style={{ marginBottom: 20, borderRadius: 12, overflow: "hidden", border: "3px solid #ffc107" }}>
+                <div style={{ padding: "12px 14px", background: "linear-gradient(135deg, #ffc107 0%, #ff8c00 100%)", color: "#1a1a2e", fontWeight: 800, fontSize: 16, textAlign: "center" }}>
+                  National Championship
+                </div>
+                <div style={{ padding: 16, background: "#fffdf0", display: "flex", justifyContent: "center" }}>
+                  <div style={{ maxWidth: 300, width: "100%" }}>
+                    <GameCard game={bracket.CH[0]} roundKey="CH" onPick={(team) => pickWinner(null, "CH", 0, team)} />
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Champion Display */}
+            {bracket.champion && (
+              <div style={{ textAlign: "center", padding: 24, background: "linear-gradient(135deg, #ffc107 0%, #ff8c00 50%, #ffc107 100%)", borderRadius: 16, marginBottom: 20 }}>
+                <div style={{ fontSize: 14, fontWeight: 600, color: "#5a4000", marginBottom: 4 }}>YOUR 2026 NATIONAL CHAMPION</div>
+                <div style={{ fontSize: 28, fontWeight: 800, color: "#1a1a2e" }}>
+                  ({bracket.champion.seed}) {bracket.champion.team}
+                </div>
+                <div style={{ marginTop: 8, fontSize: 12, color: "#5a4000" }}>Cut down the nets!</div>
+              </div>
+            )}
+
+            <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+              <strong>How it works:</strong> Click a team name to advance them to the next round. Your bracket auto-fills as you pick winners. Use the "2026 Picks" tab for data-driven upset suggestions. Reset anytime to start over.
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Footer */}
       <div style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid #e0e0e0", textAlign: "center" }}>
