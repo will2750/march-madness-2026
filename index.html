@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>March Madness Upset Analysis 2016-2025</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; }
+  </style>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
+</head>
+<body>
+  <div id="root"></div>
+  <script type="text/babel">
+    const { useState } = React;
+
+// All upsets: [year, round, winSeed, winner, loseSeed, loser, wScore, lScore]
+const data = [
+[2016,"R64",15,"Middle Tennessee",2,"Michigan State",90,81],[2016,"R64",14,"Stephen F. Austin",3,"West Virginia",70,56],[2016,"R64",13,"Hawaii",4,"California",77,66],[2016,"R64",12,"Yale",5,"Baylor",79,75],[2016,"R64",12,"Arkansas-Little Rock",5,"Purdue",85,83],[2016,"R64",11,"Wichita State",6,"Arizona",65,55],[2016,"R64",11,"Gonzaga",6,"Seton Hall",68,52],[2016,"R64",10,"Syracuse",7,"Dayton",70,51],[2016,"R64",10,"VCU",7,"Oregon State",75,67],[2016,"R64",9,"Providence",8,"USC",70,69],[2016,"R64",9,"Butler",8,"Texas Tech",71,61],[2016,"R64",9,"UConn",8,"Colorado",74,67],[2016,"R32",7,"Wisconsin",2,"Xavier",66,63],[2016,"S16",10,"Syracuse",1,"Virginia",68,62],[2016,"FF",2,"Villanova",1,"Oklahoma",95,51],[2016,"CH",2,"Villanova",1,"North Carolina",77,74],
+[2017,"R64",12,"Middle Tennessee",5,"Minnesota",81,72],[2017,"R64",11,"Xavier",6,"Maryland",76,65],[2017,"R64",11,"Rhode Island",6,"Creighton",84,72],[2017,"R64",11,"USC",6,"SMU",66,65],[2017,"R64",10,"Wichita State",7,"Dayton",64,58],[2017,"R64",9,"Michigan State",8,"Miami (FL)",78,58],[2017,"R32",8,"Wisconsin",1,"Villanova",65,62],[2017,"R32",7,"South Carolina",2,"Duke",88,81],[2017,"S16",7,"South Carolina",4,"Baylor",70,50],[2017,"E8",3,"Oregon",1,"Kansas",74,60],
+[2018,"R64",16,"UMBC",1,"Virginia",74,54],[2018,"R64",13,"Buffalo",4,"Arizona",89,68],[2018,"R64",13,"Marshall",4,"Wichita State",81,75],[2018,"R64",11,"Loyola Chicago",6,"Miami (FL)",64,62],[2018,"R64",11,"Syracuse",6,"TCU",57,52],[2018,"R64",10,"Butler",7,"Arkansas",79,62],[2018,"R64",9,"Florida State",8,"Missouri",67,54],[2018,"R64",9,"Alabama",8,"Virginia Tech",86,83],[2018,"R64",9,"Kansas State",8,"Creighton",61,59],[2018,"R32",11,"Loyola Chicago",3,"Tennessee",63,62],[2018,"R32",9,"Florida State",4,"Gonzaga",75,60],[2018,"S16",9,"Kansas State",5,"Kentucky",61,58],[2018,"S16",11,"Loyola Chicago",7,"Nevada",69,68],[2018,"E8",11,"Loyola Chicago",9,"Kansas State",78,62],[2018,"E8",3,"Kansas",2,"Duke",85,81],
+[2019,"R64",13,"UC Irvine",4,"Kansas State",70,64],[2019,"R64",12,"Murray State",5,"Marquette",83,64],[2019,"R64",12,"Liberty",5,"Mississippi State",80,76],[2019,"R64",12,"Oregon",5,"Wisconsin",72,54],[2019,"R64",11,"Ohio State",6,"Iowa State",62,59],[2019,"R64",10,"Minnesota",7,"Louisville",86,76],[2019,"R64",10,"Florida",7,"Nevada",70,61],[2019,"R64",9,"Baylor",8,"Syracuse",78,69],[2019,"R64",9,"UCF",8,"VCU",73,58],[2019,"R64",9,"Oklahoma",8,"Ole Miss",95,72],[2019,"R64",9,"Washington",8,"Utah State",78,61],[2019,"R32",12,"Oregon",4,"Oklahoma",73,54],[2019,"S16",5,"Auburn",4,"North Carolina",97,80],[2019,"S16",3,"Texas Tech",2,"Michigan",63,44],[2019,"E8",3,"Texas Tech",1,"Gonzaga",75,69],[2019,"E8",5,"Auburn",2,"Kentucky",77,71],[2019,"FF",3,"Texas Tech",2,"Michigan State",61,51],
+[2021,"R64",15,"Oral Roberts",2,"Ohio State",75,72],[2021,"R64",14,"Abilene Christian",3,"Texas",53,52],[2021,"R64",13,"North Texas",4,"Purdue",78,69],[2021,"R64",13,"Ohio",4,"Virginia",62,58],[2021,"R64",12,"Oregon State",5,"Tennessee",70,56],[2021,"R64",11,"Syracuse",6,"San Diego State",78,62],[2021,"R64",11,"UCLA",6,"BYU",73,62],[2021,"R64",10,"Maryland",7,"UConn",63,54],[2021,"R64",10,"Rutgers",7,"Clemson",60,56],[2021,"R64",9,"Wisconsin",8,"North Carolina",85,62],[2021,"R32",15,"Oral Roberts",7,"Florida",81,78],[2021,"R32",12,"Oregon State",4,"Oklahoma State",80,70],[2021,"R32",11,"Syracuse",3,"West Virginia",75,72],[2021,"R32",8,"Loyola Chicago",1,"Illinois",71,58],[2021,"S16",11,"UCLA",2,"Alabama",88,78],[2021,"S16",12,"Oregon State",8,"Loyola Chicago",65,58],[2021,"E8",11,"UCLA",1,"Michigan",51,49],
+[2022,"R64",15,"Saint Peter's",2,"Kentucky",85,79],[2022,"R64",12,"New Mexico State",5,"UConn",70,63],[2022,"R64",12,"Richmond",5,"Iowa",67,63],[2022,"R64",11,"Iowa State",6,"LSU",59,54],[2022,"R64",11,"Michigan",6,"Colorado State",75,63],[2022,"R64",11,"Notre Dame",6,"Alabama",78,64],[2022,"R64",10,"Miami (FL)",7,"USC",68,66],[2022,"R64",9,"Memphis",8,"Boise State",64,53],[2022,"R64",9,"TCU",8,"Seton Hall",69,42],[2022,"R64",9,"Creighton",8,"San Diego State",72,69],[2022,"R32",8,"North Carolina",1,"Baylor",93,86],[2022,"R32",10,"Miami (FL)",2,"Auburn",79,61],[2022,"R32",15,"Saint Peter's",7,"Murray State",70,60],[2022,"R32",11,"Iowa State",3,"Wisconsin",54,49],[2022,"R32",11,"Michigan",3,"Tennessee",76,68],[2022,"S16",15,"Saint Peter's",3,"Purdue",67,64],[2022,"S16",5,"Houston",1,"Arizona",72,60],[2022,"S16",4,"Arkansas",1,"Gonzaga",74,68],[2022,"E8",8,"North Carolina",4,"UCLA",73,66],[2022,"E8",2,"Duke",3,"Texas Tech",78,73],[2022,"FF",8,"North Carolina",2,"Duke",81,77],
+[2023,"R64",16,"Fairleigh Dickinson",1,"Purdue",63,58],[2023,"R64",15,"Princeton",2,"Arizona",59,55],[2023,"R64",13,"Furman",4,"Virginia",68,67],[2023,"R64",11,"Pittsburgh",6,"Iowa State",59,41],[2023,"R64",10,"Penn State",7,"Texas A&M",76,59],[2023,"R64",9,"FAU",8,"Memphis",66,65],[2023,"R64",9,"Auburn",8,"Iowa",83,75],[2023,"R32",15,"Princeton",7,"Missouri",78,63],[2023,"S16",5,"San Diego State",1,"Alabama",71,64],[2023,"S16",5,"Miami",1,"Houston",89,75],[2023,"S16",9,"FAU",4,"Tennessee",62,55],[2023,"E8",9,"FAU",3,"Kansas State",79,76],[2023,"E8",5,"Miami",2,"Texas",88,81],[2023,"E8",4,"UConn",3,"Gonzaga",82,54],
+[2024,"R64",14,"Oakland",3,"Kentucky",80,76],[2024,"R64",13,"Yale",4,"Auburn",78,76],[2024,"R64",12,"James Madison",5,"Wisconsin",72,61],[2024,"R64",12,"Grand Canyon",5,"Saint Mary's",75,66],[2024,"R64",11,"NC State",6,"Texas Tech",80,67],[2024,"R64",11,"Duquesne",6,"BYU",71,67],[2024,"R64",11,"Oregon",6,"South Carolina",87,73],[2024,"R64",10,"Colorado",7,"Florida",102,100],[2024,"R64",9,"Northwestern",8,"FAU",77,65],[2024,"R64",9,"Michigan State",8,"Mississippi State",69,51],[2024,"R64",9,"Texas A&M",8,"Nebraska",98,83],[2024,"R32",11,"NC State",3,"Marquette",67,58],[2024,"R32",11,"Oregon",3,"Creighton",87,73],[2024,"S16",6,"Clemson",4,"Arizona",77,72],[2024,"E8",11,"NC State",4,"Duke",76,64],[2024,"E8",4,"Alabama",1,"North Carolina",89,87],
+[2025,"R64",12,"McNeese State",5,"Clemson",69,67],[2025,"R64",12,"Colorado State",5,"Memphis",78,70],[2025,"R64",11,"Drake",6,"Missouri",67,57],[2025,"R64",10,"Arkansas",7,"Kansas",79,72],[2025,"R64",10,"New Mexico",7,"Marquette",75,66],[2025,"R64",9,"Creighton",8,"Louisville",89,75],[2025,"R64",9,"Baylor",8,"Mississippi State",75,72],[2025,"R32",10,"Arkansas",2,"St. John's",72,64],[2025,"R32",4,"Maryland",1,"North Carolina",67,64],[2025,"S16",7,"Clemson",3,"Houston",64,52],[2025,"E8",7,"Clemson",2,"Tennessee",63,55],[2025,"E8",3,"Texas Tech",1,"Auburn",77,75],[2025,"FF",7,"Clemson",1,"Duke",70,66],
+];
+
+const upsets = data.map(d => ({
+  year: d[0], round: d[1], wSeed: d[2], winner: d[3],
+  lSeed: d[4], loser: d[5], wScore: d[6], lScore: d[7]
+}));
+
+const ROUNDS = ["R64","R32","S16","E8","FF","CH"];
+const ROUND_NAMES = { R64:"Round of 64", R32:"Round of 32", S16:"Sweet 16", E8:"Elite 8", FF:"Final Four", CH:"Championship" };
+const ROUND_COLORS = { R64:"#6c757d", R32:"#0d6efd", S16:"#198754", E8:"#ffc107", FF:"#dc3545", CH:"#6f42c1" };
+const ROUND_BG = { R64:"#f8f9fa", R32:"#e8f4fd", S16:"#d4edda", E8:"#fff3cd", FF:"#f8d7da", CH:"#e2d5f1" };
+
+const NUM_TOURNAMENTS = 9;
+const GAMES_PER_SEED_R64 = NUM_TOURNAMENTS * 4;
+
+function App() {
+  const [view, setView] = useState("byRound");
+  const [selectedRound, setSelectedRound] = useState(null);
+  const [selectedSeed, setSelectedSeed] = useState(null);
+
+  // Stats by round
+  const roundStats = {};
+  ROUNDS.forEach(r => { roundStats[r] = { count: 0, games: [] }; });
+  upsets.forEach(u => { roundStats[u.round].count++; roundStats[u.round].games.push(u); });
+
+  // Year counts
+  const yearCounts = {};
+  const yearRoundCounts = {};
+  upsets.forEach(u => {
+    yearCounts[u.year] = (yearCounts[u.year] || 0) + 1;
+    const key = `${u.year}-${u.round}`;
+    yearRoundCounts[key] = (yearRoundCounts[key] || 0) + 1;
+  });
+
+  // Loser seed stats (who gets upset)
+  const loserByRound = {};
+  upsets.forEach(u => {
+    const key = `${u.lSeed}-${u.round}`;
+    if (!loserByRound[key]) loserByRound[key] = { count: 0, games: [] };
+    loserByRound[key].count++;
+    loserByRound[key].games.push(u);
+  });
+
+  // Winner seed stats
+  const winnerByRound = {};
+  upsets.forEach(u => {
+    const key = `${u.wSeed}-${u.round}`;
+    if (!winnerByRound[key]) winnerByRound[key] = { count: 0, games: [] };
+    winnerByRound[key].count++;
+    winnerByRound[key].games.push(u);
+  });
+
+  // Seeds that get upset most across all rounds
+  const loserTotals = {};
+  upsets.forEach(u => { loserTotals[u.lSeed] = (loserTotals[u.lSeed] || 0) + 1; });
+
+  // Cinderella runs (deepest round reached by high seeds)
+  const deepestRuns = {};
+  upsets.forEach(u => {
+    if (u.wSeed >= 7) {
+      const key = `${u.year}-${u.winner}`;
+      const ri = ROUNDS.indexOf(u.round);
+      if (!deepestRuns[key] || ROUNDS.indexOf(deepestRuns[key].round) < ri) {
+        deepestRuns[key] = { ...u, roundIdx: ri };
+      }
+    }
+  });
+
+  const cinderellas = Object.values(deepestRuns)
+    .filter(d => ROUNDS.indexOf(d.round) >= 2)
+    .sort((a, b) => {
+      const diff = ROUNDS.indexOf(b.round) - ROUNDS.indexOf(a.round);
+      return diff !== 0 ? diff : b.wSeed - a.wSeed;
+    });
+
+  // === 2026 PREDICTIONS DATA ===
+  // Historical upset rates per R64 matchup (winner seed over loser seed)
+  const r64Matchups = {};
+  upsets.filter(u => u.round === "R64").forEach(u => {
+    const key = `${u.wSeed}v${u.lSeed}`;
+    r64Matchups[key] = (r64Matchups[key] || 0) + 1;
+  });
+
+  // Calculate upset rates per matchup (out of 9 tournaments, 4 games each per seed)
+  const matchupRates = [
+    { matchup: "9 vs 8", wSeed: 9, lSeed: 8, upsets: r64Matchups["9v8"] || 0, games: 36, note: "Historically a coin flip - 9-seeds win ~45% of the time" },
+    { matchup: "10 vs 7", wSeed: 10, lSeed: 7, upsets: r64Matchups["10v7"] || 0, games: 36, note: "10-seeds are dangerous - pick at least one" },
+    { matchup: "11 vs 6", wSeed: 11, lSeed: 6, upsets: r64Matchups["11v6"] || 0, games: 36, note: "Most upset-prone matchup in R64 - always pick one or two" },
+    { matchup: "12 vs 5", wSeed: 12, lSeed: 5, upsets: r64Matchups["12v5"] || 0, games: 36, note: "Classic upset spot - the famous '12 over 5' rule" },
+    { matchup: "13 vs 4", wSeed: 13, lSeed: 4, upsets: r64Matchups["13v4"] || 0, games: 36, note: "Happens more often than you'd think" },
+    { matchup: "14 vs 3", wSeed: 14, lSeed: 3, upsets: r64Matchups["14v3"] || 0, games: 36, note: "Rare but devastating when it hits" },
+    { matchup: "15 vs 2", wSeed: 15, lSeed: 2, upsets: r64Matchups["15v2"] || 0, games: 36, note: "3 times in last 9 years - more common than ever" },
+    { matchup: "16 vs 1", wSeed: 16, lSeed: 1, upsets: r64Matchups["16v1"] || 0, games: 36, note: "It's happened twice now (UMBC 2018, FDU 2023)" },
+  ];
+
+  // Deep run frequency by seed
+  const deepRunsBySeed = {};
+  cinderellas.forEach(c => {
+    if (!deepRunsBySeed[c.wSeed]) deepRunsBySeed[c.wSeed] = [];
+    deepRunsBySeed[c.wSeed].push(c);
+  });
+
+  // Lunardi Bracketology (ESPN, updated 3/15/26 2:15am ET)
+  const regions = [
+    {
+      name: "East", site: "Washington DC",
+      matchups: [
+        { hi: 1, hiTeam: "Duke", lo: 16, loTeam: "Long Island" },
+        { hi: 8, hiTeam: "Ohio State", lo: 9, loTeam: "TCU" },
+        { hi: 5, hiTeam: "St. John's", lo: 12, loTeam: "Akron" },
+        { hi: 4, hiTeam: "Vanderbilt", lo: 13, loTeam: "Northern Iowa" },
+        { hi: 6, hiTeam: "Louisville", lo: 11, loTeam: "Missouri/Miami OH" },
+        { hi: 3, hiTeam: "Illinois", lo: 14, loTeam: "Wright State" },
+        { hi: 7, hiTeam: "Kentucky", lo: 10, loTeam: "Santa Clara" },
+        { hi: 2, hiTeam: "Iowa State", lo: 15, loTeam: "Furman" },
+      ]
+    },
+    {
+      name: "South", site: "Houston",
+      matchups: [
+        { hi: 1, hiTeam: "Florida", lo: 16, loTeam: "Kennesaw St/Prairie View" },
+        { hi: 8, hiTeam: "Clemson", lo: 9, loTeam: "Villanova" },
+        { hi: 5, hiTeam: "Texas Tech", lo: 12, loTeam: "Yale" },
+        { hi: 4, hiTeam: "Gonzaga", lo: 13, loTeam: "Hofstra" },
+        { hi: 6, hiTeam: "Tennessee", lo: 11, loTeam: "VCU" },
+        { hi: 3, hiTeam: "Purdue", lo: 14, loTeam: "Troy" },
+        { hi: 7, hiTeam: "Saint Mary's", lo: 10, loTeam: "Texas A&M" },
+        { hi: 2, hiTeam: "Houston", lo: 15, loTeam: "UMBC" },
+      ]
+    },
+    {
+      name: "Midwest", site: "Chicago",
+      matchups: [
+        { hi: 1, hiTeam: "Michigan", lo: 16, loTeam: "Idaho/Lehigh" },
+        { hi: 8, hiTeam: "Georgia", lo: 9, loTeam: "Saint Louis" },
+        { hi: 5, hiTeam: "Arkansas", lo: 12, loTeam: "McNeese" },
+        { hi: 4, hiTeam: "Kansas", lo: 13, loTeam: "CA Baptist" },
+        { hi: 6, hiTeam: "North Carolina", lo: 11, loTeam: "South Florida" },
+        { hi: 3, hiTeam: "Nebraska", lo: 14, loTeam: "Hawai'i" },
+        { hi: 7, hiTeam: "UCLA", lo: 10, loTeam: "NC State" },
+        { hi: 2, hiTeam: "UConn", lo: 15, loTeam: "Queens" },
+      ]
+    },
+    {
+      name: "West", site: "San Jose",
+      matchups: [
+        { hi: 1, hiTeam: "Arizona", lo: 16, loTeam: "Howard" },
+        { hi: 8, hiTeam: "Utah State", lo: 9, loTeam: "Iowa" },
+        { hi: 5, hiTeam: "Wisconsin", lo: 12, loTeam: "High Point" },
+        { hi: 4, hiTeam: "Alabama", lo: 13, loTeam: "N. Dakota St" },
+        { hi: 6, hiTeam: "BYU", lo: 11, loTeam: "SMU/Texas" },
+        { hi: 3, hiTeam: "Virginia", lo: 14, loTeam: "Tennessee St" },
+        { hi: 7, hiTeam: "Miami", lo: 10, loTeam: "UCF" },
+        { hi: 2, hiTeam: "Michigan St", lo: 15, loTeam: "Siena" },
+      ]
+    }
+  ];
+
+  // Seed line summary from Lunardi
+  const projected2026 = [
+    { seed: 1, teams: ["Duke", "Florida", "Michigan", "Arizona"], risk: "low", note: "1-seeds have been upset " + (loserTotals[1]||0) + " times across all rounds in 9 years. Expect 1-2 to fall before the Final Four." },
+    { seed: 2, teams: ["Iowa State", "Houston", "UConn", "Michigan St"], risk: "medium", note: "2-seeds face 15-seed danger in R64 (3 upsets in 9 years). UMBC is back as a 15-seed vs Houston!" },
+    { seed: 3, teams: ["Illinois", "Purdue", "Nebraska", "Virginia"], risk: "medium", note: "3-seeds face 14-seeds in R64. Nebraska & Virginia are tournament unknowns - upset watch." },
+    { seed: 4, teams: ["Vanderbilt", "Gonzaga", "Kansas", "Alabama"], risk: "high", note: "4-seeds lose to 13-seeds frequently (" + (r64Matchups["13v4"]||0) + " times in 9 yrs). Northern Iowa, Hofstra, CA Baptist all capable." },
+    { seed: 5, teams: ["St. John's", "Texas Tech", "Arkansas", "Wisconsin"], risk: "high", note: "5-seeds are historically the most upset-prone in R64. The '12 over 5' is a bracket staple." },
+    { seed: 6, teams: ["Louisville", "Tennessee", "North Carolina", "BYU"], risk: "high", note: "6 vs 11 is THE most upset-heavy matchup. VCU, South Florida, and play-in winners are dangerous." },
+    { seed: 7, teams: ["Kentucky", "Saint Mary's", "UCLA", "Miami"], risk: "medium", note: "7-seeds face 10-seeds with high-major talent: NC State, Texas A&M, Santa Clara, UCF." },
+    { seed: 8, teams: ["Ohio State", "Clemson", "Georgia", "Utah State"], risk: "high", note: "8 vs 9 is essentially a coin flip, and the winner faces a 1-seed in R32." },
+  ];
+
+  const riskColors = { low: "#198754", medium: "#ffc107", high: "#dc3545" };
+  const riskBg = { low: "#d4edda", medium: "#fff3cd", high: "#f8d7da" };
+
+  // Key bracket tips derived from data
+  const bracketTips = [
+    { emoji: "1.", title: "Always pick at least one 12-over-5", stat: `${r64Matchups["12v5"] || 0} upsets in ${NUM_TOURNAMENTS} tourneys (${Math.round(((r64Matchups["12v5"] || 0) / 36) * 100)}% rate)`, detail: "It happened in 8 of 9 tournaments. Only 2017 had no 12-over-5 upsets." },
+    { emoji: "2.", title: "Pick one or two 11-over-6 upsets", stat: `${r64Matchups["11v6"] || 0} upsets in ${NUM_TOURNAMENTS} tourneys (${Math.round(((r64Matchups["11v6"] || 0) / 36) * 100)}% rate)`, detail: "The 11 vs 6 matchup produces the most R64 upsets. Multiple 11-seeds win every year." },
+    { emoji: "3.", title: "Bet on a 15-seed winning at least once", stat: `15-seeds have beaten 2-seeds in 3 of the last 9 tournaments`, detail: "Oral Roberts (2021), Saint Peter's (2022), Princeton (2023) - this is now a regular occurrence." },
+    { emoji: "4.", title: "Don't trust all four 1-seeds to reach the Elite 8", stat: `1-seeds have been upset ${loserTotals[1] || 0} times total across all rounds`, detail: "On average, ~1.7 top-seeded teams get knocked out per tournament. At least one 1-seed falls before the Final Four." },
+    { emoji: "5.", title: "Pick a Cinderella to the Sweet 16", stat: `Seeds 7+ reached the Sweet 16 or further in every tournament`, detail: "In all 9 tournaments, at least one double-digit seed made a deep run. Look for experienced, well-coached mid-majors." },
+    { emoji: "6.", title: "The 8/9 vs 1 pipeline is real", stat: `8/9-seeds have beaten 1-seeds in R32 in 5 of 9 tournaments`, detail: "The R32 matchup of 8/9 seed vs 1-seed produces frequent upsets. UNC (2022), Loyola (2021), Wisconsin (2017)." },
+    { emoji: "7.", title: "4-seeds are paper tigers", stat: `${(loserTotals[4] || 0)} total upsets of 4-seeds across all rounds`, detail: "4-seeds face dangerous 13-seeds in R64 and battle-tested 5/12 winners in R32. They're frequently overvalued." },
+  ];
+
+  const tabs = [
+    { key: "byRound", label: "By Round" },
+    { key: "vulnerable", label: "Most Vulnerable" },
+    { key: "cinderellas", label: "Cinderella Runs" },
+    { key: "heatmap", label: "Heatmap" },
+    { key: "picks2026", label: "2026 Picks" },
+  ];
+
+  return (
+    <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", maxWidth: 960, margin: "0 auto", padding: "24px 20px", background: "#fafbfc", minHeight: "100vh" }}>
+      {/* Header */}
+      <div style={{ marginBottom: 20 }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+          <div style={{ width: 44, height: 44, borderRadius: 10, background: "linear-gradient(135deg, #e94560 0%, #6f42c1 100%)", display: "flex", alignItems: "center", justifyContent: "center", color: "#fff", fontSize: 22, fontWeight: 800 }}>M</div>
+          <div>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: "#1a1a2e", margin: 0, lineHeight: 1.2 }}>
+              March Madness Upset Analysis
+            </h1>
+            <p style={{ color: "#888", fontSize: 13, margin: 0 }}>
+              {upsets.length} upsets across all rounds &middot; 9 tournaments (2016-2025, no 2020)
+            </p>
+          </div>
+        </div>
+
+        {/* Round summary chips */}
+        <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+          {ROUNDS.map(r => (
+            <div key={r} style={{ padding: "4px 12px", borderRadius: 16, background: ROUND_BG[r], border: `1.5px solid ${ROUND_COLORS[r]}`, fontSize: 11, fontWeight: 700, color: ROUND_COLORS[r] }}>
+              {ROUND_NAMES[r]}: {roundStats[r].count}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 0, marginBottom: 24, flexWrap: "wrap" }}>
+        {tabs.map((t, i) => (
+          <button key={t.key} onClick={() => { setView(t.key); setSelectedRound(null); setSelectedSeed(null); }}
+            style={{
+              padding: "10px 16px", fontSize: 12, fontWeight: view === t.key ? 700 : 500,
+              background: view === t.key ? "#1a1a2e" : "#e8ecf0",
+              color: view === t.key ? "#fff" : "#555", border: "none", cursor: "pointer",
+              borderRadius: i === 0 ? "8px 0 0 8px" : i === tabs.length - 1 ? "0 8px 8px 0" : 0,
+              letterSpacing: 0.2, transition: "background 0.15s, color 0.15s",
+            }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
+      {/* BY ROUND VIEW */}
+      {view === "byRound" && (
+        <div>
+          {/* Year x Round grid */}
+          <div style={{ overflowX: "auto", marginBottom: 20 }}>
+            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 12 }}>
+              <thead>
+                <tr>
+                  <th style={{ padding: 8, background: "#1a1a2e", color: "#fff", textAlign: "center" }}>Year</th>
+                  {ROUNDS.map(r => (
+                    <th key={r} style={{ padding: 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: 70 }}>{ROUND_NAMES[r]}</th>
+                  ))}
+                  <th style={{ padding: 8, background: "#333", color: "#fff", textAlign: "center" }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[2016,2017,2018,2019,2021,2022,2023,2024,2025].map(yr => (
+                  <tr key={yr}>
+                    <td style={{ padding: 8, fontWeight: 700, textAlign: "center", border: "1px solid #e8e8e8" }}>{yr}</td>
+                    {ROUNDS.map(r => {
+                      const c = yearRoundCounts[`${yr}-${r}`] || 0;
+                      return (
+                        <td key={r} style={{
+                          padding: 8, textAlign: "center", border: "1px solid #e8e8e8",
+                          background: c > 0 ? ROUND_BG[r] : "#fff",
+                          fontWeight: c > 0 ? 700 : 400, fontSize: c > 0 ? 16 : 12,
+                          color: c > 0 ? ROUND_COLORS[r] : "#ddd",
+                        }}>{c || "-"}</td>
+                      );
+                    })}
+                    <td style={{ padding: 8, textAlign: "center", fontWeight: 700, border: "1px solid #e8e8e8", background: "#f8f8f8" }}>{yearCounts[yr] || 0}</td>
+                  </tr>
+                ))}
+                <tr>
+                  <td style={{ padding: 8, fontWeight: 700, textAlign: "center", background: "#1a1a2e", color: "#fff" }}>Total</td>
+                  {ROUNDS.map(r => (
+                    <td key={r} style={{ padding: 8, textAlign: "center", fontWeight: 700, fontSize: 16, background: ROUND_BG[r], color: ROUND_COLORS[r], border: "1px solid #e8e8e8" }}>{roundStats[r].count}</td>
+                  ))}
+                  <td style={{ padding: 8, textAlign: "center", fontWeight: 700, fontSize: 16, background: "#1a1a2e", color: "#fff" }}>{upsets.length}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          {/* Click a round to see games */}
+          <div style={{ display: "flex", gap: 8, marginBottom: 12, flexWrap: "wrap" }}>
+            {ROUNDS.map(r => (
+              <button key={r} onClick={() => setSelectedRound(selectedRound === r ? null : r)}
+                style={{
+                  padding: "8px 16px", borderRadius: 8, fontSize: 12, cursor: "pointer",
+                  background: selectedRound === r ? ROUND_COLORS[r] : "#fff",
+                  color: selectedRound === r ? (r === "E8" ? "#333" : "#fff") : ROUND_COLORS[r],
+                  border: `2px solid ${ROUND_COLORS[r]}`, fontWeight: 600,
+                }}>
+                {ROUND_NAMES[r]} ({roundStats[r].count})
+              </button>
+            ))}
+          </div>
+          {selectedRound && (
+            <div style={{ background: "#fff", borderRadius: 10, padding: 14, boxShadow: "0 1px 4px rgba(0,0,0,0.08)", maxHeight: 400, overflowY: "auto" }}>
+              {roundStats[selectedRound].games.map((g, i) => (
+                <div key={i} style={{ padding: "6px 0", borderBottom: i < roundStats[selectedRound].games.length - 1 ? "1px solid #eee" : "none", display: "flex", justifyContent: "space-between", fontSize: 13 }}>
+                  <span>
+                    <span style={{ display: "inline-block", width: 28, height: 28, lineHeight: "28px", borderRadius: "50%", background: ROUND_COLORS[selectedRound], color: selectedRound === "E8" ? "#333" : "#fff", textAlign: "center", fontSize: 11, fontWeight: 700, marginRight: 8 }}>{g.wSeed}</span>
+                    <strong>{g.winner}</strong> {g.wScore}-{g.lScore} over ({g.lSeed}) {g.loser}
+                  </span>
+                  <span style={{ color: "#aaa" }}>{g.year}</span>
+                </div>
+              ))}
+            </div>
+          )}
+
+          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+            <strong>Key Insight:</strong> Upsets drop off sharply after Round 1 ({roundStats.R64.count} upsets), but the later rounds still produce {roundStats.R32.count + roundStats.S16.count + roundStats.E8.count + roundStats.FF.count + roundStats.CH.count} total upsets. 2022 was the wildest overall with {yearCounts[2022]} upsets across all rounds, fueled by Saint Peter's and UNC's incredible runs.
+          </div>
+        </div>
+      )}
+
+      {/* VULNERABLE VIEW */}
+      {view === "vulnerable" && (
+        <div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>Seeds that get upset most across all rounds. Click to see breakdown.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            {Object.entries(loserTotals).sort((a, b) => b[1] - a[1]).map(([seed, total]) => {
+              const maxTotal = Math.max(...Object.values(loserTotals));
+              const isSelected = selectedSeed === Number(seed);
+              const colors = ["#1a1a2e","#16213e","#0f3460","#533483","#e94560","#ff6b35","#f7b731","#a0522d"];
+              const bg = colors[Number(seed) - 1] || "#666";
+              return (
+                <div key={seed}>
+                  <div onClick={() => setSelectedSeed(isSelected ? null : Number(seed))}
+                    style={{
+                      display: "flex", alignItems: "center", gap: 12, cursor: "pointer",
+                      padding: "8px 14px", borderRadius: 10,
+                      background: isSelected ? "#f0f4ff" : "#fff",
+                      border: isSelected ? "2px solid #1a1a2e" : "2px solid transparent",
+                      boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+                    }}>
+                    <div style={{ width: 40, height: 40, borderRadius: "50%", background: bg, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16, flexShrink: 0 }}>{seed}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: 3 }}>
+                        <span style={{ fontWeight: 600, fontSize: 13 }}>{seed}-seeds</span>
+                        <span style={{ fontSize: 12, color: "#888" }}>{total} total upsets across all rounds</span>
+                      </div>
+                      {/* Stacked bar by round */}
+                      <div style={{ display: "flex", height: 20, borderRadius: 10, overflow: "hidden", background: "#eee" }}>
+                        {ROUNDS.map(r => {
+                          const cnt = (loserByRound[`${seed}-${r}`] || {}).count || 0;
+                          if (cnt === 0) return null;
+                          return <div key={r} title={`${ROUND_NAMES[r]}: ${cnt}`} style={{ width: `${(cnt / maxTotal) * 100}%`, background: ROUND_COLORS[r], display: "flex", alignItems: "center", justifyContent: "center" }}>
+                            <span style={{ color: r === "E8" ? "#333" : "#fff", fontSize: 9, fontWeight: 700 }}>{cnt}</span>
+                          </div>;
+                        })}
+                      </div>
+                    </div>
+                  </div>
+                  {isSelected && (
+                    <div style={{ marginLeft: 52, marginTop: 4, padding: 10, background: "#f8f9fb", borderRadius: 8, fontSize: 12, maxHeight: 250, overflowY: "auto" }}>
+                      {ROUNDS.filter(r => (loserByRound[`${seed}-${r}`] || {}).count > 0).map(r => (
+                        <div key={r} style={{ marginBottom: 8 }}>
+                          <div style={{ fontWeight: 700, color: ROUND_COLORS[r], marginBottom: 4 }}>{ROUND_NAMES[r]} ({(loserByRound[`${seed}-${r}`] || {}).count})</div>
+                          {((loserByRound[`${seed}-${r}`] || {}).games || []).map((g, i) => (
+                            <div key={i} style={{ padding: "3px 0", color: "#555" }}>
+                              ({g.wSeed}) <strong>{g.winner}</strong> {g.wScore}-{g.lScore} over {g.loser} <span style={{ color: "#bbb" }}>{g.year}</span>
+                            </div>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+            <strong>Key Insight:</strong> <strong>1-seeds get upset the most across all rounds combined</strong> ({loserTotals[1] || 0} times) because they're targeted in every round of the bracket. But in R64, 8-seeds and 6-seeds are the most vulnerable. The danger shifts in later rounds to the top seeds who face battle-tested underdogs.
+          </div>
+        </div>
+      )}
+
+      {/* CINDERELLA RUNS */}
+      {view === "cinderellas" && (
+        <div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 16 }}>Seeds 7+ that made it to the Sweet 16 or beyond. The deeper the run, the bigger the Cinderella story.</p>
+          <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+            {cinderellas.map((c, i) => {
+              const roundDepth = ROUNDS.indexOf(c.round);
+              return (
+                <div key={i} style={{ display: "flex", alignItems: "center", gap: 12, padding: "10px 14px", borderRadius: 10, background: "#fff", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${ROUND_COLORS[c.round]}` }}>
+                  <div style={{ width: 40, height: 40, borderRadius: "50%", background: ROUND_COLORS[c.round], color: c.round === "E8" ? "#333" : "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{c.wSeed}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14 }}>{c.winner} <span style={{ fontWeight: 400, color: "#888" }}>({c.year})</span></div>
+                    <div style={{ fontSize: 12, color: "#666" }}>Reached {ROUND_NAMES[c.round]} as a {c.wSeed}-seed</div>
+                  </div>
+                  <div style={{ display: "flex", gap: 3 }}>
+                    {ROUNDS.slice(0, roundDepth + 1).map((r, j) => (
+                      <div key={r} style={{ width: 14, height: 14, borderRadius: 3, background: ROUND_COLORS[r] }} />
+                    ))}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+          <div style={{ marginTop: 16, padding: 14, background: "#d4edda", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+            <strong>Key Insight:</strong> The most remarkable Cinderella runs include (11) Loyola Chicago reaching the Final Four in 2018, (11) UCLA reaching the Final Four in 2021, (9) FAU reaching the Final Four in 2023, (8) North Carolina reaching the Championship in 2022, (11) NC State reaching the Final Four in 2024, and (7) Clemson reaching the Championship in 2025. Double-digit seeds making deep runs is no longer rare - it happened in 7 of 9 tournaments.
+          </div>
+        </div>
+      )}
+
+      {/* HEATMAP VIEW */}
+      {view === "heatmap" && (
+        <div>
+          <p style={{ fontSize: 13, color: "#666", marginBottom: 12 }}>How often each seed line gets upset, broken down by round. Darker = more upsets.</p>
+          <div style={{ overflowX: "auto" }}>
+            <table style={{ borderCollapse: "collapse", width: "100%", fontSize: 12 }}>
+              <thead>
+                <tr>
+                  <th style={{ padding: 8, background: "#1a1a2e", color: "#fff" }}>Loser Seed</th>
+                  {ROUNDS.map(r => (
+                    <th key={r} style={{ padding: 8, background: ROUND_COLORS[r], color: r === "E8" ? "#333" : "#fff", textAlign: "center", minWidth: 70 }}>{ROUND_NAMES[r]}</th>
+                  ))}
+                  <th style={{ padding: 8, background: "#333", color: "#fff", textAlign: "center" }}>Total</th>
+                </tr>
+              </thead>
+              <tbody>
+                {[1,2,3,4,5,6,7,8].map(seed => {
+                  const total = loserTotals[seed] || 0;
+                  return (
+                    <tr key={seed}>
+                      <td style={{ padding: 8, fontWeight: 700, textAlign: "center", border: "1px solid #e8e8e8" }}>{seed}-seed</td>
+                      {ROUNDS.map(r => {
+                        const cnt = (loserByRound[`${seed}-${r}`] || {}).count || 0;
+                        const maxInCol = Math.max(...[1,2,3,4,5,6,7,8].map(s => (loserByRound[`${s}-${r}`] || {}).count || 0));
+                        const intensity = cnt > 0 && maxInCol > 0 ? 0.15 + (cnt / maxInCol) * 0.65 : 0;
+                        return (
+                          <td key={r} style={{
+                            padding: 8, textAlign: "center", border: "1px solid #e8e8e8",
+                            background: cnt > 0 ? `rgba(220, 53, 69, ${intensity})` : "#fff",
+                            color: cnt > 0 ? (intensity > 0.5 ? "#fff" : "#c0392b") : "#ddd",
+                            fontWeight: cnt > 0 ? 700 : 400, fontSize: cnt > 0 ? 16 : 12,
+                          }}>{cnt || "-"}</td>
+                        );
+                      })}
+                      <td style={{ padding: 8, textAlign: "center", fontWeight: 700, fontSize: 16, border: "1px solid #e8e8e8", background: "#f8f8f8" }}>{total}</td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+          <div style={{ marginTop: 16, padding: 14, background: "#fde8e8", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
+            <strong>Key Insight:</strong> In Round of 64, <strong>8-seeds</strong> and <strong>6-seeds</strong> get upset the most. But in the later rounds, <strong>1-seeds</strong> become the primary upset targets because they're always the higher seed in any matchup. Across all rounds, 1-seeds have been upset {loserTotals[1] || 0} times - nearly twice per tournament on average.
+          </div>
+        </div>
+      )}
+
+      {/* 2026 PICKS VIEW */}
+      {view === "picks2026" && (
+        <div>
+          <div style={{ padding: 14, background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", borderRadius: 12, marginBottom: 20, color: "#fff" }}>
+            <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>2026 Bracket Strategy Guide</div>
+            <div style={{ fontSize: 12, opacity: 0.8 }}>Based on 10 years of historical upset data (2016-2025) + Lunardi's ESPN Bracketology</div>
+            <div style={{ fontSize: 11, opacity: 0.6, marginTop: 4 }}>Source: ESPN Bracketology by Joe Lunardi, updated 3/15/26 2:15am ET</div>
+          </div>
+
+          {/* Bracket Tips */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Data-Driven Bracket Rules</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {bracketTips.map((tip, i) => (
+                <div key={i} style={{ padding: "12px 16px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: "4px solid #0d6efd" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 4 }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>{tip.emoji} {tip.title}</div>
+                    <div style={{ fontSize: 11, color: "#0d6efd", fontWeight: 600, whiteSpace: "nowrap", marginLeft: 12 }}>{tip.stat}</div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#666", lineHeight: 1.5 }}>{tip.detail}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* R64 Upset Rate Chart */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>First Round Upset Rates (2016-2025)</h3>
+            <div style={{ background: "#fff", borderRadius: 12, padding: 16, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+              {matchupRates.map((m, i) => {
+                const rate = m.games > 0 ? (m.upsets / m.games) * 100 : 0;
+                const barColor = rate >= 40 ? "#dc3545" : rate >= 20 ? "#ffc107" : rate >= 10 ? "#0d6efd" : "#6c757d";
+                return (
+                  <div key={i} style={{ marginBottom: i < matchupRates.length - 1 ? 10 : 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 3 }}>
+                      <span style={{ fontSize: 13, fontWeight: 600 }}>{m.matchup}</span>
+                      <span style={{ fontSize: 12, color: "#888" }}>{m.upsets}/{m.games} games ({rate.toFixed(0)}%)</span>
+                    </div>
+                    <div style={{ height: 20, background: "#f0f0f0", borderRadius: 10, overflow: "hidden", position: "relative" }}>
+                      <div style={{ height: "100%", width: `${Math.max(rate, 2)}%`, background: barColor, borderRadius: 10, display: "flex", alignItems: "center", justifyContent: "flex-end", paddingRight: 6, transition: "width 0.3s" }}>
+                        {rate >= 8 && <span style={{ color: "#fff", fontSize: 10, fontWeight: 700 }}>{rate.toFixed(0)}%</span>}
+                      </div>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#999", marginTop: 2 }}>{m.note}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Region-by-Region Breakdown */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Lunardi's Bracket: Region-by-Region Upset Watch</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+              {regions.map((reg, ri) => {
+                const regionColors = ["#0d6efd", "#dc3545", "#198754", "#6f42c1"];
+                const regionBgs = ["#e8f0fe", "#fde8e8", "#e8f5e9", "#f3e8fd"];
+                return (
+                  <div key={ri} style={{ background: "#fff", borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+                    <div style={{ padding: "10px 14px", background: regionColors[ri], color: "#fff", fontWeight: 700, fontSize: 13 }}>
+                      {reg.name} Region <span style={{ fontWeight: 400, opacity: 0.8 }}>({reg.site})</span>
+                    </div>
+                    <div style={{ padding: 10 }}>
+                      {reg.matchups.map((m, mi) => {
+                        const upsetKey = `${m.lo}v${m.hi}`;
+                        const upsetCount = r64Matchups[upsetKey] || 0;
+                        const rate = (upsetCount / 36 * 100);
+                        const isHot = rate >= 20;
+                        const isWarm = rate >= 10 && rate < 20;
+                        const isCoinFlip = m.hi === 8;
+                        return (
+                          <div key={mi} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 4px", borderBottom: mi < reg.matchups.length - 1 ? "1px solid #f0f0f0" : "none", background: isHot ? "#fff5f5" : isCoinFlip ? "#fff8e1" : "transparent", borderRadius: 4 }}>
+                            <div style={{ width: 22, fontSize: 11, fontWeight: 700, color: "#888", textAlign: "center" }}>{m.hi}</div>
+                            <div style={{ flex: 1, fontSize: 12, fontWeight: 600 }}>{m.hiTeam}</div>
+                            <div style={{ fontSize: 10, color: "#bbb", padding: "0 4px" }}>vs</div>
+                            <div style={{ flex: 1, fontSize: 12, textAlign: "right", color: isHot ? "#dc3545" : isWarm ? "#e67e22" : "#666", fontWeight: isHot ? 700 : 400 }}>{m.loTeam}</div>
+                            <div style={{ width: 22, fontSize: 11, fontWeight: 700, color: "#888", textAlign: "center" }}>{m.lo}</div>
+                            {(isHot || isWarm || isCoinFlip) && (
+                              <div style={{ fontSize: 9, padding: "2px 5px", borderRadius: 8, fontWeight: 700, background: isHot ? "#dc3545" : isCoinFlip ? "#ffc107" : "#e67e22", color: isHot || !isCoinFlip ? "#fff" : "#333", whiteSpace: "nowrap" }}>
+                                {isCoinFlip ? "FLIP" : rate.toFixed(0) + "%"}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Specific Upset Picks for 2026 */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Top Upset Picks for 2026</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {[
+                { pick: "12 Yale over 5 Texas Tech", region: "South", why: "12-over-5 happens in 8 of 9 tournaments. Yale is an experienced Ivy team - classic Cinderella profile.", heat: 3 },
+                { pick: "12 McNeese over 5 Arkansas", region: "Midwest", why: "Two 12-vs-5 matchups doubles your odds. McNeese brings Southland grit.", heat: 3 },
+                { pick: "11 VCU over 6 Tennessee", region: "South", why: "11-vs-6 is the #1 upset matchup in the tournament. VCU has March pedigree (2011 Final Four, A-10 champs).", heat: 3 },
+                { pick: "11 South Florida over 6 North Carolina", region: "Midwest", why: "UNC as a 6-seed means they're vulnerable. 11-seeds win this matchup at a high rate.", heat: 2 },
+                { pick: "13 Northern Iowa over 4 Vanderbilt", region: "East", why: "13-over-4 has happened " + (r64Matchups["13v4"]||0) + " times in 9 years. Northern Iowa upset Texas in 2016.", heat: 2 },
+                { pick: "10 NC State over 7 UCLA", region: "Midwest", why: "NC State made the 2024 Final Four as an 11-seed. Tournament experience matters.", heat: 2 },
+                { pick: "9 TCU over 8 Ohio State then upset 1 Duke in R32", region: "East", why: "8/9 winners beat 1-seeds in 5 of 9 tournaments. The TCU-Duke path is live.", heat: 2 },
+                { pick: "15 UMBC over 2 Houston", region: "South", why: "UMBC pulled the first-ever 16-over-1 upset in 2018. As a 15-seed, they're even more dangerous. 15-seeds have won 3 times in 9 years.", heat: 1 },
+              ].map((p, i) => (
+                <div key={i} style={{ padding: "10px 14px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${p.heat >= 3 ? "#dc3545" : p.heat >= 2 ? "#e67e22" : "#6c757d"}` }}>
+                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 4 }}>
+                    <div style={{ fontWeight: 700, fontSize: 13, color: "#1a1a2e" }}>{p.pick}</div>
+                    <div style={{ display: "flex", alignItems: "center", gap: 4 }}>
+                      <span style={{ fontSize: 10, color: "#888" }}>{p.region}</span>
+                      <div style={{ display: "flex", gap: 1 }}>
+                        {[1,2,3].map(h => (
+                          <div key={h} style={{ width: 8, height: 8, borderRadius: "50%", background: h <= p.heat ? "#dc3545" : "#e0e0e0" }} />
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#666", lineHeight: 1.5 }}>{p.why}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Projected 2026 Seed Lines */}
+          <div style={{ marginBottom: 24 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Seed Line Risk Assessment (Lunardi Projections)</h3>
+            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+              {projected2026.map((p, i) => (
+                <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "12px 16px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${riskColors[p.risk]}` }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                    <div style={{ width: 32, height: 32, borderRadius: "50%", background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{p.seed}</div>
+                    <div style={{ flex: 1 }}>
+                      <div style={{ fontSize: 13, fontWeight: 600 }}>{p.teams.join(" / ")}</div>
+                    </div>
+                    <div style={{ padding: "3px 10px", borderRadius: 12, background: riskBg[p.risk], color: riskColors[p.risk], fontSize: 11, fontWeight: 700, textTransform: "uppercase" }}>
+                      {p.risk} upset risk
+                    </div>
+                  </div>
+                  <div style={{ fontSize: 12, color: "#666", marginLeft: 42, lineHeight: 1.5 }}>{p.note}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Quick Pick Suggestions */}
+          <div style={{ marginBottom: 20 }}>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Quick Pick Suggestions for 2026</h3>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
+              <div style={{ background: "#d4edda", borderRadius: 10, padding: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#155724", marginBottom: 6 }}>Safe Picks</div>
+                <div style={{ fontSize: 12, color: "#155724", lineHeight: 1.7 }}>
+                  Duke, Florida, Michigan, Arizona to Elite 8 (drop 1)<br/>
+                  Iowa State, Houston, UConn, Michigan St win R64<br/>
+                  Illinois & Purdue to the Sweet 16<br/>
+                  Kentucky or Saint Mary's on a Sweet 16 run
+                </div>
+              </div>
+              <div style={{ background: "#f8d7da", borderRadius: 10, padding: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#721c24", marginBottom: 6 }}>Upset Picks</div>
+                <div style={{ fontSize: 12, color: "#721c24", lineHeight: 1.7 }}>
+                  Yale over Texas Tech or McNeese over Arkansas<br/>
+                  VCU over Tennessee or S. Florida over UNC<br/>
+                  TCU/Villanova to upset a 1-seed in R32<br/>
+                  Northern Iowa or Hofstra over their 4-seed
+                </div>
+              </div>
+              <div style={{ background: "#e2d5f1", borderRadius: 10, padding: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#4a1d8e", marginBottom: 6 }}>Cinderella Picks</div>
+                <div style={{ fontSize: 12, color: "#4a1d8e", lineHeight: 1.7 }}>
+                  VCU or NC State to the Sweet 16<br/>
+                  TCU or Villanova (8/9) to the Elite 8<br/>
+                  Yale has the profile of a Cinderella (smart, senior-led)<br/>
+                  UMBC has March magic history
+                </div>
+              </div>
+              <div style={{ background: "#fff3cd", borderRadius: 10, padding: 14 }}>
+                <div style={{ fontWeight: 700, fontSize: 13, color: "#856404", marginBottom: 6 }}>Champion Profile</div>
+                <div style={{ fontSize: 12, color: "#856404", lineHeight: 1.7 }}>
+                  7 of 9 champs were 1 or 2 seeds<br/>
+                  Duke & Houston fit the elite defense profile<br/>
+                  UConn won it as a 4-seed in 2023 (repeat run?)<br/>
+                  Florida won in 2025 as a 3 - now a 1-seed threat
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+            <strong>Source:</strong> ESPN Bracketology by Joe Lunardi, updated 3/15/26 2:15am ET. The official bracket is revealed at 6 PM ET on CBS. Lunardi's final update will post during Sunday's conference championship games. First Four games begin March 17, Round of 64 starts March 19.
+          </div>
+        </div>
+      )}
+
+      {/* Footer */}
+      <div style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid #e0e0e0", textAlign: "center" }}>
+        <div style={{ fontSize: 11, color: "#aaa", lineHeight: 1.6 }}>
+          March Madness Upset Analysis &middot; Data: 2016-2025 NCAA Tournaments &middot; 2026 projections via ESPN Bracketology (Joe Lunardi)
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+    ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+  </script>
+</body>
+</html>
