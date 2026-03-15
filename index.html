@@ -144,72 +144,72 @@ function App() {
     deepRunsBySeed[c.wSeed].push(c);
   });
 
-  // Lunardi Bracketology (ESPN, updated 3/15/26 2:15am ET)
+  // Official 2026 NCAA Tournament Bracket (Selection Sunday 3/15/26)
   const regions = [
     {
       name: "East", site: "Washington DC",
       matchups: [
-        { hi: 1, hiTeam: "Duke", lo: 16, loTeam: "Long Island" },
-        { hi: 8, hiTeam: "Ohio State", lo: 9, loTeam: "TCU" },
-        { hi: 5, hiTeam: "St. John's", lo: 12, loTeam: "Akron" },
-        { hi: 4, hiTeam: "Vanderbilt", lo: 13, loTeam: "Northern Iowa" },
-        { hi: 6, hiTeam: "Louisville", lo: 11, loTeam: "Missouri/Miami OH" },
-        { hi: 3, hiTeam: "Illinois", lo: 14, loTeam: "Wright State" },
-        { hi: 7, hiTeam: "Kentucky", lo: 10, loTeam: "Santa Clara" },
-        { hi: 2, hiTeam: "Iowa State", lo: 15, loTeam: "Furman" },
+        { hi: 1, hiTeam: "Duke", lo: 16, loTeam: "Siena" },
+        { hi: 8, hiTeam: "Ohio St.", lo: 9, loTeam: "TCU" },
+        { hi: 5, hiTeam: "St. John's", lo: 12, loTeam: "Northern Iowa" },
+        { hi: 4, hiTeam: "Kansas", lo: 13, loTeam: "Cal Baptist" },
+        { hi: 6, hiTeam: "Louisville", lo: 11, loTeam: "South Florida" },
+        { hi: 3, hiTeam: "Michigan St.", lo: 14, loTeam: "North Dakota St." },
+        { hi: 7, hiTeam: "UCLA", lo: 10, loTeam: "UCF" },
+        { hi: 2, hiTeam: "UConn", lo: 15, loTeam: "Furman" },
       ]
     },
     {
       name: "South", site: "Houston",
       matchups: [
-        { hi: 1, hiTeam: "Florida", lo: 16, loTeam: "Kennesaw St/Prairie View" },
-        { hi: 8, hiTeam: "Clemson", lo: 9, loTeam: "Villanova" },
-        { hi: 5, hiTeam: "Texas Tech", lo: 12, loTeam: "Yale" },
-        { hi: 4, hiTeam: "Gonzaga", lo: 13, loTeam: "Hofstra" },
-        { hi: 6, hiTeam: "Tennessee", lo: 11, loTeam: "VCU" },
-        { hi: 3, hiTeam: "Purdue", lo: 14, loTeam: "Troy" },
+        { hi: 1, hiTeam: "Florida", lo: 16, loTeam: "Prairie View/Lehigh" },
+        { hi: 8, hiTeam: "Clemson", lo: 9, loTeam: "Iowa" },
+        { hi: 5, hiTeam: "Vanderbilt", lo: 12, loTeam: "McNeese" },
+        { hi: 4, hiTeam: "Nebraska", lo: 13, loTeam: "Troy" },
+        { hi: 6, hiTeam: "North Carolina", lo: 11, loTeam: "VCU" },
+        { hi: 3, hiTeam: "Illinois", lo: 14, loTeam: "Penn" },
         { hi: 7, hiTeam: "Saint Mary's", lo: 10, loTeam: "Texas A&M" },
-        { hi: 2, hiTeam: "Houston", lo: 15, loTeam: "UMBC" },
+        { hi: 2, hiTeam: "Houston", lo: 15, loTeam: "Idaho" },
       ]
     },
     {
       name: "Midwest", site: "Chicago",
       matchups: [
-        { hi: 1, hiTeam: "Michigan", lo: 16, loTeam: "Idaho/Lehigh" },
+        { hi: 1, hiTeam: "Michigan", lo: 16, loTeam: "UMBC/Howard" },
         { hi: 8, hiTeam: "Georgia", lo: 9, loTeam: "Saint Louis" },
-        { hi: 5, hiTeam: "Arkansas", lo: 12, loTeam: "McNeese" },
-        { hi: 4, hiTeam: "Kansas", lo: 13, loTeam: "CA Baptist" },
-        { hi: 6, hiTeam: "North Carolina", lo: 11, loTeam: "South Florida" },
-        { hi: 3, hiTeam: "Nebraska", lo: 14, loTeam: "Hawai'i" },
-        { hi: 7, hiTeam: "UCLA", lo: 10, loTeam: "NC State" },
-        { hi: 2, hiTeam: "UConn", lo: 15, loTeam: "Queens" },
+        { hi: 5, hiTeam: "Texas Tech", lo: 12, loTeam: "Akron" },
+        { hi: 4, hiTeam: "Alabama", lo: 13, loTeam: "Hofstra" },
+        { hi: 6, hiTeam: "Tennessee", lo: 11, loTeam: "Miami (OH)/SMU" },
+        { hi: 3, hiTeam: "Virginia", lo: 14, loTeam: "Wright St." },
+        { hi: 7, hiTeam: "Kentucky", lo: 10, loTeam: "Santa Clara" },
+        { hi: 2, hiTeam: "Iowa St.", lo: 15, loTeam: "Tennessee St." },
       ]
     },
     {
       name: "West", site: "San Jose",
       matchups: [
-        { hi: 1, hiTeam: "Arizona", lo: 16, loTeam: "Howard" },
-        { hi: 8, hiTeam: "Utah State", lo: 9, loTeam: "Iowa" },
+        { hi: 1, hiTeam: "Arizona", lo: 16, loTeam: "Long Island" },
+        { hi: 8, hiTeam: "Villanova", lo: 9, loTeam: "Utah St." },
         { hi: 5, hiTeam: "Wisconsin", lo: 12, loTeam: "High Point" },
-        { hi: 4, hiTeam: "Alabama", lo: 13, loTeam: "N. Dakota St" },
-        { hi: 6, hiTeam: "BYU", lo: 11, loTeam: "SMU/Texas" },
-        { hi: 3, hiTeam: "Virginia", lo: 14, loTeam: "Tennessee St" },
-        { hi: 7, hiTeam: "Miami", lo: 10, loTeam: "UCF" },
-        { hi: 2, hiTeam: "Michigan St", lo: 15, loTeam: "Siena" },
+        { hi: 4, hiTeam: "Arkansas", lo: 13, loTeam: "Hawaii" },
+        { hi: 6, hiTeam: "BYU", lo: 11, loTeam: "Texas/NC State" },
+        { hi: 3, hiTeam: "Gonzaga", lo: 14, loTeam: "Kennesaw St." },
+        { hi: 7, hiTeam: "Miami (FL)", lo: 10, loTeam: "Missouri" },
+        { hi: 2, hiTeam: "Purdue", lo: 15, loTeam: "Queens (N.C.)" },
       ]
     }
   ];
 
-  // Seed line summary from Lunardi
+  // Seed line summary from official bracket
   const projected2026 = [
-    { seed: 1, teams: ["Duke", "Florida", "Michigan", "Arizona"], risk: "low", note: "1-seeds have been upset " + (loserTotals[1]||0) + " times across all rounds in 9 years. Expect 1-2 to fall before the Final Four." },
-    { seed: 2, teams: ["Iowa State", "Houston", "UConn", "Michigan St"], risk: "medium", note: "2-seeds face 15-seed danger in R64 (3 upsets in 9 years). UMBC is back as a 15-seed vs Houston!" },
-    { seed: 3, teams: ["Illinois", "Purdue", "Nebraska", "Virginia"], risk: "medium", note: "3-seeds face 14-seeds in R64. Nebraska & Virginia are tournament unknowns - upset watch." },
-    { seed: 4, teams: ["Vanderbilt", "Gonzaga", "Kansas", "Alabama"], risk: "high", note: "4-seeds lose to 13-seeds frequently (" + (r64Matchups["13v4"]||0) + " times in 9 yrs). Northern Iowa, Hofstra, CA Baptist all capable." },
-    { seed: 5, teams: ["St. John's", "Texas Tech", "Arkansas", "Wisconsin"], risk: "high", note: "5-seeds are historically the most upset-prone in R64. The '12 over 5' is a bracket staple." },
-    { seed: 6, teams: ["Louisville", "Tennessee", "North Carolina", "BYU"], risk: "high", note: "6 vs 11 is THE most upset-heavy matchup. VCU, South Florida, and play-in winners are dangerous." },
-    { seed: 7, teams: ["Kentucky", "Saint Mary's", "UCLA", "Miami"], risk: "medium", note: "7-seeds face 10-seeds with high-major talent: NC State, Texas A&M, Santa Clara, UCF." },
-    { seed: 8, teams: ["Ohio State", "Clemson", "Georgia", "Utah State"], risk: "high", note: "8 vs 9 is essentially a coin flip, and the winner faces a 1-seed in R32." },
+    { seed: 1, teams: ["Duke", "Florida", "Michigan", "Arizona"], risk: "low", note: "1-seeds have been upset " + (loserTotals[1]||0) + " times across all rounds in 9 years. Duke is the overall #1 seed. Expect 1-2 to fall before the Final Four." },
+    { seed: 2, teams: ["UConn", "Houston", "Iowa St.", "Purdue"], risk: "medium", note: "2-seeds face 15-seed danger in R64 (3 upsets in 9 years). Furman and Tennessee St. are capable mid-majors." },
+    { seed: 3, teams: ["Michigan St.", "Illinois", "Virginia", "Gonzaga"], risk: "medium", note: "3-seeds face 14-seeds in R64. North Dakota St., Penn, Wright St. are live underdogs. Virginia is vulnerable." },
+    { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "4-seeds lose to 13-seeds frequently (" + (r64Matchups["13v4"]||0) + " times in 9 yrs). Cal Baptist, Troy, Hofstra, Hawaii all capable." },
+    { seed: 5, teams: ["St. John's", "Vanderbilt", "Texas Tech", "Wisconsin"], risk: "high", note: "5-seeds are historically the most upset-prone in R64. The '12 over 5' is a bracket staple." },
+    { seed: 6, teams: ["Louisville", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "6 vs 11 is THE most upset-heavy matchup. VCU, South Florida, and First Four winners are dangerous." },
+    { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "7-seeds face 10-seeds with high-major talent: UCF, Texas A&M, Santa Clara, Missouri." },
+    { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is essentially a coin flip, and the winner faces a 1-seed in R32." },
   ];
 
   const riskColors = { low: "#198754", medium: "#ffc107", high: "#dc3545" };
@@ -227,7 +227,7 @@ function App() {
   ];
 
   // === INTERACTIVE BRACKET STATE ===
-  // Build a fresh empty bracket from Lunardi data
+  // Build a fresh empty bracket from official bracket data
   const buildFreshBracket = () => {
     const init = {};
     regions.forEach((reg, ri) => {
@@ -791,8 +791,8 @@ function App() {
         <div>
           <div style={{ padding: 14, background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 100%)", borderRadius: 12, marginBottom: 20, color: "#fff" }}>
             <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>2026 Bracket Strategy Guide</div>
-            <div style={{ fontSize: 12, opacity: 0.8 }}>Based on 10 years of historical upset data (2016-2025) + Lunardi's ESPN Bracketology</div>
-            <div style={{ fontSize: 11, opacity: 0.6, marginTop: 4 }}>Source: ESPN Bracketology by Joe Lunardi, updated 3/15/26 2:15am ET</div>
+            <div style={{ fontSize: 12, opacity: 0.8 }}>Based on 10 years of historical upset data (2016-2025) + Official 2026 NCAA Bracket</div>
+            <div style={{ fontSize: 11, opacity: 0.6, marginTop: 4 }}>Source: Official NCAA Tournament bracket, Selection Sunday 3/15/26</div>
           </div>
 
           {/* Bracket Tips */}
@@ -838,7 +838,7 @@ function App() {
 
           {/* Region-by-Region Breakdown */}
           <div style={{ marginBottom: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Lunardi's Bracket: Region-by-Region Upset Watch</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Official Bracket: Region-by-Region Upset Watch</h3>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 12 }}>
               {regions.map((reg, ri) => {
                 const regionColors = ["#0d6efd", "#dc3545", "#198754", "#6f42c1"];
@@ -883,14 +883,14 @@ function App() {
             <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Top Upset Picks for 2026</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { pick: "12 Yale over 5 Texas Tech", region: "South", why: "12-over-5 happens in 8 of 9 tournaments. Yale is an experienced Ivy team - classic Cinderella profile.", heat: 3 },
-                { pick: "12 McNeese over 5 Arkansas", region: "Midwest", why: "Two 12-vs-5 matchups doubles your odds. McNeese brings Southland grit.", heat: 3 },
-                { pick: "11 VCU over 6 Tennessee", region: "South", why: "11-vs-6 is the #1 upset matchup in the tournament. VCU has March pedigree (2011 Final Four, A-10 champs).", heat: 3 },
-                { pick: "11 South Florida over 6 North Carolina", region: "Midwest", why: "UNC as a 6-seed means they're vulnerable. 11-seeds win this matchup at a high rate.", heat: 2 },
-                { pick: "13 Northern Iowa over 4 Vanderbilt", region: "East", why: "13-over-4 has happened " + (r64Matchups["13v4"]||0) + " times in 9 years. Northern Iowa upset Texas in 2016.", heat: 2 },
-                { pick: "10 NC State over 7 UCLA", region: "Midwest", why: "NC State made the 2024 Final Four as an 11-seed. Tournament experience matters.", heat: 2 },
-                { pick: "9 TCU over 8 Ohio State then upset 1 Duke in R32", region: "East", why: "8/9 winners beat 1-seeds in 5 of 9 tournaments. The TCU-Duke path is live.", heat: 2 },
-                { pick: "15 UMBC over 2 Houston", region: "South", why: "UMBC pulled the first-ever 16-over-1 upset in 2018. As a 15-seed, they're even more dangerous. 15-seeds have won 3 times in 9 years.", heat: 1 },
+                { pick: "12 Northern Iowa over 5 St. John's", region: "East", why: "12-over-5 happens in 8 of 9 tournaments. Northern Iowa upset Texas in 2016. St. John's hasn't been in the tourney since 2019.", heat: 3 },
+                { pick: "12 McNeese over 5 Vanderbilt", region: "South", why: "Two 12-vs-5 matchups doubles your odds. McNeese won 30 games. Vanderbilt is a tournament newcomer.", heat: 3 },
+                { pick: "11 VCU over 6 North Carolina", region: "South", why: "11-vs-6 is the #1 upset matchup in the tournament. VCU has March pedigree (2011 Final Four, A-10 champs). UNC as a 6-seed is vulnerable.", heat: 3 },
+                { pick: "11 South Florida over 6 Louisville", region: "East", why: "11-seeds win the 6-vs-11 matchup half the time. South Florida brings AAC toughness.", heat: 2 },
+                { pick: "13 Hofstra over 4 Alabama", region: "Midwest", why: "13-over-4 has happened " + (r64Matchups["13v4"]||0) + " times in 9 years. Hofstra can shoot and Alabama is inconsistent.", heat: 2 },
+                { pick: "10 Santa Clara over 7 Kentucky", region: "Midwest", why: "10-seeds beat 7-seeds at a 36% clip. Santa Clara is a well-coached WCC team. Kentucky is beatable.", heat: 2 },
+                { pick: "9 TCU over 8 Ohio St. then upset 1 Duke in R32", region: "East", why: "8/9 winners beat 1-seeds in 5 of 9 tournaments. The TCU-Duke path is live.", heat: 2 },
+                { pick: "15 Furman over 2 UConn", region: "East", why: "15-seeds have won 3 times in 9 years (Oral Roberts '21, St. Peter's '22, Princeton '23). Furman upset Virginia as a 13-seed in 2023.", heat: 1 },
               ].map((p, i) => (
                 <div key={i} style={{ padding: "10px 14px", background: "#fff", borderRadius: 10, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${p.heat >= 3 ? "#dc3545" : p.heat >= 2 ? "#e67e22" : "#6c757d"}` }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", justifyContent: "space-between", marginBottom: 4, gap: isMobile ? 2 : 0 }}>
@@ -912,7 +912,7 @@ function App() {
 
           {/* Projected 2026 Seed Lines */}
           <div style={{ marginBottom: 24 }}>
-            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Seed Line Risk Assessment (Lunardi Projections)</h3>
+            <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Seed Line Risk Assessment (Official Bracket)</h3>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {projected2026.map((p, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, padding: "12px 16px", boxShadow: "0 1px 3px rgba(0,0,0,0.06)", borderLeft: `4px solid ${riskColors[p.risk]}` }}>
@@ -939,43 +939,43 @@ function App() {
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#155724", marginBottom: 6 }}>Safe Picks</div>
                 <div style={{ fontSize: 12, color: "#155724", lineHeight: 1.7 }}>
                   Duke, Florida, Michigan, Arizona to Elite 8 (drop 1)<br/>
-                  Iowa State, Houston, UConn, Michigan St win R64<br/>
-                  Illinois & Purdue to the Sweet 16<br/>
+                  UConn, Houston, Iowa St., Purdue win R64<br/>
+                  Michigan St. & Illinois to the Sweet 16<br/>
                   Kentucky or Saint Mary's on a Sweet 16 run
                 </div>
               </div>
               <div style={{ background: "#f8d7da", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#721c24", marginBottom: 6 }}>Upset Picks</div>
                 <div style={{ fontSize: 12, color: "#721c24", lineHeight: 1.7 }}>
-                  Yale over Texas Tech or McNeese over Arkansas<br/>
-                  VCU over Tennessee or S. Florida over UNC<br/>
-                  TCU/Villanova to upset a 1-seed in R32<br/>
-                  Northern Iowa or Hofstra over their 4-seed
+                  Northern Iowa over St. John's or McNeese over Vanderbilt<br/>
+                  VCU over North Carolina or S. Florida over Louisville<br/>
+                  TCU or Iowa to upset a 1-seed in R32<br/>
+                  Hofstra over Alabama or Cal Baptist over Kansas
                 </div>
               </div>
               <div style={{ background: "#e2d5f1", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#4a1d8e", marginBottom: 6 }}>Cinderella Picks</div>
                 <div style={{ fontSize: 12, color: "#4a1d8e", lineHeight: 1.7 }}>
-                  VCU or NC State to the Sweet 16<br/>
-                  TCU or Villanova (8/9) to the Elite 8<br/>
-                  Yale has the profile of a Cinderella (smart, senior-led)<br/>
-                  UMBC has March magic history
+                  VCU or UCF to the Sweet 16<br/>
+                  TCU or Iowa (8/9) to the Elite 8<br/>
+                  Northern Iowa has the Cinderella profile (experienced, mid-major)<br/>
+                  Furman has upset pedigree (beat Virginia in 2023)
                 </div>
               </div>
               <div style={{ background: "#fff3cd", borderRadius: 10, padding: 14 }}>
                 <div style={{ fontWeight: 700, fontSize: 13, color: "#856404", marginBottom: 6 }}>Champion Profile</div>
                 <div style={{ fontSize: 12, color: "#856404", lineHeight: 1.7 }}>
                   7 of 9 champs were 1 or 2 seeds<br/>
-                  Duke & Houston fit the elite defense profile<br/>
-                  UConn won it as a 4-seed in 2023 (repeat run?)<br/>
-                  Florida won in 2025 as a 3 - now a 1-seed threat
+                  Duke (overall #1) & Houston fit the elite defense profile<br/>
+                  UConn back as a 2-seed after winning it all in '23 & '24<br/>
+                  Florida is the defending champ, now a 1-seed threat
                 </div>
               </div>
             </div>
           </div>
 
           <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>Source:</strong> ESPN Bracketology by Joe Lunardi, updated 3/15/26 2:15am ET. The official bracket is revealed at 6 PM ET on CBS. Lunardi's final update will post during Sunday's conference championship games. First Four games begin March 17, Round of 64 starts March 19.
+            <strong>Source:</strong> Official 2026 NCAA Tournament bracket, released Selection Sunday 3/15/26 on CBS. First Four games: March 17-18. Round of 64: March 19-20. Final Four: April 4 at Lucas Oil Stadium, Indianapolis. Championship: April 6.
           </div>
         </div>
       )}
@@ -1184,7 +1184,7 @@ function App() {
       {/* Footer */}
       <div style={{ marginTop: 32, paddingTop: 16, borderTop: "1px solid #e0e0e0", textAlign: "center" }}>
         <div style={{ fontSize: 11, color: "#aaa", lineHeight: 1.6 }}>
-          March Madness Upset Analysis &middot; Data: 2016-2025 NCAA Tournaments &middot; 2026 projections via ESPN Bracketology (Joe Lunardi)
+          March Madness Upset Analysis &middot; Data: 2016-2025 NCAA Tournaments &middot; 2026 Official NCAA Tournament Bracket
         </div>
       </div>
     </div>
