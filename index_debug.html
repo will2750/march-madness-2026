@@ -8,13 +8,14 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #0f172a; color: #e2e8f0; }
   </style>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
-  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+  <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
   <script crossorigin src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.9/babel.min.js"></script>
 </head>
 <body>
   <div id="root"></div>
   <script type="text/babel">
+window.onerror = function(msg, url, line, col, err) { document.body.innerHTML = "<pre style=\"color:red;padding:20px\">" + msg + "\nLine: " + line + "\nCol: " + col + "\n" + (err && err.stack ? err.stack : "") + "</pre>"; };
     const { useState, useEffect } = React;
 
 // All upsets: [year, round, winSeed, winner, loseSeed, loser, wScore, lScore]
@@ -81,7 +82,7 @@ const scoreBracketCode = (code) => {
 const NUM_TOURNAMENTS = 9;
 const GAMES_PER_SEED_R64 = NUM_TOURNAMENTS * 4;
 
-function App() {
+export default function App() {
   const [view, setView] = useState("byRound");
   const [selectedRound, setSelectedRound] = useState(null);
   const [selectedSeed, setSelectedSeed] = useState(null);
@@ -612,26 +613,16 @@ function App() {
 
   const gamesPlayed = actualResultsCode.replace(/_/g, "").length;
 
-  const tabGroups = [
-    { label: "Historical Data", color: "#6c757d", tabs: [
-      { key: "byRound", label: "By Round" },
-      { key: "vulnerable", label: "Most Vulnerable" },
-      { key: "cinderellas", label: "Cinderellas" },
-      { key: "heatmap", label: "Heatmap" },
-    ]},
-    { label: "2026 Analysis", color: "#e94560", tabs: [
-      { key: "picks2026", label: "2026 Cheat Sheet" },
-      { key: "vulnerable2026", label: "Upset Targets" },
-      { key: "survivalOdds", label: "Survival Odds" },
-      { key: "injuryReport", label: "Injury Report" },
-      { key: "aiPredictions", label: "AI Bracket" },
-    ]},
-    { label: "Your Bracket", color: "#0d6efd", tabs: [
-      { key: "leaderboard", label: "Play the AI" },
-      { key: "bracket", label: "My Bracket" },
-    ]},
+  const tabs = [
+    { key: "byRound", label: "By Round" },
+    { key: "vulnerable", label: "Most Vulnerable" },
+    { key: "cinderellas", label: "Cinderella Runs" },
+    { key: "heatmap", label: "Heatmap" },
+    { key: "picks2026", label: "2026 Picks" },
+    { key: "aiPredictions", label: "AI Bracket" },
+    { key: "leaderboard", label: "Leaderboard" },
+    { key: "bracket", label: "My Bracket" },
   ];
-  const tabs = tabGroups.flatMap(g => g.tabs);
 
   return (
     <div style={{ fontFamily: "'Segoe UI', system-ui, -apple-system, sans-serif", maxWidth: 960, margin: "0 auto", padding: isMobile ? "16px 10px" : "24px 20px", background: "#fafbfc", minHeight: "100vh" }}>
@@ -663,32 +654,20 @@ function App() {
         </div>
       </div>
 
-      {/* Tabs — grouped */}
-      <div style={{ display: "flex", flexDirection: "column", gap: isMobile ? 6 : 8, marginBottom: 24 }}>
-        {tabGroups.map((group, gi) => {
-          const activeInGroup = group.tabs.some(t => t.key === view);
-          return (
-            <div key={gi}>
-              <div style={{ fontSize: 10, fontWeight: 700, textTransform: "uppercase", letterSpacing: 1, color: activeInGroup ? group.color : "#aaa", marginBottom: 4, paddingLeft: 2 }}>
-                {group.label}
-              </div>
-              <div style={{ display: "flex", gap: isMobile ? 4 : 0, flexWrap: "wrap" }}>
-                {group.tabs.map((t, i) => (
-                  <button key={t.key} onClick={() => { setView(t.key); setSelectedRound(null); setSelectedSeed(null); }}
-                    style={{
-                      padding: isMobile ? "7px 10px" : "8px 14px", fontSize: isMobile ? 11 : 12, fontWeight: view === t.key ? 700 : 500,
-                      background: view === t.key ? group.color : "#e8ecf0",
-                      color: view === t.key ? "#fff" : "#555", border: "none", cursor: "pointer",
-                      borderRadius: isMobile ? 6 : (i === 0 ? "8px 0 0 8px" : i === group.tabs.length - 1 ? "0 8px 8px 0" : 0),
-                      letterSpacing: 0.2, transition: "background 0.15s, color 0.15s",
-                    }}>
-                    {t.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-          );
-        })}
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: isMobile ? 4 : 0, marginBottom: 24, flexWrap: "wrap" }}>
+        {tabs.map((t, i) => (
+          <button key={t.key} onClick={() => { setView(t.key); setSelectedRound(null); setSelectedSeed(null); }}
+            style={{
+              padding: isMobile ? "8px 10px" : "10px 16px", fontSize: isMobile ? 11 : 12, fontWeight: view === t.key ? 700 : 500,
+              background: view === t.key ? "#1a1a2e" : "#e8ecf0",
+              color: view === t.key ? "#fff" : "#555", border: "none", cursor: "pointer",
+              borderRadius: isMobile ? 6 : (i === 0 ? "8px 0 0 8px" : i === tabs.length - 1 ? "0 8px 8px 0" : 0),
+              letterSpacing: 0.2, transition: "background 0.15s, color 0.15s",
+            }}>
+            {t.label}
+          </button>
+        ))}
       </div>
 
       {/* BY ROUND VIEW */}
@@ -827,359 +806,6 @@ function App() {
           </div>
           <div style={{ marginTop: 16, padding: 14, background: "#fff3cd", color: "#5a4b1a", borderRadius: 10, fontSize: 13, lineHeight: 1.6 }}>
             <strong>Key Insight:</strong> <strong>1-seeds get upset the most across all rounds combined</strong> ({loserTotals[1] || 0} times) because they're targeted in every round of the bracket. But in R64, 8-seeds and 6-seeds are the most vulnerable. The danger shifts in later rounds to the top seeds who face battle-tested underdogs.
-          </div>
-        </div>
-      )}
-
-      {/* 2026 UPSET TARGETS — Most Vulnerable Team Per Seed */}
-      {view === "vulnerable2026" && (
-        <div>
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>The most upset-prone team at each seed line based on KenPom rankings, injuries, off-court issues, and historical vulnerability. These are the teams to pick against in your bracket.</p>
-          </div>
-          <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-            {[
-              { seed: 1, team: "Duke (32-2)", region: "East", kenPom: 1, kenPomOff: 4, kenPomDef: 2, record: "32-2",
-                vulnerability: 62, reason: "INJURIES",
-                details: "Caleb Foster (broken foot, surgery) is effectively OUT for the tournament. Running a 7-man rotation with Cayden Boozer logging 37-40 min/game. Won ACC tourney but barely escaped FSU and Virginia. Fatigue is the X-factor in a 6-game tournament. Cameron Boozer is the best player alive but depth is dangerously thin.",
-                upsetBy: "TCU/Ohio St. (8/9 winner) in R32",
-                histRate: "1-seeds upset 5x in R32 in 9 years (from 8/9 winner pipeline)" },
-              { seed: 2, team: "UConn (29-5)", region: "East", kenPom: 12, kenPomOff: 30, kenPomDef: 11, record: "29-5",
-                vulnerability: 58, reason: "FORM + INJURY",
-                details: "Lost Big East final to St. John's. Silas Demary Jr. (10.9 PPG, 6.2 APG) sprained ankle in that game — expected to play but may be limited. KenPom #30 offense is the weakest among all 2-seeds. Entered the tournament on a down note with questions about their offensive ceiling.",
-                upsetBy: "Furman (15) in R64 or UCF (10) in R32",
-                histRate: "15-over-2 has hit in 3 of 9 tournaments (33% of years)" },
-              { seed: 3, team: "Gonzaga", region: "West", kenPom: 7, kenPomOff: 3, kenPomDef: 22, record: "27-7",
-                vulnerability: 65, reason: "KEY INJURY",
-                details: "Braden Huff (17.8 PPG, 5.6 RPG) has been ruled OUT for the first weekend — dislocated kneecap since Jan 15. Without their second-best scorer and top interior presence, Gonzaga's ceiling drops dramatically. Graham Ike has carried the load, but the margin for error is razor-thin. Sweet 16 return possible if they survive.",
-                upsetBy: "Kennesaw St. (14) in R64 or Wisconsin (5) in R32",
-                histRate: "14-over-3 has happened 3x in 9 years (SFA '16, Abilene '21, Oakland '24)" },
-              { seed: 4, team: "Alabama (23-9)", region: "Midwest", kenPom: 16, kenPomOff: 3, kenPomDef: 67, record: "23-9",
-                vulnerability: 82, reason: "ARREST + DEFENSE",
-                details: "BREAKING: Aden Holloway (16.8 PPG, 43.8% 3P, All-SEC Third Team) arrested on felony drug charges 3/16. Tournament status UNKNOWN. Even before the arrest, Alabama's defense ranks KenPom #67 — by far the worst among 4-seeds. High-variance team that lost in the SEC Tournament. Elite offense (#3) but catastrophic defense makes them upset bait.",
-                upsetBy: "Hofstra (13) in R64",
-                histRate: "13-over-4 happens ~once per tournament (22%)" },
-              { seed: 5, team: "Texas Tech (22-10)", region: "Midwest", kenPom: 20, kenPomOff: 12, kenPomDef: 33, record: "22-10",
-                vulnerability: 72, reason: "KEY INJURY",
-                details: "Lost JT Toppin for the season — defense COLLAPSED from KenPom #24 to #119 in adjusted efficiency without him. Christian Anderson (19.2 PPG, 43% 3P) carries the offense but cannot fix the defense alone. 22-10 record with 10 losses is the weakest among 5-seeds. Akron (29-5) is a dangerous opponent.",
-                upsetBy: "Akron (12) in R64",
-                histRate: "12-over-5 hits in 8 of 9 years (36% per game)" },
-              { seed: 6, team: "BYU", region: "West", kenPom: 25, kenPomOff: 15, kenPomDef: 40, record: "24-9",
-                vulnerability: 78, reason: "DOUBLE INJURY",
-                details: "Lost TWO starters to torn ACLs — Richie Saunders (all-conference sharpshooter) in mid-February AND Tyler Welling vs Wake Forest. Only AJ Dybantsa and Robert Wright III remain from their core. BYU is running on fumes against the First Four winner (Texas KenPom #37 or NC State KenPom #34), both of whom are battle-tested and hungry.",
-                upsetBy: "Texas/NC State (11) in R64",
-                histRate: "11-over-6 is the #1 upset matchup (50% in some years)" },
-              { seed: 7, team: "UCLA", region: "East", kenPom: 18, kenPomOff: 10, kenPomDef: 30, record: "23-10",
-                vulnerability: 55, reason: "INJURIES + FORM",
-                details: "Donovan Dent (calf strain) and Tyler Bilodeau both left the Big Ten semifinal vs Purdue injured. Both expected to play vs UCF but health is uncertain. UCLA lost to Purdue in the Big Ten semis and enters as a 7-seed with 10 losses — not where they expected to be. 10-over-7 hits at least once every tournament.",
-                upsetBy: "UCF (10) in R64",
-                histRate: "10-over-7 has happened in every tournament since 2016" },
-              { seed: 8, team: "Villanova", region: "West", kenPom: 33, kenPomOff: 28, kenPomDef: 38, record: "20-13",
-                vulnerability: 60, reason: "WEAK PROFILE",
-                details: "KenPom #33 is the weakest profile among all 8-seeds. 20-13 record with 13 losses is the most among any team seeded 1-8. Utah State (KenPom #32) is actually ranked higher. Villanova lacks a true star and their Big East record was mediocre. This is the definition of a coin-flip 8/9 game leaning toward the 9-seed.",
-                upsetBy: "Utah St. (9) in R64",
-                histRate: "9-over-8 is a coin flip (44% historically)" },
-            ].map((t, i) => {
-              const vulnColor = t.vulnerability >= 75 ? "#dc3545" : t.vulnerability >= 60 ? "#e67e22" : t.vulnerability >= 45 ? "#ffc107" : "#198754";
-              const vulnBg = t.vulnerability >= 75 ? "#fde8e8" : t.vulnerability >= 60 ? "#fff3e0" : t.vulnerability >= 45 ? "#fff8e1" : "#e8f5e9";
-              const vulnLabel = t.vulnerability >= 75 ? "CRITICAL" : t.vulnerability >= 60 ? "HIGH" : t.vulnerability >= 45 ? "ELEVATED" : "MODERATE";
-              return (
-                <div key={i} style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", overflow: "hidden", borderLeft: `5px solid ${vulnColor}` }}>
-                  <div style={{ padding: isMobile ? "12px 10px" : "14px 16px" }}>
-                    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 8 : 12, marginBottom: 10 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, flex: 1 }}>
-                        <div style={{ width: 44, height: 44, borderRadius: "50%", background: vulnColor, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, flexShrink: 0 }}>{t.seed}</div>
-                        <div>
-                          <div style={{ fontWeight: 800, fontSize: 15, color: "#1a1a2e" }}>{t.team}</div>
-                          <div style={{ fontSize: 11, color: "#888" }}>{t.region} Region &middot; {t.record}</div>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", gap: 6, alignItems: "center", flexWrap: "wrap" }}>
-                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: vulnBg, color: vulnColor, fontWeight: 700 }}>{vulnLabel} ({t.vulnerability}%)</span>
-                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: "#f0f0f0", color: "#555", fontWeight: 600 }}>{t.reason}</span>
-                      </div>
-                    </div>
-                    <div style={{ display: "flex", gap: isMobile ? 6 : 12, marginBottom: 10, flexWrap: "wrap" }}>
-                      <div style={{ fontSize: 11, padding: "4px 8px", borderRadius: 6, background: "#e8f4fd", color: "#0c5460" }}>KenPom: <strong>#{t.kenPom}</strong></div>
-                      <div style={{ fontSize: 11, padding: "4px 8px", borderRadius: 6, background: t.kenPomOff <= 15 ? "#d4edda" : t.kenPomOff <= 30 ? "#fff3cd" : "#f8d7da", color: t.kenPomOff <= 15 ? "#155724" : t.kenPomOff <= 30 ? "#856404" : "#721c24" }}>Off: <strong>#{t.kenPomOff}</strong></div>
-                      <div style={{ fontSize: 11, padding: "4px 8px", borderRadius: 6, background: t.kenPomDef <= 15 ? "#d4edda" : t.kenPomDef <= 30 ? "#fff3cd" : "#f8d7da", color: t.kenPomDef <= 15 ? "#155724" : t.kenPomDef <= 30 ? "#856404" : "#721c24" }}>Def: <strong>#{t.kenPomDef}</strong></div>
-                    </div>
-                    <div style={{ fontSize: 12, color: "#444", lineHeight: 1.6, marginBottom: 8 }}>{t.details}</div>
-                    <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 8 }}>
-                      <div style={{ flex: 1, fontSize: 11, padding: "6px 10px", borderRadius: 6, background: "#fde8e8", color: "#721c24" }}>
-                        <strong>Upset pick:</strong> {t.upsetBy}
-                      </div>
-                      <div style={{ flex: 1, fontSize: 11, padding: "6px 10px", borderRadius: 6, background: "#f8f9fa", color: "#555" }}>
-                        <strong>Historical rate:</strong> {t.histRate}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-          <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>How to read this:</strong> Vulnerability scores combine KenPom rank vs seed expectation, injury impact, recent form, and historical upset rates. A score above 75% means a team is in serious danger. Scores are relative — even a 50% score means meaningful upset risk. Data: KenPom rankings (3/15/26), injury reports (3/16/26), historical upset data (2016-2025).
-          </div>
-        </div>
-      )}
-
-      {/* SURVIVAL ODDS */}
-      {view === "survivalOdds" && (() => {
-        // Historical survival rates by seed through each round (from 2016-2025 data, 4 teams per seed per year, 9 years = 36 teams)
-        const survivalData = [
-          // === 1-SEEDS ===
-          { seed: 1, team: "Duke", region: "East", kenPom: 1, injuryFlag: "Caleb Foster OUT (broken foot)", survR64: 99, survR32: 85, survS16: 68, survE8: 50, survFF: 28, survCH: 15,
-            adj: "Running 7-man rotation without Foster. Fatigue risk compounds each round. Cameron Boozer is transcendent but depth is razor-thin." },
-          { seed: 1, team: "Florida", region: "South", kenPom: 5, injuryFlag: null, survR64: 99, survR32: 88, survS16: 72, survE8: 55, survFF: 32, survCH: 18,
-            adj: "Healthiest 1-seed. Walter Clayton Jr. and Alex Condon form an elite duo. No major concerns — slight edge over other 1s." },
-          { seed: 1, team: "Michigan", region: "Midwest", kenPom: 2, injuryFlag: "L.J. Cason OUT (torn ACL)", survR64: 99, survR32: 86, survS16: 70, survE8: 52, survFF: 30, survCH: 16,
-            adj: "Lost Cason but still KenPom #2. Loaded Midwest bracket (Alabama, Tennessee, Iowa St.) makes path harder." },
-          { seed: 1, team: "Arizona", region: "West", kenPom: 3, injuryFlag: null, survR64: 99, survR32: 90, survS16: 74, survE8: 58, survFF: 35, survCH: 20,
-            adj: "Easiest bracket path of any 1-seed. 32-2 record, Big 12 title, fully healthy. Best survival profile." },
-          // === 2-SEEDS ===
-          { seed: 2, team: "UConn", region: "East", kenPom: 12, injuryFlag: "Demary Jr. ankle (limited)", survR64: 91, survR32: 72, survS16: 50, survE8: 30, survFF: 14, survCH: 6,
-            adj: "Lost Big East final, Demary ankle. KenPom #30 offense is worst among 2-seeds. Weakest 2 in the field." },
-          { seed: 2, team: "Houston", region: "South", kenPom: 4, injuryFlag: null, survR64: 96, survR32: 82, survS16: 62, survE8: 42, survFF: 22, survCH: 12,
-            adj: "Elite defense, fully healthy. Houston's floor is very high. Tough path through Florida region." },
-          { seed: 2, team: "Iowa St.", region: "Midwest", kenPom: 6, injuryFlag: null, survR64: 96, survR32: 80, survS16: 58, survE8: 38, survFF: 20, survCH: 10,
-            adj: "Top-5 defense, battle-tested Big 12 schedule. Loaded Midwest region lowers deep-run odds." },
-          { seed: 2, team: "Purdue", region: "West", kenPom: 8, injuryFlag: null, survR64: 95, survR32: 78, survS16: 56, survE8: 36, survFF: 18, survCH: 9,
-            adj: "Solid but unspectacular. Queens (15) is a free pass but path gets hard fast vs Gonzaga or Wisconsin." },
-          // === 3-SEEDS ===
-          { seed: 3, team: "Michigan St.", region: "East", kenPom: 9, injuryFlag: null, survR64: 92, survR32: 70, survS16: 45, survE8: 25, survFF: 12, survCH: 5,
-            adj: "Tom Izzo in March. KenPom #9 with balanced offense and defense. N. Dakota St. (14) is manageable, but path runs through Duke/Kansas side." },
-          { seed: 3, team: "Illinois", region: "South", kenPom: 11, injuryFlag: null, survR64: 92, survR32: 68, survS16: 42, survE8: 22, survFF: 10, survCH: 4,
-            adj: "Solid Big Ten squad with tournament experience. Penn (14) is a winnable R64 but could face Houston or Saint Mary's in S16." },
-          { seed: 3, team: "Virginia", region: "Midwest", kenPom: 15, injuryFlag: null, survR64: 85, survR32: 62, survS16: 38, survE8: 20, survFF: 8, survCH: 3,
-            adj: "Most upset-prone team in March history (UMBC '18, Ohio '21, Furman '23). Profile says survive, history says danger." },
-          { seed: 3, team: "Gonzaga", region: "West", kenPom: 7, injuryFlag: "Braden Huff OUT (1st weekend)", survR64: 78, survR32: 52, survS16: 35, survE8: 18, survFF: 8, survCH: 3,
-            adj: "Huff OUT for first weekend tanks survival odds. If they survive to S16, Huff may return — odds jump." },
-          // === 4-SEEDS ===
-          { seed: 4, team: "Kansas", region: "East", kenPom: 14, injuryFlag: "Peterson health (fragile)", survR64: 82, survR32: 58, survS16: 35, survE8: 18, survFF: 8, survCH: 3,
-            adj: "Peterson's cramping history makes every game a coinflip. When healthy, elite. When not, they're a 6-seed." },
-          { seed: 4, team: "Nebraska", region: "South", kenPom: 17, injuryFlag: null, survR64: 85, survR32: 60, survS16: 32, survE8: 15, survFF: 6, survCH: 2,
-            adj: "First tournament appearance in years. KenPom #17 is respectable but no March pedigree. Troy (13) is beatable; deeper rounds are uncertain." },
-          { seed: 4, team: "Alabama", region: "Midwest", kenPom: 16, injuryFlag: "Holloway arrested (status unknown)", survR64: 55, survR32: 28, survS16: 12, survE8: 5, survFF: 2, survCH: 1,
-            adj: "Holloway arrest crushes survival odds. KenPom #67 defense was already catastrophic. Near-dead bracket entry." },
-          { seed: 4, team: "Arkansas", region: "West", kenPom: 19, injuryFlag: null, survR64: 84, survR32: 55, survS16: 28, survE8: 12, survFF: 5, survCH: 2,
-            adj: "Solid season under Calipari. Hawaii (13) is a manageable R64 draw. Path gets tough through Gonzaga/Wisconsin side of the West." },
-          // === 5-SEEDS ===
-          { seed: 5, team: "St. John's", region: "East", kenPom: 13, injuryFlag: null, survR64: 72, survR32: 42, survS16: 20, survE8: 8, survFF: 3, survCH: 1,
-            adj: "Beat UConn in Big East final — riding high. KenPom #13 is best among 5-seeds. Northern Iowa (12) is a dangerous first-round foe though." },
-          { seed: 5, team: "Vanderbilt", region: "South", kenPom: 21, injuryFlag: null, survR64: 68, survR32: 38, survS16: 16, survE8: 6, survFF: 2, survCH: 1,
-            adj: "Strong SEC season (26-8). McNeese (28-5, 12-seed) is a very live upset pick. If they survive R64, Nebraska or Troy awaits." },
-          { seed: 5, team: "Texas Tech", region: "Midwest", kenPom: 20, injuryFlag: "JT Toppin OUT (season)", survR64: 58, survR32: 28, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
-            adj: "Defense collapsed without Toppin (24th to 119th). Akron (29-5) is a nightmare first-round matchup." },
-          { seed: 5, team: "Wisconsin", region: "West", kenPom: 10, injuryFlag: null, survR64: 75, survR32: 52, survS16: 30, survE8: 15, survFF: 6, survCH: 2,
-            adj: "4 wins over KenPom top-10 teams (90+ each). High ceiling, inconsistent floor. Could beat anyone or lose early." },
-          // === 6-SEEDS ===
-          { seed: 6, team: "Louisville", region: "East", kenPom: 24, injuryFlag: "Mikel Brown Jr. (back, hopes to play)", survR64: 58, survR32: 28, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
-            adj: "Brown Jr. (18.2 PPG) missed ACC tourney with back injury. If he plays, Louisville is a solid 6. If not, South Florida (11) feasts." },
-          { seed: 6, team: "North Carolina", region: "South", kenPom: 22, injuryFlag: "Caleb Wilson OUT (broken thumb)", survR64: 52, survR32: 25, survS16: 10, survE8: 4, survFF: 1, survCH: 0,
-            adj: "Without Wilson (19.8 PPG), UNC is a shell. VCU won the A-10 title and has March DNA. Dangerous matchup." },
-          { seed: 6, team: "Tennessee", region: "Midwest", kenPom: 23, injuryFlag: null, survR64: 65, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1,
-            adj: "Experienced SEC squad. Miami (OH)/SMU from First Four is a manageable R64 draw. Potential R32 matchup with Virginia or Wright St." },
-          { seed: 6, team: "BYU", region: "West", kenPom: 25, injuryFlag: "Saunders + Welling OUT (torn ACLs)", survR64: 42, survR32: 18, survS16: 6, survE8: 2, survFF: 0, survCH: 0,
-            adj: "Two torn ACLs gutted this roster. Only Dybantsa remains. First Four winner (Texas/NC State) is very dangerous." },
-          // === 7-SEEDS ===
-          { seed: 7, team: "UCLA", region: "East", kenPom: 18, injuryFlag: "Dent (calf) + Bilodeau (injury)", survR64: 60, survR32: 30, survS16: 12, survE8: 4, survFF: 1, survCH: 0,
-            adj: "Two starters banged up from Big Ten semis. 10-over-7 hits every year. UCF is a tough draw for a hobbled UCLA." },
-          { seed: 7, team: "Saint Mary's", region: "South", kenPom: 26, injuryFlag: null, survR64: 65, survR32: 32, survS16: 14, survE8: 5, survFF: 2, survCH: 0,
-            adj: "11th-best 3P%, #1 FT% nationally, 7th-best scoring. 3-1 in R64 over last 4 appearances. Dangerous Cinderella potential." },
-          { seed: 7, team: "Kentucky", region: "Midwest", kenPom: 27, injuryFlag: null, survR64: 62, survR32: 30, survS16: 12, survE8: 4, survFF: 1, survCH: 0,
-            adj: "Upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022. Young roster, March pedigree, but inconsistent." },
-          { seed: 7, team: "Miami (FL)", region: "West", kenPom: 30, injuryFlag: null, survR64: 58, survR32: 25, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
-            adj: "Made the Final Four in 2023 as a 5-seed. Tournament experience but weaker roster this year. Missouri (10) is a tough draw." },
-          // === 8-SEEDS ===
-          { seed: 8, team: "Ohio St.", region: "East", kenPom: 28, injuryFlag: null, survR64: 50, survR32: 14, survS16: 4, survE8: 1, survFF: 0, survCH: 0,
-            adj: "Classic 8/9 coinflip vs TCU. Winner gets Duke. The 8/9-over-1 pipeline has hit in 5 of 9 years but Duke is still elite." },
-          { seed: 8, team: "Clemson", region: "South", kenPom: 29, injuryFlag: null, survR64: 52, survR32: 15, survS16: 5, survE8: 2, survFF: 1, survCH: 0,
-            adj: "Final Four last year as a 7-seed — March pedigree is real. Iowa (9) is a coinflip. If they win, they get Florida. Clemson knows how to win in March." },
-          { seed: 8, team: "Georgia", region: "Midwest", kenPom: 31, injuryFlag: null, survR64: 48, survR32: 12, survS16: 4, survE8: 1, survFF: 0, survCH: 0,
-            adj: "Weakish profile for an 8-seed. Saint Louis (9) is tough. Even if they win, Michigan (1) awaits. Low ceiling." },
-          { seed: 8, team: "Villanova", region: "West", kenPom: 33, injuryFlag: null, survR64: 44, survR32: 10, survS16: 3, survE8: 1, survFF: 0, survCH: 0,
-            adj: "Weakest 8-seed by KenPom. Utah St. is actually ranked higher. Even if they win, they face Arizona." },
-        ];
-
-        const roundKeys = ["survR64", "survR32", "survS16", "survE8", "survFF", "survCH"];
-        const roundLabels = ["R64", "R32", "S16", "E8", "FF", "CH"];
-        const roundColors = ["#6c757d", "#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1"];
-        const seedFilter = selectedSeed;
-        const filteredData = seedFilter ? survivalData.filter(t => t.seed === seedFilter) : survivalData;
-
-        return (
-          <div>
-            <div style={{ marginBottom: 16 }}>
-              <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
-                Estimated probability of each team surviving through each round, combining historical seed performance, KenPom rankings, injuries, and matchup difficulty. Watch the bars fade as the tournament gets harder.
-              </p>
-            </div>
-
-            {/* Seed filter */}
-            <div style={{ display: "flex", gap: 4, flexWrap: "wrap", marginBottom: 14 }}>
-              <button onClick={() => setSelectedSeed(null)} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: !seedFilter ? 700 : 500, background: !seedFilter ? "#e94560" : "#e8ecf0", color: !seedFilter ? "#fff" : "#555", border: "none", cursor: "pointer" }}>All Seeds</button>
-              {[1,2,3,4,5,6,7,8].map(s => (
-                <button key={s} onClick={() => setSelectedSeed(s)} style={{ padding: "6px 12px", borderRadius: 8, fontSize: 11, fontWeight: seedFilter === s ? 700 : 500, background: seedFilter === s ? "#e94560" : "#e8ecf0", color: seedFilter === s ? "#fff" : "#555", border: "none", cursor: "pointer" }}>#{s}</button>
-              ))}
-            </div>
-
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {filteredData.map((t, i) => {
-                const injColor = t.injuryFlag ? (t.survR64 < 60 ? "#dc3545" : "#e67e22") : "#198754";
-                return (
-                  <div key={i} style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", overflow: "hidden" }}>
-                    <div style={{ padding: isMobile ? "10px 10px 6px" : "12px 16px 8px" }}>
-                      {/* Header */}
-                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 8 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: "50%", background: "#1a1a2e", color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14, flexShrink: 0 }}>{t.seed}</div>
-                        <div style={{ flex: 1 }}>
-                          <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e" }}>{t.team}</div>
-                          <div style={{ fontSize: 10, color: "#888" }}>{t.region} &middot; KenPom #{t.kenPom}</div>
-                        </div>
-                        {t.injuryFlag && (
-                          <span style={{ fontSize: 9, padding: "3px 7px", borderRadius: 8, background: injColor === "#dc3545" ? "#fde8e8" : "#fff3e0", color: injColor, fontWeight: 700, maxWidth: isMobile ? 120 : 200, textAlign: "right" }}>{t.injuryFlag}</span>
-                        )}
-                        {!t.injuryFlag && (
-                          <span style={{ fontSize: 9, padding: "3px 7px", borderRadius: 8, background: "#d4edda", color: "#198754", fontWeight: 700 }}>HEALTHY</span>
-                        )}
-                      </div>
-
-                      {/* Survival bars */}
-                      <div style={{ display: "flex", gap: isMobile ? 2 : 4, alignItems: "flex-end", height: 60, marginBottom: 6 }}>
-                        {roundKeys.map((rk, ri) => {
-                          const pct = t[rk];
-                          const barH = Math.max(2, (pct / 100) * 56);
-                          return (
-                            <div key={rk} style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", gap: 2 }}>
-                              <div style={{ fontSize: 9, fontWeight: 700, color: pct > 50 ? "#333" : pct > 20 ? "#888" : "#ccc" }}>{pct}%</div>
-                              <div style={{ width: "100%", height: barH, borderRadius: 4, background: `linear-gradient(180deg, ${roundColors[ri]}, ${roundColors[ri]}88)`, transition: "height 0.3s" }} />
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      {/* Round labels */}
-                      <div style={{ display: "flex", gap: isMobile ? 2 : 4 }}>
-                        {roundLabels.map((rl, ri) => (
-                          <div key={rl} style={{ flex: 1, textAlign: "center", fontSize: 9, color: "#aaa", fontWeight: 600 }}>{rl}</div>
-                        ))}
-                      </div>
-
-                      {/* Analysis */}
-                      <div style={{ marginTop: 8, fontSize: 11, color: "#555", lineHeight: 1.5, padding: "6px 8px", background: "#f8f9fa", borderRadius: 6 }}>{t.adj}</div>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-
-            <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-              <strong>Methodology:</strong> Survival odds are computed from historical seed-line survival rates (2016-2025, 36 teams per seed), adjusted for each team's KenPom efficiency ranking, current injuries, recent form, and bracket path difficulty. Injured teams receive significant downgrades proportional to the player's impact. These are pre-tournament estimates — actual odds shift as games are played.
-            </div>
-          </div>
-        );
-      })()}
-
-      {/* INJURY REPORT */}
-      {view === "injuryReport" && (
-        <div>
-          <div style={{ marginBottom: 16 }}>
-            <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
-              Comprehensive injury and availability tracker for all tournament teams with significant health concerns. Impact ratings reflect each player's importance to their team's tournament chances.
-            </p>
-            <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Last updated: March 16, 2026</div>
-          </div>
-
-          {/* Critical / Out */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#dc3545" }} />
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#dc3545", margin: 0 }}>Out / Suspended</h3>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {[
-                { team: "Duke (1)", player: "Caleb Foster", injury: "Broken foot (surgery)", status: "OUT for tournament", impact: 95, details: "Had surgery on broken foot. Coach K says 'very minimal' chance of return even for Final Four. Duke's backup PG is unproven — Cayden Boozer forced to play 37-40 min/game. Team running 7-man rotation without him." },
-                { team: "Alabama (4)", player: "Aden Holloway", injury: "Felony drug arrest (3/16)", status: "STATUS UNKNOWN", impact: 98, details: "Arrested on felony charges — over a pound of marijuana found at his residence. 16.8 PPG, 43.8% 3P, All-SEC Third Team. Nate Oats has not commented. If suspended, Alabama loses their best perimeter shooter and 2nd-leading scorer. Tournament viability in serious doubt." },
-                { team: "Gonzaga (3)", player: "Braden Huff", injury: "Dislocated kneecap (Jan 15)", status: "OUT for 1st weekend", impact: 90, details: "Ruled out for R64 and R32 by coach Mark Few. 17.8 PPG, 5.6 RPG — second-best scorer and top interior presence. 'He is jogging and shooting' — possible Sweet 16 return if Gonzaga survives. Graham Ike carrying the load." },
-                { team: "BYU (6)", player: "Richie Saunders", injury: "Torn ACL (mid-February)", status: "OUT for season", impact: 88, details: "All-conference sharpshooter tore his ACL in mid-February. Combined with Welling's ACL tear, BYU has lost two starters. Only AJ Dybantsa and Robert Wright III remain from their core rotation." },
-                { team: "BYU (6)", player: "Tyler Welling", injury: "Torn ACL (vs Wake Forest)", status: "OUT for season", impact: 82, details: "Second torn ACL on the BYU roster. Welling was a key starter who went down vs Wake Forest. Two ACL losses makes BYU the most injury-devastated team in the tournament." },
-                { team: "North Carolina (6)", player: "Caleb Wilson", injury: "Broken thumb", status: "OUT", impact: 92, details: "19.8 PPG, 9.4 RPG — UNC's best player by a wide margin. Broke his thumb and is out for the tournament. Without him, UNC faces VCU (A-10 champs) in R64 as a massive underdog disguised as a 6-seed." },
-                { team: "Texas Tech (5)", player: "JT Toppin", injury: "Season-ending (undisclosed)", status: "OUT for season", impact: 85, details: "Defense collapsed from KenPom #24 to #119 in adjusted efficiency without Toppin. Christian Anderson (19.2 PPG) carries the offense but cannot fix the defensive crater. 22-10 record with 10 losses is the weakest among 5-seeds." },
-                { team: "Michigan (1)", player: "L.J. Cason", injury: "Torn ACL", status: "OUT for season", impact: 55, details: "Key bench contributor averaging 8.4 PPG tore his ACL. Michigan is still KenPom #2 and 29-2, but their depth is thinner. Impact is lower since Cason was a reserve, but it narrows an already tight rotation." },
-              ].map((inj, i) => (
-                <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #dc3545", padding: isMobile ? "10px 10px" : "12px 16px" }}>
-                  <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 4 : 12, marginBottom: 6 }}>
-                    <div style={{ flex: 1 }}>
-                      <span style={{ fontWeight: 800, fontSize: 14, color: "#1a1a2e" }}>{inj.player}</span>
-                      <span style={{ fontSize: 12, color: "#666", marginLeft: 8 }}>{inj.team}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                      <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: "#fde8e8", color: "#dc3545", fontWeight: 700 }}>{inj.status}</span>
-                      <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: "#1a1a2e", color: "#fff", fontWeight: 700 }}>Impact: {inj.impact}/100</span>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>{inj.injury}</div>
-                  <div style={{ fontSize: 12, color: "#555", lineHeight: 1.5 }}>{inj.details}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Questionable / Game-Time */}
-          <div style={{ marginBottom: 20 }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-              <div style={{ width: 10, height: 10, borderRadius: "50%", background: "#e67e22" }} />
-              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#e67e22", margin: 0 }}>Questionable / Limited</h3>
-            </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {[
-                { team: "Duke (1)", player: "Maliq Ngongba", injury: "Foot injury", status: "EXPECTED to play", impact: 40, details: "Missed 2+ weeks with a foot injury. Expected back for the tournament opener vs Siena. If fully healthy, he helps alleviate Duke's depth crisis. If re-aggravated, Duke's rotation shrinks to 6 players." },
-                { team: "UConn (2)", player: "Silas Demary Jr.", injury: "Sprained ankle (Big East final)", status: "PROBABLE (limited)", impact: 65, details: "10.9 PPG, 6.2 APG. Sprained ankle in the Big East final loss to St. John's. X-ray negative, out of walking boot. Expected to play but may be limited — mobility and burst could be affected. UConn's playmaking runs through him." },
-                { team: "UCLA (7)", player: "Donovan Dent", injury: "Calf strain (Big Ten semi)", status: "EXPECTED to play", impact: 60, details: "Left the Big Ten semifinal vs Purdue with a calf strain. Expected to play vs UCF but health is uncertain. If limited, UCLA's backcourt depth is significantly weakened against a solid UCF team." },
-                { team: "UCLA (7)", player: "Tyler Bilodeau", injury: "Undisclosed (Big Ten semi)", status: "EXPECTED to play", impact: 50, details: "Also left the Big Ten semifinal with an undisclosed injury. Both he and Dent are expected to suit up, but having two starters nursing injuries into R64 is a red flag." },
-                { team: "Kansas (4)", player: "Darryn Peterson", injury: "Chronic cramping/hamstring", status: "AVAILABLE (fragile)", impact: 75, details: "19.8 PPG, projected #1 NBA pick. Missed 11 of 31 regular-season games with cramping episodes he's called 'traumatic.' Available for the tournament but could leave any game at any time. When healthy, Kansas is a title contender. When he's out, they're a 6-seed at best." },
-                { team: "Louisville (6)", player: "Mikel Brown Jr.", injury: "Back injury", status: "HOPES to play", impact: 55, details: "18.2 PPG, 4.7 APG. Missed the ACC Tournament with a back injury. Hopes to return for the NCAA Tournament but no official clearance yet. Louisville's offensive engine — without him, South Florida (11) is a very live upset." },
-              ].map((inj, i) => (
-                <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #e67e22", padding: isMobile ? "10px 10px" : "12px 16px" }}>
-                  <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 4 : 12, marginBottom: 6 }}>
-                    <div style={{ flex: 1 }}>
-                      <span style={{ fontWeight: 800, fontSize: 14, color: "#1a1a2e" }}>{inj.player}</span>
-                      <span style={{ fontSize: 12, color: "#666", marginLeft: 8 }}>{inj.team}</span>
-                    </div>
-                    <div style={{ display: "flex", gap: 6, alignItems: "center" }}>
-                      <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: "#fff3e0", color: "#e67e22", fontWeight: 700 }}>{inj.status}</span>
-                      <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 8, background: "#1a1a2e", color: "#fff", fontWeight: 700 }}>Impact: {inj.impact}/100</span>
-                    </div>
-                  </div>
-                  <div style={{ fontSize: 11, color: "#888", marginBottom: 4 }}>{inj.injury}</div>
-                  <div style={{ fontSize: 12, color: "#555", lineHeight: 1.5 }}>{inj.details}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Impact Summary */}
-          <div style={{ background: "#fff", borderRadius: 12, padding: 16, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", marginBottom: 16 }}>
-            <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Injury Impact on Bracket Strategy</h3>
-            <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
-              {[
-                { label: "Fade These Teams", color: "#dc3545", bg: "#fde8e8", teams: "Alabama (4), BYU (6), UNC (6), Texas Tech (5)" , why: "Key players confirmed OUT. Pick against them." },
-                { label: "Injury Discounts", color: "#e67e22", bg: "#fff3e0", teams: "Duke (1), Gonzaga (3), UCLA (7), Kansas (4)", why: "Star players injured or limited. Lower seed advancement odds." },
-                { label: "Upgrade Opponents", color: "#198754", bg: "#d4edda", teams: "Hofstra (13), VCU (11), Akron (12), UCF (10)", why: "Facing injury-weakened teams. Prime upset candidates." },
-                { label: "Monitor Game-Time", color: "#0d6efd", bg: "#e8f4fd", teams: "UConn (Demary), Louisville (Brown), UCLA (Dent)", why: "Game-time decisions. Check before lock." },
-              ].map((card, ci) => (
-                <div key={ci} style={{ padding: 12, borderRadius: 8, background: card.bg, border: `1px solid ${card.color}22` }}>
-                  <div style={{ fontWeight: 700, fontSize: 12, color: card.color, marginBottom: 4 }}>{card.label}</div>
-                  <div style={{ fontSize: 12, fontWeight: 600, color: "#1a1a2e", marginBottom: 4 }}>{card.teams}</div>
-                  <div style={{ fontSize: 11, color: "#666" }}>{card.why}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>Note:</strong> Injury information compiled from ESPN, team press conferences, and beat reporters as of March 16, 2026. Statuses can change rapidly — check official sources before locking your bracket. Impact scores (0-100) reflect how important the player is to their team's tournament ceiling, not the severity of the injury itself.
           </div>
         </div>
       )}
@@ -2109,126 +1735,6 @@ function App() {
             <div style={{ height: 6, background: "#e0e0e0", borderRadius: 3, marginBottom: 20, overflow: "hidden" }}>
               <div style={{ height: "100%", width: `${(totalPicks / 63) * 100}%`, background: totalPicks === 63 ? "#198754" : "linear-gradient(90deg, #0d6efd, #6f42c1)", borderRadius: 3, transition: "width 0.3s" }} />
             </div>
-
-            {/* Bracket Confidence Meter */}
-            {totalPicks > 0 && (() => {
-              // Compute bracket code from user picks
-              const userCode = (() => {
-                let code = "";
-                regions.forEach((reg, ri) => {
-                  ["R64","R32","S16","E8"].forEach(round => {
-                    (bracket[reg.name] && bracket[reg.name][round] ? bracket[reg.name][round] : []).forEach(game => {
-                      if (game && game.winner) {
-                        code += game.winner.team === (game.a ? game.a.team : null) ? "a" : "b";
-                      } else {
-                        code += "_";
-                      }
-                    });
-                  });
-                });
-                (bracket.FF || []).forEach(game => {
-                  if (game && game.winner) {
-                    code += game.winner.team === (game.a ? game.a.team : null) ? "a" : "b";
-                  } else {
-                    code += "_";
-                  }
-                });
-                (bracket.CH || []).forEach(game => {
-                  if (game && game.winner) {
-                    code += game.winner.team === (game.a ? game.a.team : null) ? "a" : "b";
-                  } else {
-                    code += "_";
-                  }
-                });
-                return code;
-              })();
-
-              // Compare user picks vs AI picks
-              let agree = 0, disagree = 0, upsets = 0, chalk = 0;
-              const riskyPicks = [];
-              const smartPicks = [];
-
-              // Historical upset rates by seed matchup in R64
-              const upsetRates = { "16v1": 3, "9v8": 44, "12v5": 36, "13v4": 22, "11v6": 38, "14v3": 8, "10v7": 30, "15v2": 8 };
-
-              for (let i = 0; i < Math.min(userCode.length, AI_BRACKET_CODE.length); i++) {
-                if (userCode[i] === "_") continue;
-                if (userCode[i] === AI_BRACKET_CODE[i]) agree++;
-                else disagree++;
-                // R64 picks: check if user picked the lower seed
-                if (i < 32) {
-                  if (userCode[i] === "b") upsets++;
-                  else chalk++;
-                }
-              }
-
-              const totalMade = agree + disagree;
-              const aiAgreePct = totalMade > 0 ? Math.round((agree / totalMade) * 100) : 0;
-              const chalkPct = (chalk + upsets) > 0 ? Math.round((chalk / (chalk + upsets)) * 100) : 0;
-              const confidenceScore = Math.round(aiAgreePct * 0.6 + (100 - Math.abs(chalkPct - 65)) * 0.4);
-              const confColor = confidenceScore >= 70 ? "#198754" : confidenceScore >= 45 ? "#ffc107" : "#dc3545";
-              const confLabel = confidenceScore >= 70 ? "Strong" : confidenceScore >= 45 ? "Moderate" : "Risky";
-
-              return (
-                <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 20, boxShadow: "0 2px 6px rgba(0,0,0,0.06)" }}>
-                  <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 12 }}>
-                    <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", margin: 0, flex: 1 }}>Bracket Confidence Meter</h3>
-                    <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
-                      <div style={{ width: 48, height: 48, borderRadius: "50%", background: confColor, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 16 }}>{confidenceScore}</div>
-                      <div style={{ fontSize: 11, color: confColor, fontWeight: 700 }}>{confLabel}</div>
-                    </div>
-                  </div>
-
-                  <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(2, 1fr)" : "repeat(4, 1fr)", gap: 8, marginBottom: 12 }}>
-                    <div style={{ padding: 10, borderRadius: 8, background: "#e8f4fd", textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: "#0d6efd" }}>{agree}</div>
-                      <div style={{ fontSize: 10, color: "#666" }}>Agree with AI</div>
-                    </div>
-                    <div style={{ padding: 10, borderRadius: 8, background: "#fde8e8", textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: "#dc3545" }}>{disagree}</div>
-                      <div style={{ fontSize: 10, color: "#666" }}>Disagree with AI</div>
-                    </div>
-                    <div style={{ padding: 10, borderRadius: 8, background: "#d4edda", textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: "#198754" }}>{chalk}</div>
-                      <div style={{ fontSize: 10, color: "#666" }}>Chalk picks (R64)</div>
-                    </div>
-                    <div style={{ padding: 10, borderRadius: 8, background: "#fff3e0", textAlign: "center" }}>
-                      <div style={{ fontSize: 20, fontWeight: 800, color: "#e67e22" }}>{upsets}</div>
-                      <div style={{ fontSize: 10, color: "#666" }}>Upsets picked (R64)</div>
-                    </div>
-                  </div>
-
-                  {/* AI agreement bar */}
-                  <div style={{ marginBottom: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#666", marginBottom: 3 }}>
-                      <span>AI Agreement</span>
-                      <span>{aiAgreePct}%</span>
-                    </div>
-                    <div style={{ height: 8, background: "#e9ecef", borderRadius: 4, overflow: "hidden" }}>
-                      <div style={{ height: "100%", width: aiAgreePct + "%", background: aiAgreePct > 70 ? "#198754" : aiAgreePct > 40 ? "#ffc107" : "#dc3545", borderRadius: 4, transition: "width 0.3s" }} />
-                    </div>
-                  </div>
-
-                  {/* Chalk meter */}
-                  <div style={{ marginBottom: 8 }}>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: 11, color: "#666", marginBottom: 3 }}>
-                      <span>Chalk-o-Meter (R64)</span>
-                      <span>{chalkPct}% chalk</span>
-                    </div>
-                    <div style={{ height: 8, background: "#e9ecef", borderRadius: 4, overflow: "hidden", position: "relative" }}>
-                      <div style={{ height: "100%", width: chalkPct + "%", background: chalkPct > 85 ? "#dc3545" : chalkPct > 60 ? "#198754" : "#ffc107", borderRadius: 4, transition: "width 0.3s" }} />
-                      {/* Sweet spot marker at 65% */}
-                      <div style={{ position: "absolute", top: -2, left: "65%", width: 2, height: 12, background: "#333", borderRadius: 1 }} />
-                    </div>
-                    <div style={{ fontSize: 9, color: "#999", marginTop: 2 }}>Sweet spot: ~65% chalk. Too much = boring. Too little = reckless.</div>
-                  </div>
-
-                  <div style={{ fontSize: 11, color: "#666", lineHeight: 1.5, padding: "8px 10px", background: "#f8f9fa", borderRadius: 6 }}>
-                    <strong>Score breakdown:</strong> 60% weighted on AI agreement (data-driven picks) + 40% on chalk balance (historical sweet spot is ~65% favorites in R64). A score of 70+ means your bracket is well-calibrated. Below 45 means you're either too chalky or too contrarian.
-                  </div>
-                </div>
-              );
-            })()}
 
             {/* Region brackets */}
             {regions.map((reg, ri) => {
