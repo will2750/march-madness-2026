@@ -91,6 +91,9 @@ function App() {
     try { return localStorage.getItem("mm_bracket_name") || ""; } catch(e) { return ""; }
   });
   const [showShareMsg, setShowShareMsg] = useState(false);
+  const [h2hTeamA, setH2hTeamA] = useState(null);
+  const [h2hTeamB, setH2hTeamB] = useState(null);
+  const [survivalWhatIf, setSurvivalWhatIf] = useState({});
 
   // Responsive listener
   if (typeof window !== "undefined") {
@@ -623,7 +626,9 @@ function App() {
       { key: "picks2026", label: "2026 Cheat Sheet" },
       { key: "vulnerable2026", label: "Upset Targets" },
       { key: "survivalOdds", label: "Survival Odds" },
+      { key: "regionRank", label: "Region Power" },
       { key: "injuryReport", label: "Injury Report" },
+      { key: "h2h", label: "Head-to-Head" },
       { key: "aiPredictions", label: "AI Bracket" },
     ]},
     { label: "Your Bracket", color: "#0d6efd", tabs: [
@@ -1002,11 +1007,35 @@ function App() {
             adj: "Weakest 8-seed by KenPom. Utah St. is actually ranked higher. Even if they win, they face Arizona." },
         ];
 
+        // What-If injury overrides: when toggled, recalculate as if player were healthy/out
+        const whatIfOverrides = {
+          "Alabama": { healthy: { survR64: 80, survR32: 55, survS16: 30, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Holloway: Alabama's elite offense (#3 KenPom) is intact. Still hampered by #67 defense, but Holloway's 43.8% 3P shooting stretches defenses. Viable Sweet 16 team." } },
+          "Duke": { healthy: { survR64: 99, survR32: 92, survS16: 78, survE8: 62, survFF: 40, survCH: 24, injuryFlag: null, adj: "WITH Foster: Duke goes from 7 to 9-man rotation. Fatigue concerns disappear. Cameron Boozer + Foster backcourt is the best in the country. Title favorite." } },
+          "Gonzaga": { healthy: { survR64: 92, survR32: 72, survS16: 50, survE8: 30, survFF: 14, survCH: 6, injuryFlag: null, adj: "WITH Huff: Gonzaga's interior is restored (17.8 PPG, 5.6 RPG). Graham Ike + Huff frontcourt is elite. Sweet 16 team with Final Four upside." } },
+          "Kansas": { out: { survR64: 62, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1, injuryFlag: "Peterson OUT (hypothetical)", adj: "WITHOUT Peterson: Kansas drops from a 4-seed talent to a 7-seed. No one else on the roster can create offense at his level. Cal Baptist becomes dangerous." } },
+          "BYU": { healthy: { survR64: 68, survR32: 38, survS16: 18, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "WITH Saunders + Welling: BYU goes from gutted to dangerous. Dybantsa + Saunders + Welling is a top-20 starting five. Legitimate Sweet 16 contender." } },
+          "North Carolina": { healthy: { survR64: 78, survR32: 50, survS16: 28, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Wilson: UNC's offense is restored (19.8 PPG, 9.4 RPG). They become the favorite over VCU and a legitimate threat to reach the Sweet 16." } },
+          "Texas Tech": { healthy: { survR64: 72, survR32: 45, survS16: 22, survE8: 10, survFF: 4, survCH: 1, injuryFlag: null, adj: "WITH Toppin: Defense returns to KenPom #24 instead of #119. Texas Tech becomes a legitimate 5-seed threat with balanced offense and defense." } },
+          "UCLA": { healthy: { survR64: 75, survR32: 42, survS16: 20, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "FULLY HEALTHY: Both Dent and Bilodeau at 100% gives UCLA a complete starting five. UCF becomes manageable and a R32 run is realistic." } },
+        };
+
+        const applyWhatIf = (t) => {
+          const override = whatIfOverrides[t.team];
+          if (!override) return t;
+          const toggle = survivalWhatIf[t.team];
+          if (!toggle) return t;
+          const mod = override[toggle];
+          if (!mod) return t;
+          return { ...t, ...mod };
+        };
+
+        const processedData = survivalData.map(applyWhatIf);
+
         const roundKeys = ["survR64", "survR32", "survS16", "survE8", "survFF", "survCH"];
         const roundLabels = ["R64", "R32", "S16", "E8", "FF", "CH"];
         const roundColors = ["#6c757d", "#0d6efd", "#198754", "#ffc107", "#dc3545", "#6f42c1"];
         const seedFilter = selectedSeed;
-        const filteredData = seedFilter ? survivalData.filter(t => t.seed === seedFilter) : survivalData;
+        const filteredData = seedFilter ? processedData.filter(t => t.seed === seedFilter) : processedData;
 
         return (
           <div>
@@ -1067,7 +1096,28 @@ function App() {
                       </div>
 
                       {/* Analysis */}
-                      <div style={{ marginTop: 8, fontSize: 11, color: "#555", lineHeight: 1.5, padding: "6px 8px", background: "#f8f9fa", borderRadius: 6 }}>{t.adj}</div>
+                      <div style={{ marginTop: 8, fontSize: 11, color: "#555", lineHeight: 1.5, padding: "6px 8px", background: survivalWhatIf[t.team] ? "#e8f5e9" : "#f8f9fa", borderRadius: 6, border: survivalWhatIf[t.team] ? "1px dashed #198754" : "none" }}>
+                        {survivalWhatIf[t.team] && <span style={{ fontSize: 9, fontWeight: 700, color: "#198754", marginRight: 4 }}>WHAT IF:</span>}
+                        {t.adj}
+                      </div>
+
+                      {/* What If toggle */}
+                      {whatIfOverrides[t.team] && (
+                        <div style={{ marginTop: 6, display: "flex", gap: 6 }}>
+                          {whatIfOverrides[t.team].healthy && (
+                            <button onClick={() => setSurvivalWhatIf(prev => ({ ...prev, [t.team]: prev[t.team] === "healthy" ? undefined : "healthy" }))}
+                              style={{ padding: "4px 10px", borderRadius: 6, fontSize: 10, fontWeight: 600, background: survivalWhatIf[t.team] === "healthy" ? "#198754" : "#e8f5e9", color: survivalWhatIf[t.team] === "healthy" ? "#fff" : "#198754", border: "1px solid #198754", cursor: "pointer" }}>
+                              {survivalWhatIf[t.team] === "healthy" ? "Reset" : "What if healthy?"}
+                            </button>
+                          )}
+                          {whatIfOverrides[t.team].out && (
+                            <button onClick={() => setSurvivalWhatIf(prev => ({ ...prev, [t.team]: prev[t.team] === "out" ? undefined : "out" }))}
+                              style={{ padding: "4px 10px", borderRadius: 6, fontSize: 10, fontWeight: 600, background: survivalWhatIf[t.team] === "out" ? "#dc3545" : "#fde8e8", color: survivalWhatIf[t.team] === "out" ? "#fff" : "#dc3545", border: "1px solid #dc3545", cursor: "pointer" }}>
+                              {survivalWhatIf[t.team] === "out" ? "Reset" : "What if star sits?"}
+                            </button>
+                          )}
+                        </div>
+                      )}
                     </div>
                   </div>
                 );
@@ -1183,6 +1233,355 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* REGION POWER RANKINGS */}
+      {view === "regionRank" && (() => {
+        const regionData = [
+          { name: "Midwest", site: "Chicago", color: "#198754", bg: "#e8f5e9",
+            avgKenPom: 14.4, topSeed: "Michigan (1, KenPom #2)", injuryCount: 3,
+            injuredTeams: "Alabama (Holloway arrested), Texas Tech (Toppin OUT), Michigan (Cason OUT)",
+            keyMatchups: "Michigan vs Iowa St. potential E8 clash. Alabama vs Hofstra is the biggest upset watch. Virginia's March collapse history looms. Tennessee and Kentucky add even more firepower.",
+            dangerLevel: 95, dangerLabel: "BLOODBATH",
+            teams: [
+              { seed: 1, team: "Michigan", kenPom: 2, note: "Cason OUT, still elite" },
+              { seed: 2, team: "Iowa St.", kenPom: 6, note: "Top-5 defense" },
+              { seed: 3, team: "Virginia", kenPom: 15, note: "Most upset-prone team ever" },
+              { seed: 4, team: "Alabama", kenPom: 16, note: "Holloway arrested" },
+              { seed: 5, team: "Texas Tech", kenPom: 20, note: "Toppin OUT, defense collapsed" },
+              { seed: 6, team: "Tennessee", kenPom: 23, note: "Experienced SEC squad" },
+              { seed: 7, team: "Kentucky", kenPom: 27, note: "Young, inconsistent" },
+              { seed: 8, team: "Georgia", kenPom: 31, note: "Weakest 8-seed path" },
+            ] },
+          { name: "East", site: "Washington DC", color: "#0d6efd", bg: "#e8f0fe",
+            avgKenPom: 13.1, topSeed: "Duke (1, KenPom #1)", injuryCount: 3,
+            injuredTeams: "Duke (Foster OUT), Kansas (Peterson fragile), UCLA (Dent + Bilodeau banged up)",
+            keyMatchups: "Duke's 7-man rotation vs the 8/9 winner in R32 is the marquee upset watch. St. John's (Big East champs) could make noise. UConn with a hobbled Demary faces Furman's March pedigree.",
+            dangerLevel: 80, dangerLabel: "LOADED",
+            teams: [
+              { seed: 1, team: "Duke", kenPom: 1, note: "Foster OUT, 7-man rotation" },
+              { seed: 2, team: "UConn", kenPom: 12, note: "Demary ankle, lost BE final" },
+              { seed: 3, team: "Michigan St.", kenPom: 9, note: "Izzo in March" },
+              { seed: 4, team: "Kansas", kenPom: 14, note: "Peterson health fragile" },
+              { seed: 5, team: "St. John's", kenPom: 13, note: "Beat UConn in BE final" },
+              { seed: 6, team: "Louisville", kenPom: 24, note: "Brown Jr. back injury" },
+              { seed: 7, team: "UCLA", kenPom: 18, note: "Two starters banged up" },
+              { seed: 8, team: "Ohio St.", kenPom: 28, note: "Coinflip vs TCU" },
+            ] },
+          { name: "South", site: "Houston", color: "#dc3545", bg: "#fde8e8",
+            avgKenPom: 14.9, topSeed: "Florida (1, KenPom #5)", injuryCount: 1,
+            injuredTeams: "North Carolina (Wilson OUT — broken thumb)",
+            keyMatchups: "Florida has the clearest path of any 1-seed. Houston (2) is an elite defensive team that could meet Florida in the E8. Illinois and Nebraska are solid but not scary. Clemson's Final Four pedigree makes the 8/9 game interesting.",
+            dangerLevel: 60, dangerLabel: "MODERATE",
+            teams: [
+              { seed: 1, team: "Florida", kenPom: 5, note: "Healthiest 1-seed" },
+              { seed: 2, team: "Houston", kenPom: 4, note: "Elite defense, fully healthy" },
+              { seed: 3, team: "Illinois", kenPom: 11, note: "Solid Big Ten squad" },
+              { seed: 4, team: "Nebraska", kenPom: 17, note: "No March pedigree" },
+              { seed: 5, team: "Vanderbilt", kenPom: 21, note: "Strong SEC season" },
+              { seed: 6, team: "North Carolina", kenPom: 22, note: "Wilson OUT" },
+              { seed: 7, team: "Saint Mary's", kenPom: 26, note: "#1 FT%, Cinderella threat" },
+              { seed: 8, team: "Clemson", kenPom: 29, note: "Final Four last year" },
+            ] },
+          { name: "West", site: "San Jose", color: "#6f42c1", bg: "#f3e8fd",
+            avgKenPom: 14.4, topSeed: "Arizona (1, KenPom #3)", injuryCount: 2,
+            injuredTeams: "Gonzaga (Huff OUT 1st weekend), BYU (Saunders + Welling torn ACLs)",
+            keyMatchups: "Arizona has the easiest path on paper. Gonzaga without Huff is vulnerable through R32. Wisconsin is the most dangerous 5-seed in the field (4 wins over KenPom top 10). BYU is gutted. Purdue is a quiet 2-seed that could make a run.",
+            dangerLevel: 55, dangerLabel: "FAVORABLE",
+            teams: [
+              { seed: 1, team: "Arizona", kenPom: 3, note: "32-2, fully healthy, Big 12 champs" },
+              { seed: 2, team: "Purdue", kenPom: 8, note: "Solid but path gets hard" },
+              { seed: 3, team: "Gonzaga", kenPom: 7, note: "Huff OUT first weekend" },
+              { seed: 4, team: "Arkansas", kenPom: 19, note: "Calipari's first year" },
+              { seed: 5, team: "Wisconsin", kenPom: 10, note: "Most dangerous 5-seed" },
+              { seed: 6, team: "BYU", kenPom: 25, note: "Two torn ACLs, gutted" },
+              { seed: 7, team: "Miami (FL)", kenPom: 30, note: "2023 FF experience" },
+              { seed: 8, team: "Villanova", kenPom: 33, note: "Weakest 8-seed" },
+            ] },
+        ];
+
+        // Sort by danger level descending
+        const sorted = [...regionData].sort((a, b) => b.dangerLevel - a.dangerLevel);
+
+        return (
+          <div>
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
+                How tough is each region? Ranked by combined KenPom strength, injury impact, historical upset potential, and path difficulty. Use this to decide where to pick chaos and where to play it safe.
+              </p>
+            </div>
+
+            <div style={{ display: "flex", flexDirection: "column", gap: 14 }}>
+              {sorted.map((reg, ri) => {
+                const dangerColor = reg.dangerLevel >= 80 ? "#dc3545" : reg.dangerLevel >= 60 ? "#e67e22" : "#198754";
+                return (
+                  <div key={reg.name} style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 6px rgba(0,0,0,0.06)", overflow: "hidden", borderLeft: `5px solid ${reg.color}` }}>
+                    {/* Region header */}
+                    <div style={{ padding: isMobile ? "12px 10px" : "14px 16px", background: reg.bg }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 10, marginBottom: 6 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, flex: 1 }}>
+                          <span style={{ fontSize: 20, fontWeight: 800, color: reg.color }}>#{ri + 1}</span>
+                          <div>
+                            <div style={{ fontWeight: 800, fontSize: 18, color: "#1a1a2e" }}>{reg.name} Region</div>
+                            <div style={{ fontSize: 11, color: "#888" }}>{reg.site} &middot; Top seed: {reg.topSeed}</div>
+                          </div>
+                        </div>
+                        <div style={{ textAlign: "center" }}>
+                          <div style={{ fontSize: 24, fontWeight: 800, color: dangerColor }}>{reg.dangerLevel}</div>
+                          <div style={{ fontSize: 9, fontWeight: 700, color: dangerColor }}>{reg.dangerLabel}</div>
+                        </div>
+                      </div>
+
+                      {/* Danger bar */}
+                      <div style={{ height: 8, background: "#e9ecef", borderRadius: 4, overflow: "hidden", marginBottom: 8 }}>
+                        <div style={{ height: "100%", width: reg.dangerLevel + "%", background: `linear-gradient(90deg, ${reg.color}, ${dangerColor})`, borderRadius: 4 }} />
+                      </div>
+
+                      {/* Quick stats */}
+                      <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 6 }}>
+                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: "#fff", color: "#555", fontWeight: 600 }}>Avg KenPom: #{Math.round(reg.avgKenPom)}</span>
+                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: reg.injuryCount >= 3 ? "#fde8e8" : reg.injuryCount >= 1 ? "#fff3e0" : "#d4edda", color: reg.injuryCount >= 3 ? "#dc3545" : reg.injuryCount >= 1 ? "#e67e22" : "#198754", fontWeight: 600 }}>{reg.injuryCount} injured team{reg.injuryCount !== 1 ? "s" : ""}</span>
+                      </div>
+                      <div style={{ fontSize: 11, color: "#666" }}>{reg.injuredTeams}</div>
+                    </div>
+
+                    {/* Teams grid */}
+                    <div style={{ padding: isMobile ? "8px 10px" : "10px 16px" }}>
+                      <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 6 }}>
+                        {reg.teams.map(tm => (
+                          <div key={tm.team} style={{ display: "flex", alignItems: "center", gap: 8, padding: "6px 8px", borderRadius: 6, background: "#f8f9fa" }}>
+                            <div style={{ width: 24, height: 24, borderRadius: "50%", background: reg.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, fontWeight: 800, flexShrink: 0 }}>{tm.seed}</div>
+                            <div style={{ flex: 1 }}>
+                              <span style={{ fontWeight: 700, fontSize: 12, color: "#1a1a2e" }}>{tm.team}</span>
+                              <span style={{ fontSize: 10, color: "#888", marginLeft: 4 }}>KP #{tm.kenPom}</span>
+                            </div>
+                            <span style={{ fontSize: 9, color: "#888", maxWidth: isMobile ? 100 : 160, textAlign: "right" }}>{tm.note}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Key matchups */}
+                    <div style={{ padding: isMobile ? "8px 10px 12px" : "8px 16px 14px" }}>
+                      <div style={{ fontSize: 12, color: "#555", lineHeight: 1.5, padding: "8px 10px", background: "#f8f9fa", borderRadius: 6 }}>
+                        <strong style={{ color: reg.color }}>Key matchups:</strong> {reg.keyMatchups}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+              <strong>Strategy tip:</strong> Pick more upsets in the Midwest (loaded with talent + injuries = chaos). Play it safer in the West and South (clearer favorites, fewer injuries). The East is a wildcard — Duke is the best team but also the most vulnerable 1-seed due to depth concerns.
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* HEAD-TO-HEAD MATCHUP EXPLORER */}
+      {view === "h2h" && (() => {
+        // Build a flat list of all seeded teams 1-16 across all regions
+        const allTeams = [];
+        regions.forEach(reg => {
+          reg.matchups.forEach(m => {
+            allTeams.push({ team: m.hiTeam, seed: m.hi, region: reg.name });
+            allTeams.push({ team: m.loTeam, seed: m.lo, region: reg.name });
+          });
+        });
+        allTeams.sort((a, b) => a.seed - b.seed || a.team.localeCompare(b.team));
+
+        // KenPom + injury lookup
+        const teamProfiles = {
+          "Duke": { kenPom: 1, off: 4, def: 2, record: "32-2", injury: "Foster OUT (broken foot)", injImpact: -12 },
+          "Florida": { kenPom: 5, off: 8, def: 5, record: "30-4", injury: null, injImpact: 0 },
+          "Michigan": { kenPom: 2, off: 6, def: 1, record: "29-2", injury: "Cason OUT (torn ACL)", injImpact: -4 },
+          "Arizona": { kenPom: 3, off: 2, def: 7, record: "32-2", injury: null, injImpact: 0 },
+          "UConn": { kenPom: 12, off: 30, def: 11, record: "29-5", injury: "Demary ankle (limited)", injImpact: -5 },
+          "Houston": { kenPom: 4, off: 14, def: 3, record: "28-6", injury: null, injImpact: 0 },
+          "Iowa St.": { kenPom: 6, off: 18, def: 4, record: "27-7", injury: null, injImpact: 0 },
+          "Purdue": { kenPom: 8, off: 9, def: 10, record: "27-8", injury: null, injImpact: 0 },
+          "Michigan St.": { kenPom: 9, off: 16, def: 8, record: "25-8", injury: null, injImpact: 0 },
+          "Illinois": { kenPom: 11, off: 20, def: 12, record: "24-9", injury: null, injImpact: 0 },
+          "Virginia": { kenPom: 15, off: 45, def: 6, record: "23-10", injury: null, injImpact: -3 },
+          "Gonzaga": { kenPom: 7, off: 3, def: 22, record: "27-7", injury: "Huff OUT (1st weekend)", injImpact: -10 },
+          "Kansas": { kenPom: 14, off: 11, def: 18, record: "24-9", injury: "Peterson fragile", injImpact: -7 },
+          "Nebraska": { kenPom: 17, off: 22, def: 15, record: "24-9", injury: null, injImpact: 0 },
+          "Alabama": { kenPom: 16, off: 3, def: 67, record: "23-9", injury: "Holloway arrested", injImpact: -18 },
+          "Arkansas": { kenPom: 19, off: 13, def: 25, record: "23-10", injury: null, injImpact: 0 },
+          "St. John's": { kenPom: 13, off: 17, def: 14, record: "28-6", injury: null, injImpact: 0 },
+          "Vanderbilt": { kenPom: 21, off: 24, def: 20, record: "26-8", injury: null, injImpact: 0 },
+          "Texas Tech": { kenPom: 20, off: 12, def: 33, record: "22-10", injury: "Toppin OUT (season)", injImpact: -14 },
+          "Wisconsin": { kenPom: 10, off: 7, def: 16, record: "24-10", injury: null, injImpact: 0 },
+          "Louisville": { kenPom: 24, off: 19, def: 28, record: "22-9", injury: "Brown Jr. (back)", injImpact: -6 },
+          "North Carolina": { kenPom: 22, off: 10, def: 35, record: "21-12", injury: "Wilson OUT (thumb)", injImpact: -15 },
+          "Tennessee": { kenPom: 23, off: 26, def: 21, record: "22-11", injury: null, injImpact: 0 },
+          "BYU": { kenPom: 25, off: 15, def: 40, record: "24-9", injury: "Saunders + Welling OUT (ACLs)", injImpact: -16 },
+          "UCLA": { kenPom: 18, off: 10, def: 30, record: "23-10", injury: "Dent (calf) + Bilodeau", injImpact: -6 },
+          "Saint Mary's": { kenPom: 26, off: 25, def: 27, record: "27-6", injury: null, injImpact: 0 },
+          "Kentucky": { kenPom: 27, off: 21, def: 32, record: "22-11", injury: null, injImpact: 0 },
+          "Miami (FL)": { kenPom: 30, off: 28, def: 31, record: "21-12", injury: null, injImpact: 0 },
+          "Ohio St.": { kenPom: 28, off: 27, def: 29, record: "20-13", injury: null, injImpact: 0 },
+          "Clemson": { kenPom: 29, off: 32, def: 26, record: "20-13", injury: null, injImpact: 0 },
+          "Georgia": { kenPom: 31, off: 29, def: 34, record: "20-13", injury: null, injImpact: 0 },
+          "Villanova": { kenPom: 33, off: 28, def: 38, record: "20-13", injury: null, injImpact: 0 },
+        };
+
+        const teamA = h2hTeamA ? allTeams.find(t => t.team === h2hTeamA) : null;
+        const teamB = h2hTeamB ? allTeams.find(t => t.team === h2hTeamB) : null;
+        const profA = teamA ? teamProfiles[teamA.team] : null;
+        const profB = teamB ? teamProfiles[teamB.team] : null;
+
+        // Win probability estimate based on KenPom gap + injury adjustment
+        const calcWinProb = (pA, pB) => {
+          if (!pA || !pB) return 50;
+          const adjA = pA.kenPom + (pA.injImpact || 0);
+          const adjB = pB.kenPom + (pB.injImpact || 0);
+          const diff = adjB - adjA; // positive = A is better
+          const prob = Math.round(50 + diff * 1.8);
+          return Math.max(8, Math.min(92, prob));
+        };
+
+        const winProbA = profA && profB ? calcWinProb(profA, profB) : 50;
+        const winProbB = 100 - winProbA;
+
+        // Determine edges
+        const edges = profA && profB ? [
+          { label: "KenPom Overall", valA: profA.kenPom, valB: profB.kenPom, lower: true },
+          { label: "Offense", valA: profA.off, valB: profB.off, lower: true },
+          { label: "Defense", valA: profA.def, valB: profB.def, lower: true },
+        ] : [];
+
+        return (
+          <div>
+            <div style={{ marginBottom: 16 }}>
+              <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
+                Pick any two tournament teams and compare their KenPom profiles, injuries, and estimated win probability. Use this to evaluate potential matchups deeper in the bracket.
+              </p>
+            </div>
+
+            {/* Team selectors */}
+            <div style={{ display: "flex", gap: 12, marginBottom: 20, flexDirection: isMobile ? "column" : "row" }}>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#0d6efd", marginBottom: 4 }}>TEAM A</div>
+                <select value={h2hTeamA || ""} onChange={e => setH2hTeamA(e.target.value || null)}
+                  style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "2px solid #0d6efd", fontSize: 13, color: "#333", background: "#fff" }}>
+                  <option value="">Select a team...</option>
+                  {allTeams.map(t => (
+                    <option key={t.team + t.region} value={t.team}>({t.seed}) {t.team} — {t.region}</option>
+                  ))}
+                </select>
+              </div>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 18, color: "#888", paddingTop: isMobile ? 0 : 18 }}>VS</div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 11, fontWeight: 700, color: "#dc3545", marginBottom: 4 }}>TEAM B</div>
+                <select value={h2hTeamB || ""} onChange={e => setH2hTeamB(e.target.value || null)}
+                  style={{ width: "100%", padding: "10px 12px", borderRadius: 8, border: "2px solid #dc3545", fontSize: 13, color: "#333", background: "#fff" }}>
+                  <option value="">Select a team...</option>
+                  {allTeams.map(t => (
+                    <option key={t.team + t.region} value={t.team}>({t.seed}) {t.team} — {t.region}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Matchup comparison */}
+            {profA && profB && teamA && teamB && (
+              <div style={{ background: "#fff", borderRadius: 12, boxShadow: "0 2px 8px rgba(0,0,0,0.08)", overflow: "hidden" }}>
+                {/* Win probability bar */}
+                <div style={{ padding: "16px 16px 12px" }}>
+                  <div style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "#888", marginBottom: 8 }}>WIN PROBABILITY</div>
+                  <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
+                    <div style={{ width: 60, textAlign: "right", fontSize: 13, fontWeight: 800, color: "#0d6efd" }}>{winProbA}%</div>
+                    <div style={{ flex: 1, height: 24, borderRadius: 12, overflow: "hidden", display: "flex", background: "#e9ecef" }}>
+                      <div style={{ width: winProbA + "%", background: "linear-gradient(90deg, #0d6efd, #4da3ff)", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#fff", fontWeight: 700, transition: "width 0.4s" }}>
+                        {winProbA > 25 ? teamA.team : ""}
+                      </div>
+                      <div style={{ width: winProbB + "%", background: "linear-gradient(90deg, #ff6b6b, #dc3545)", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#fff", fontWeight: 700, transition: "width 0.4s" }}>
+                        {winProbB > 25 ? teamB.team : ""}
+                      </div>
+                    </div>
+                    <div style={{ width: 60, fontSize: 13, fontWeight: 800, color: "#dc3545" }}>{winProbB}%</div>
+                  </div>
+                </div>
+
+                {/* Team cards side by side */}
+                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", borderTop: "1px solid #eee" }}>
+                  {[{ tm: teamA, prof: profA, color: "#0d6efd", bg: "#e8f0fe" }, { tm: teamB, prof: profB, color: "#dc3545", bg: "#fde8e8" }].map((side, si) => (
+                    <div key={si} style={{ flex: 1, padding: 14, borderRight: !isMobile && si === 0 ? "1px solid #eee" : "none", borderTop: isMobile && si === 1 ? "1px solid #eee" : "none" }}>
+                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
+                        <div style={{ width: 36, height: 36, borderRadius: "50%", background: side.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14 }}>{side.tm.seed}</div>
+                        <div>
+                          <div style={{ fontWeight: 800, fontSize: 15, color: "#1a1a2e" }}>{side.tm.team}</div>
+                          <div style={{ fontSize: 10, color: "#888" }}>{side.tm.region} &middot; {side.prof.record}</div>
+                        </div>
+                      </div>
+                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
+                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: "#e8f4fd", color: "#0c5460", fontWeight: 600 }}>KenPom #{side.prof.kenPom}</span>
+                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: side.prof.off <= 15 ? "#d4edda" : "#fff3cd", color: side.prof.off <= 15 ? "#155724" : "#856404", fontWeight: 600 }}>Off #{side.prof.off}</span>
+                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: side.prof.def <= 15 ? "#d4edda" : "#fff3cd", color: side.prof.def <= 15 ? "#155724" : "#856404", fontWeight: 600 }}>Def #{side.prof.def}</span>
+                      </div>
+                      {side.prof.injury ? (
+                        <div style={{ fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#fde8e8", color: "#dc3545", fontWeight: 600 }}>{side.prof.injury}</div>
+                      ) : (
+                        <div style={{ fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#d4edda", color: "#198754", fontWeight: 600 }}>Fully healthy</div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+
+                {/* Edge comparison */}
+                <div style={{ padding: 14, borderTop: "1px solid #eee" }}>
+                  <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e", marginBottom: 8 }}>Category Edges</div>
+                  {edges.map((e, ei) => {
+                    const aWins = e.lower ? e.valA < e.valB : e.valA > e.valB;
+                    const bWins = e.lower ? e.valB < e.valA : e.valB > e.valA;
+                    const tie = e.valA === e.valB;
+                    return (
+                      <div key={ei} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, padding: "4px 8px", borderRadius: 6, background: "#f8f9fa" }}>
+                        <div style={{ width: 40, textAlign: "center", fontWeight: 700, fontSize: 13, color: aWins ? "#0d6efd" : "#aaa" }}>#{e.valA}</div>
+                        <div style={{ flex: 1, textAlign: "center" }}>
+                          <span style={{ fontSize: 11, color: "#666" }}>{e.label}</span>
+                          {!tie && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: aWins ? "#0d6efd" : "#dc3545" }}>{aWins ? teamA.team : teamB.team} edge</span>}
+                        </div>
+                        <div style={{ width: 40, textAlign: "center", fontWeight: 700, fontSize: 13, color: bWins ? "#dc3545" : "#aaa" }}>#{e.valB}</div>
+                      </div>
+                    );
+                  })}
+
+                  {/* Historical seed matchup */}
+                  {(() => {
+                    const seedHi = Math.min(teamA.seed, teamB.seed);
+                    const seedLo = Math.max(teamA.seed, teamB.seed);
+                    const key = seedLo + "v" + seedHi;
+                    const matchupUpsets = upsets.filter(u => (u.wSeed === seedLo && u.lSeed === seedHi) || (u.wSeed === seedHi && u.lSeed === seedLo));
+                    const lowerWins = matchupUpsets.filter(u => u.wSeed === seedLo).length;
+                    const higherWins = matchupUpsets.filter(u => u.wSeed === seedHi).length;
+                    const total = lowerWins + higherWins;
+                    if (seedHi === seedLo || total === 0) return null;
+                    return (
+                      <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 6, background: "#fff3cd", fontSize: 11, color: "#856404", lineHeight: 1.5 }}>
+                        <strong>Historical:</strong> In our 2016-2025 data, {seedLo}-seeds have beaten {seedHi}-seeds {lowerWins} time{lowerWins !== 1 ? "s" : ""} as upsets. The higher seed ({seedHi}) won {higherWins} of those matchups recorded as upsets. This matchup has produced {total} notable results.
+                      </div>
+                    );
+                  })()}
+                </div>
+              </div>
+            )}
+
+            {/* Empty state */}
+            {(!profA || !profB) && (
+              <div style={{ textAlign: "center", padding: 40, color: "#aaa" }}>
+                <div style={{ fontSize: 48, marginBottom: 12 }}>vs</div>
+                <div style={{ fontSize: 14 }}>Select two teams above to compare their profiles</div>
+              </div>
+            )}
+
+            <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+              <strong>How it works:</strong> Win probability is estimated from adjusted KenPom rankings (accounting for injuries). Lower KenPom = better team. Injury impact is subtracted from each team's effective ranking. This is a simplified model — real matchups depend on pace, style, 3P%, rebounding, and dozens of other factors. Use this as a starting point, not gospel.
+            </div>
+          </div>
+        );
+      })()}
 
       {/* CINDERELLA RUNS */}
       {view === "cinderellas" && (
@@ -2087,6 +2486,71 @@ function App() {
                   </button>
                   <button onClick={resetBracket} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 12, background: "#f8d7da", color: "#721c24", border: "none", cursor: "pointer", fontWeight: 600 }}>
                     Reset
+                  </button>
+                  <button onClick={() => {
+                    const printWin = window.open("", "_blank");
+                    const regionColors = { East: "#0d6efd", South: "#dc3545", Midwest: "#198754", West: "#6f42c1" };
+                    let html = "<!DOCTYPE html><html><head><title>" + (userName || "My") + " 2026 March Madness Bracket</title><style>";
+                    html += "body{font-family:'Segoe UI',system-ui,sans-serif;max-width:900px;margin:0 auto;padding:20px;color:#1a1a2e;}";
+                    html += "h1{text-align:center;font-size:22px;margin-bottom:4px;}";
+                    html += "h2{font-size:16px;margin:16px 0 8px;padding:6px 10px;border-radius:6px;color:#fff;}";
+                    html += ".subtitle{text-align:center;font-size:12px;color:#888;margin-bottom:20px;}";
+                    html += ".game{display:flex;gap:8px;margin:4px 0;font-size:12px;}";
+                    html += ".seed{width:20px;height:20px;border-radius:50%;background:#1a1a2e;color:#fff;text-align:center;line-height:20px;font-size:10px;font-weight:700;flex-shrink:0;}";
+                    html += ".winner{font-weight:700;color:#198754;}.loser{color:#aaa;}";
+                    html += ".champ{text-align:center;padding:20px;background:linear-gradient(135deg,#ffc107,#ff8c00);border-radius:12px;margin:20px 0;}";
+                    html += ".champ-name{font-size:24px;font-weight:800;}.champ-label{font-size:12px;color:#5a4000;margin-bottom:4px;font-weight:600;}";
+                    html += "@media print{body{padding:10px;} h2{break-before:auto;}}";
+                    html += "</style></head><body>";
+                    html += "<h1>" + (userName || "My") + "'s 2026 March Madness Bracket</h1>";
+                    html += "<div class='subtitle'>Generated from March Madness Upset Analysis &middot; " + totalPicks + "/63 picks made</div>";
+                    if (bracket.champion) {
+                      html += "<div class='champ'><div class='champ-label'>NATIONAL CHAMPION</div><div class='champ-name'>(" + bracket.champion.seed + ") " + bracket.champion.team + "</div></div>";
+                    }
+                    regions.forEach(function(reg) {
+                      html += "<h2 style='background:" + regionColors[reg.name] + "'>" + reg.name + " Region</h2>";
+                      ["R64","R32","S16","E8"].forEach(function(round) {
+                        var roundNames = {R64:"Round of 64",R32:"Round of 32",S16:"Sweet 16",E8:"Elite 8"};
+                        var games = bracket[reg.name] && bracket[reg.name][round] ? bracket[reg.name][round] : [];
+                        var hasGames = games.some(function(g){return g && g.winner;});
+                        if (hasGames) {
+                          html += "<div style='margin:6px 0 2px;font-size:11px;color:#888;font-weight:600;'>" + roundNames[round] + "</div>";
+                          games.forEach(function(g) {
+                            if (g && g.winner && g.a && g.b) {
+                              var aWon = g.winner.team === g.a.team;
+                              html += "<div class='game'>";
+                              html += "<span class='seed'>" + g.a.seed + "</span><span class='" + (aWon ? "winner" : "loser") + "'>" + g.a.team + "</span>";
+                              html += "<span style='color:#ccc;'>vs</span>";
+                              html += "<span class='seed'>" + g.b.seed + "</span><span class='" + (!aWon ? "winner" : "loser") + "'>" + g.b.team + "</span>";
+                              html += "</div>";
+                            }
+                          });
+                        }
+                      });
+                    });
+                    if (bracket.FF && bracket.FF.some(function(g){return g && g.winner;})) {
+                      html += "<h2 style='background:#dc3545'>Final Four</h2>";
+                      bracket.FF.forEach(function(g,gi) {
+                        if (g && g.winner && g.a && g.b) {
+                          var aWon = g.winner.team === g.a.team;
+                          html += "<div class='game'><span class='seed'>" + g.a.seed + "</span><span class='" + (aWon?"winner":"loser") + "'>" + g.a.team + "</span><span style='color:#ccc;'>vs</span><span class='seed'>" + g.b.seed + "</span><span class='" + (!aWon?"winner":"loser") + "'>" + g.b.team + "</span></div>";
+                        }
+                      });
+                    }
+                    if (bracket.CH && bracket.CH[0] && bracket.CH[0].winner) {
+                      html += "<h2 style='background:#6f42c1'>Championship</h2>";
+                      var g = bracket.CH[0];
+                      var aWon = g.winner.team === g.a.team;
+                      html += "<div class='game'><span class='seed'>" + g.a.seed + "</span><span class='" + (aWon?"winner":"loser") + "'>" + g.a.team + "</span><span style='color:#ccc;'>vs</span><span class='seed'>" + g.b.seed + "</span><span class='" + (!aWon?"winner":"loser") + "'>" + g.b.team + "</span></div>";
+                    }
+                    html += "<div style='text-align:center;margin-top:24px;font-size:10px;color:#ccc;'>March Madness Upset Analysis 2026</div>";
+                    html += "</body></html>";
+                    printWin.document.write(html);
+                    printWin.document.close();
+                    printWin.focus();
+                    setTimeout(function(){ printWin.print(); }, 300);
+                  }} style={{ padding: "8px 16px", borderRadius: 8, fontSize: 12, background: totalPicks > 0 ? "#198754" : "#ccc", color: "#fff", border: "none", cursor: totalPicks > 0 ? "pointer" : "default", fontWeight: 600 }}>
+                    Print Bracket
                   </button>
                 </div>
               )}
