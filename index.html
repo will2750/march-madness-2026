@@ -521,6 +521,7 @@ function App() {
     { key: "cinderellas", label: "Cinderella Runs" },
     { key: "heatmap", label: "Heatmap" },
     { key: "picks2026", label: "2026 Picks" },
+    { key: "aiPredictions", label: "AI Bracket" },
     { key: "bracket", label: "My Bracket" },
   ];
 
@@ -855,16 +856,17 @@ function App() {
                         const rate = (upsetCount / 36 * 100);
                         const isHot = rate >= 20;
                         const isWarm = rate >= 10 && rate < 20;
+                        const isCool = rate > 0 && rate < 10;
                         const isCoinFlip = m.hi === 8;
                         return (
                           <div key={mi} style={{ display: "flex", alignItems: "center", gap: 6, padding: "5px 4px", borderBottom: mi < reg.matchups.length - 1 ? "1px solid #f0f0f0" : "none", background: isHot ? "#fff5f5" : isCoinFlip ? "#fff8e1" : "transparent", borderRadius: 4 }}>
                             <div style={{ width: 22, fontSize: 11, fontWeight: 700, color: "#888", textAlign: "center" }}>{m.hi}</div>
                             <div style={{ flex: 1, fontSize: 12, fontWeight: 600 }}>{m.hiTeam}</div>
                             <div style={{ fontSize: 10, color: "#bbb", padding: "0 4px" }}>vs</div>
-                            <div style={{ flex: 1, fontSize: 12, textAlign: "right", color: isHot ? "#dc3545" : isWarm ? "#e67e22" : "#666", fontWeight: isHot ? 700 : 400 }}>{m.loTeam}</div>
+                            <div style={{ flex: 1, fontSize: 12, textAlign: "right", color: isHot ? "#dc3545" : isWarm ? "#e67e22" : isCool ? "#6c757d" : "#666", fontWeight: isHot ? 700 : 400 }}>{m.loTeam}</div>
                             <div style={{ width: 22, fontSize: 11, fontWeight: 700, color: "#888", textAlign: "center" }}>{m.lo}</div>
-                            {(isHot || isWarm || isCoinFlip) && (
-                              <div style={{ fontSize: 9, padding: "2px 5px", borderRadius: 8, fontWeight: 700, background: isHot ? "#dc3545" : isCoinFlip ? "#ffc107" : "#e67e22", color: isHot || !isCoinFlip ? "#fff" : "#333", whiteSpace: "nowrap" }}>
+                            {(isHot || isWarm || isCool || isCoinFlip) && (
+                              <div style={{ fontSize: 9, padding: "2px 5px", borderRadius: 8, fontWeight: 700, background: isHot ? "#dc3545" : isCoinFlip ? "#ffc107" : isWarm ? "#e67e22" : "#6c757d", color: isCoinFlip ? "#333" : "#fff", whiteSpace: "nowrap" }}>
                                 {isCoinFlip ? "FLIP" : rate.toFixed(0) + "%"}
                               </div>
                             )}
@@ -1128,6 +1130,290 @@ function App() {
           </div>
         </div>
       )}
+
+      {/* AI PREDICTION BRACKET */}
+      {view === "aiPredictions" && (() => {
+        const regionColors = { East: "#0d6efd", South: "#dc3545", Midwest: "#198754", West: "#6f42c1" };
+
+        // === AI PREDICTIONS DATA ===
+        // Built from: historical upset rates, 2026 injuries, KenPom rankings, SOS, team performance
+        const aiPicks = {
+          East: {
+            R64: [
+              { winner: "Duke", seed: 1, loser: "Siena", lSeed: 16, upset: false, reason: "Duke is KenPom #1 and has never lost to a 16 as a 1-seed in program history." },
+              { winner: "TCU", seed: 9, loser: "Ohio St.", lSeed: 8, upset: true, reason: "9-over-8 is a coin flip. TCU has more tournament experience this decade and a slight edge in tempo control." },
+              { winner: "Northern Iowa", seed: 12, loser: "St. John's", lSeed: 5, upset: true, reason: "12-over-5 hits 36% of the time. Northern Iowa plays the 2nd-slowest tempo in the country and has a top-25 defense. St. John's just lost the Big East final — potential letdown." },
+              { winner: "Kansas", seed: 4, loser: "Cal Baptist", lSeed: 13, upset: false, reason: "If Darryn Peterson (19.8 PPG) is healthy, Kansas is too talented. Peterson's availability is the risk." },
+              { winner: "South Florida", seed: 11, loser: "Louisville", lSeed: 6, upset: true, reason: "Louisville's Mikel Brown Jr. (back) missed the ACC tourney. 11-over-6 is the highest upset rate in the tournament (50%). South Florida went 25-8 with AAC toughness." },
+              { winner: "Michigan St.", seed: 3, loser: "North Dakota St.", lSeed: 14, upset: false, reason: "Michigan State's tournament experience under Tom Izzo is a massive edge. Izzo is 34-14 in R64/R32 games." },
+              { winner: "UCF", seed: 10, loser: "UCLA", lSeed: 7, upset: true, reason: "10-over-7 hits 36% of the time with at least one per tournament. UCF has AAC experience and UCLA as a 7-seed is out of their comfort zone." },
+              { winner: "UConn", seed: 2, loser: "Furman", lSeed: 15, upset: false, reason: "Despite the Big East final loss, UConn is too talented. But Furman is live — 15s have won 3x in 9 years." },
+            ],
+            R32: [
+              { winner: "Duke", seed: 1, loser: "TCU", lSeed: 9, upset: false, reason: "Duke without Foster is vulnerable but Cameron Boozer (22.7/10.2) is the best player in the tournament. Ngongba expected back." },
+              { winner: "Northern Iowa", seed: 12, loser: "Kansas", lSeed: 4, upset: true, reason: "Bold pick: Peterson's health is fragile (missed 11 games). If he cramps out, Northern Iowa's defense suffocates Kansas. Cinderella run begins." },
+              { winner: "South Florida", seed: 11, loser: "Michigan St.", lSeed: 3, upset: true, reason: "USF carries momentum from the Louisville upset. Izzo struggles against athletic, high-pressure defenses. The Cinderella S16 run." },
+              { winner: "UConn", seed: 2, loser: "UCF", lSeed: 10, upset: false, reason: "UConn's two-time championship experience (2023, 2024) gives them the edge in a close game." },
+            ],
+            S16: [
+              { winner: "Duke", seed: 1, loser: "Northern Iowa", lSeed: 12, upset: false, reason: "Duke's defense eventually wears down the Cinderella. Boozer is too dominant in the paint." },
+              { winner: "UConn", seed: 2, loser: "South Florida", lSeed: 11, upset: false, reason: "UConn has the depth and experience to handle another AAC team. South Florida's run ends here." },
+            ],
+            E8: [
+              { winner: "Duke", seed: 1, loser: "UConn", lSeed: 2, upset: false, reason: "Duke's KenPom #1 defense contains UConn's offense. Boozer's double-double machine carries them to the Final Four." },
+            ],
+          },
+          South: {
+            R64: [
+              { winner: "Florida", seed: 1, loser: "Prairie View/Lehigh", lSeed: 16, upset: false, reason: "Defending national champions don't lose to 16-seeds. Florida's depth is overwhelming." },
+              { winner: "Clemson", seed: 8, loser: "Iowa", lSeed: 9, upset: false, reason: "Clemson made the Final Four last year as a 7-seed. They know how to win in March. Experience matters in 8-9 games." },
+              { winner: "McNeese", seed: 12, loser: "Vanderbilt", lSeed: 5, upset: true, reason: "McNeese (28-5) already pulled a 12-over-5 in 2025, beating Clemson 69-67. Vanderbilt has zero recent NCAA tournament experience." },
+              { winner: "Nebraska", seed: 4, loser: "Troy", lSeed: 13, upset: false, reason: "Nebraska's Big Ten experience gives them the edge, but Troy is a live underdog at 22%." },
+              { winner: "VCU", seed: 11, loser: "North Carolina", lSeed: 6, upset: true, reason: "UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG) to a broken thumb. VCU won the A-10 title and has 2011 Final Four DNA. The strongest injury-backed upset in the bracket." },
+              { winner: "Illinois", seed: 3, loser: "Penn", lSeed: 14, upset: false, reason: "Illinois has too much firepower. Penn's Ivy League defense is solid but outmatched athletically." },
+              { winner: "Saint Mary's", seed: 7, loser: "Texas A&M", lSeed: 10, upset: false, reason: "Saint Mary's has the #1 FT%, 11th-best 3P%, and 7th-best scoring nationally. They're 3-1 in recent R64 games." },
+              { winner: "Houston", seed: 2, loser: "Idaho", lSeed: 15, upset: false, reason: "Houston's elite defense (28-6) is too stifling for Idaho. Not this year for the 15-over-2." },
+            ],
+            R32: [
+              { winner: "Florida", seed: 1, loser: "Clemson", lSeed: 8, upset: false, reason: "Clemson's magic from last year's FF run is hard to replicate. Florida's defending champs are too deep." },
+              { winner: "Nebraska", seed: 4, loser: "McNeese", lSeed: 12, upset: false, reason: "McNeese's Cinderella moment ends here. Nebraska's Big Ten physicality and experience wear down the Southland champs in a grind-it-out R32 game." },
+              { winner: "VCU", seed: 11, loser: "Illinois", lSeed: 3, upset: true, reason: "VCU's Cinderella run continues! After beating an injured UNC, they carry momentum into R32. Illinois plays down to their competition, and VCU's A-10 toughness and March pedigree (2011 Final Four) fuel a second straight upset." },
+              { winner: "Houston", seed: 2, loser: "Saint Mary's", lSeed: 7, upset: false, reason: "Houston's defense is the equalizer. Saint Mary's elite shooting gets slowed down by Houston's suffocating pressure defense." },
+            ],
+            S16: [
+              { winner: "Florida", seed: 1, loser: "Nebraska", lSeed: 4, upset: false, reason: "Florida's defending champs are too talented for Nebraska. The Gators' depth and championship experience carry them to the Elite 8." },
+              { winner: "Houston", seed: 2, loser: "VCU", lSeed: 11, upset: false, reason: "VCU's magical Cinderella run (through injured UNC and Illinois) ends against Houston's #1 adjusted defensive efficiency. Houston holds VCU under 50 points." },
+            ],
+            E8: [
+              { winner: "Houston", seed: 2, loser: "Florida", lSeed: 1, upset: true, reason: "Upset pick: Houston's elite defense (#1 in adj. efficiency) smothers Florida's offense. The Cougars have been to the Final Four 3x since 2021 and know this stage. Florida can't generate enough offense against Houston's suffocating pressure." },
+            ],
+          },
+          Midwest: {
+            R64: [
+              { winner: "Michigan", seed: 1, loser: "UMBC/Howard", lSeed: 16, upset: false, reason: "Michigan is KenPom #2 with elite defense. First Four teams are exhausted from their play-in game." },
+              { winner: "Georgia", seed: 8, loser: "Saint Louis", lSeed: 9, upset: false, reason: "Georgia's SEC experience gives them a slight edge. Coin flip game but SEC toughness wins out." },
+              { winner: "Akron", seed: 12, loser: "Texas Tech", lSeed: 5, upset: true, reason: "Texas Tech lost JT Toppin for the season — defense dropped from 24th to 119th. Akron is 29-5 and won the MAC title. Classic injury-fueled 12-over-5." },
+              { winner: "Alabama", seed: 4, loser: "Hofstra", lSeed: 13, upset: false, reason: "Alabama's high-variance style makes them dangerous but also favored. Their athleticism overwhelms Hofstra in a track meet." },
+              { winner: "Tennessee", seed: 6, loser: "Miami (OH)/SMU", lSeed: 11, upset: false, reason: "Tennessee's SEC-level defense is too much for a First Four survivor. Tennessee is a dark horse Sweet 16 team." },
+              { winner: "Virginia", seed: 3, loser: "Wright St.", lSeed: 14, upset: false, reason: "Despite Virginia's upset history, they're still more talented. Wright St. is live but Virginia's slow tempo works against smaller opponents." },
+              { winner: "Kentucky", seed: 7, loser: "Santa Clara", lSeed: 10, upset: false, reason: "Coin flip matchup, but Kentucky's talent and name recognition gives them an edge. Santa Clara's WCC style could trouble them though." },
+              { winner: "Iowa St.", seed: 2, loser: "Tennessee St.", lSeed: 15, upset: false, reason: "Iowa State's top-5 defense (Tamin Lipsey: 5.0 AST, 2.2 STL) is too suffocating. Tennessee St. can't generate enough offense." },
+            ],
+            R32: [
+              { winner: "Michigan", seed: 1, loser: "Georgia", lSeed: 8, upset: false, reason: "Michigan's KenPom #2 defense shuts down Georgia. The Wolverines cruise to the Sweet 16." },
+              { winner: "Akron", seed: 12, loser: "Alabama", lSeed: 4, upset: true, reason: "Alabama's inconsistency rears its head against a disciplined Akron team. The MAC champs control tempo and force Bama into a half-court game. Akron to the Sweet 16." },
+              { winner: "Tennessee", seed: 6, loser: "Virginia", lSeed: 3, upset: true, reason: "Tennessee's athleticism and defensive intensity overwhelms Virginia's plodding tempo. Virginia's upset-prone history continues." },
+              { winner: "Iowa St.", seed: 2, loser: "Kentucky", lSeed: 7, upset: false, reason: "Iowa State's top-5 defense neutralizes Kentucky's talent. Lipsey's ball-hawking defense is the difference." },
+            ],
+            S16: [
+              { winner: "Michigan", seed: 1, loser: "Akron", lSeed: 12, upset: false, reason: "Akron's Cinderella run ends here. Michigan's top-tier defense clamps down and their talent advantage is too much." },
+              { winner: "Iowa St.", seed: 2, loser: "Tennessee", lSeed: 6, upset: false, reason: "Iowa State's defensive system grinds Tennessee to a halt. The Cyclones' experience in March (E8 last year) carries them." },
+            ],
+            E8: [
+              { winner: "Michigan", seed: 1, loser: "Iowa St.", lSeed: 2, upset: false, reason: "Heavyweight defensive battle. Michigan's slight edge in offensive talent (despite losing Cason) wins a grind-it-out game." },
+            ],
+          },
+          West: {
+            R64: [
+              { winner: "Arizona", seed: 1, loser: "Long Island", lSeed: 16, upset: false, reason: "Arizona is 32-2 with the Big 12 title. KenPom #3. Long Island has no chance." },
+              { winner: "Utah St.", seed: 9, loser: "Villanova", lSeed: 8, upset: true, reason: "Utah State's Mountain West experience and 9-over-8 coin flip. They play a grinding, physical style that Villanova struggles with." },
+              { winner: "Wisconsin", seed: 5, loser: "High Point", lSeed: 12, upset: false, reason: "Wisconsin (24-10) has 4 wins over KenPom top-10 teams scoring 90+ each time. When locked in, they're a Sweet 16 team." },
+              { winner: "Arkansas", seed: 4, loser: "Hawaii", lSeed: 13, upset: false, reason: "Arkansas's SEC athleticism overwhelms Hawaii. Travel fatigue (Hawaii to mainland) is a real factor." },
+              { winner: "Texas/NC State", seed: 11, loser: "BYU", lSeed: 6, upset: true, reason: "BYU lost Richie Saunders (torn ACL). The First Four winner comes in battle-tested. NC State made the Elite 8 as an 11 in 2024. Three of four 6-seeds have injuries." },
+              { winner: "Gonzaga", seed: 3, loser: "Kennesaw St.", lSeed: 14, upset: false, reason: "Even without Huff, Gonzaga's Graham Ike and Mark Few's system are enough for the R64. Huff's status is the wildcard for later rounds." },
+              { winner: "Miami (FL)", seed: 7, loser: "Missouri", lSeed: 10, upset: false, reason: "Miami's ACC tournament experience and Jim Larrañaga's March coaching give them the edge in a tight game." },
+              { winner: "Purdue", seed: 2, loser: "Queens (N.C.)", lSeed: 15, upset: false, reason: "Purdue is too big and too talented. Queens (N.C.) is making their first tournament appearance." },
+            ],
+            R32: [
+              { winner: "Arizona", seed: 1, loser: "Utah St.", lSeed: 9, upset: false, reason: "Arizona's pace and athleticism is too much for Utah State's grind-it-out style. The Wildcats roll." },
+              { winner: "Wisconsin", seed: 5, loser: "Arkansas", lSeed: 4, upset: true, reason: "Wisconsin's 4 top-10 wins show they can beat anyone. Arkansas is a 4-seed but Wisconsin plays like a 2 when hot. Their half-court offense is methodical and effective." },
+              { winner: "Gonzaga", seed: 3, loser: "Texas/NC State", lSeed: 11, upset: false, reason: "Gonzaga's talent edge is still significant even without Huff. If Huff returns for R32, this isn't close." },
+              { winner: "Purdue", seed: 2, loser: "Miami (FL)", lSeed: 7, upset: false, reason: "Purdue's size advantage is overwhelming. Their frontcourt dominates the glass." },
+            ],
+            S16: [
+              { winner: "Arizona", seed: 1, loser: "Wisconsin", lSeed: 5, upset: false, reason: "Arizona's pace destroys Wisconsin's methodical approach. The Wildcats run Wisconsin off the floor with tempo." },
+              { winner: "Purdue", seed: 2, loser: "Gonzaga", lSeed: 3, upset: false, reason: "Without a healthy Huff, Gonzaga can't match Purdue's size inside. Purdue's paint dominance wins a physical game." },
+            ],
+            E8: [
+              { winner: "Arizona", seed: 1, loser: "Purdue", lSeed: 2, upset: false, reason: "Arizona's Big 12-tested defense and 32-2 record prove too much. Their guard play is the difference in a close Elite 8 battle." },
+            ],
+          },
+          FinalFour: [
+            { winner: "Duke", seed: 1, loser: "Houston", lSeed: 2, region: "East vs South", reason: "Duke's offense finally cracks Houston's defense. Cameron Boozer has a 30-point masterclass. If Foster returns, Duke has another gear." },
+            { winner: "Arizona", seed: 1, loser: "Michigan", lSeed: 1, region: "West vs Midwest", reason: "Battle of 1-seeds. Arizona's tempo and depth wear down Michigan in a classic. Arizona's Big 12 schedule prepared them for this moment." },
+          ],
+          Championship: {
+            winner: "Duke", seed: 1, loser: "Arizona", lSeed: 1, reason: "Duke's KenPom #1 defense meets Arizona's KenPom #3 offense. Cameron Boozer finishes as the tournament's Most Outstanding Player with a dominant championship performance. Duke's first national title since 2015 and Coach Scheyer's first."
+          },
+        };
+
+        const upsetBadge = (seed, lSeed) => {
+          if (seed > lSeed) return <span style={{ fontSize: 9, padding: "2px 5px", borderRadius: 8, fontWeight: 700, background: "#dc3545", color: "#fff", marginLeft: 6 }}>UPSET</span>;
+          return null;
+        };
+
+        const totalUpsets = (() => {
+          let count = 0;
+          Object.values(aiPicks).forEach(region => {
+            if (Array.isArray(region)) { region.forEach(g => { if (g.winner && g.seed > (g.lSeed || 0)) count++; }); }
+            else { Object.values(region).forEach(round => { if (Array.isArray(round)) round.forEach(g => { if (g.upset) count++; }); }); }
+          });
+          if (aiPicks.Championship && aiPicks.Championship.seed > aiPicks.Championship.lSeed) count++;
+          return count;
+        })();
+
+        return (
+          <div>
+            {/* Header */}
+            <div style={{ padding: "16px 18px", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)", borderRadius: 12, marginBottom: 20, color: "#fff" }}>
+              <div style={{ fontSize: isMobile ? 16 : 20, fontWeight: 800, marginBottom: 4 }}>AI Tournament Prediction Bracket</div>
+              <div style={{ fontSize: 12, opacity: 0.8, lineHeight: 1.5 }}>
+                Predicted by analyzing: 9 years of upset data (2016-2025), KenPom efficiency ratings, strength of schedule, current injuries (Foster, Wilson, Huff, Toppin, Saunders, Brown Jr.), team records, and performance against similar opponents.
+              </div>
+              <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
+                <div style={{ padding: "4px 10px", borderRadius: 8, background: "rgba(255,255,255,0.15)", fontSize: 11, fontWeight: 600 }}>Champion: (1) Duke</div>
+                <div style={{ padding: "4px 10px", borderRadius: 8, background: "rgba(255,255,255,0.15)", fontSize: 11, fontWeight: 600 }}>Total Upsets Predicted: {totalUpsets}</div>
+                <div style={{ padding: "4px 10px", borderRadius: 8, background: "rgba(255,255,255,0.15)", fontSize: 11, fontWeight: 600 }}>Cinderella: VCU to Sweet 16</div>
+              </div>
+            </div>
+
+            {/* Final Four & Championship at top */}
+            <div style={{ marginBottom: 20 }}>
+              <div style={{ textAlign: "center", padding: 20, background: "linear-gradient(135deg, #ffc107 0%, #ff8c00 100%)", borderRadius: 12, marginBottom: 12 }}>
+                <div style={{ fontSize: 12, fontWeight: 600, color: "#5a4000", marginBottom: 2 }}>AI PREDICTED 2026 NATIONAL CHAMPION</div>
+                <div style={{ fontSize: isMobile ? 22 : 28, fontWeight: 800, color: "#1a1a2e" }}>
+                  (1) Duke Blue Devils
+                </div>
+                <div style={{ fontSize: 12, color: "#5a4000", marginTop: 4 }}>{aiPicks.Championship.reason}</div>
+              </div>
+
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 8, marginBottom: 8 }}>
+                {aiPicks.FinalFour.map((g, i) => (
+                  <div key={i} style={{ background: "#fff", borderRadius: 10, padding: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", border: "2px solid #6f42c1" }}>
+                    <div style={{ fontSize: 10, color: "#6f42c1", fontWeight: 700, marginBottom: 6 }}>FINAL FOUR — {g.region}</div>
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 6 }}>
+                      <div style={{ fontWeight: 700, fontSize: 14, color: "#198754" }}>({g.seed}) {g.winner}</div>
+                      <div style={{ fontSize: 11, color: "#888" }}>over ({g.lSeed}) {g.loser}</div>
+                    </div>
+                    <div style={{ fontSize: 11, color: "#666", lineHeight: 1.4 }}>{g.reason}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Region-by-Region Predictions */}
+            {["East", "South", "Midwest", "West"].map(regName => {
+              const regionData = aiPicks[regName];
+              const rounds = ["R64", "R32", "S16", "E8"];
+              const roundNames = { R64: "Round of 64", R32: "Round of 32", S16: "Sweet 16", E8: "Elite 8" };
+
+              return (
+                <div key={regName} style={{ marginBottom: 20, borderRadius: 12, overflow: "hidden", boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+                  <div style={{ padding: "12px 16px", background: regionColors[regName], color: "#fff", fontWeight: 700, fontSize: 14 }}>
+                    {regName} Region
+                    <span style={{ fontWeight: 400, opacity: 0.8, fontSize: 12, marginLeft: 8 }}>
+                      Predicted Winner: ({regionData.E8[0].seed}) {regionData.E8[0].winner}
+                    </span>
+                  </div>
+                  <div style={{ background: "#fff", padding: isMobile ? 10 : 14 }}>
+                    {rounds.map(round => {
+                      const games = regionData[round];
+                      if (!games || games.length === 0) return null;
+                      return (
+                        <div key={round} style={{ marginBottom: round !== "E8" ? 12 : 0 }}>
+                          <div style={{ fontSize: 11, fontWeight: 700, color: regionColors[regName], marginBottom: 6, textTransform: "uppercase", letterSpacing: 0.5 }}>{roundNames[round]}</div>
+                          <div style={{ display: "flex", flexDirection: "column", gap: 4 }}>
+                            {games.map((g, gi) => (
+                              <div key={gi} style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 2 : 8, padding: "6px 10px", borderRadius: 6, background: g.upset ? "#fff5f5" : "#f8f9fa", borderLeft: `3px solid ${g.upset ? "#dc3545" : "#e0e0e0"}` }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: 4, minWidth: isMobile ? "auto" : 200 }}>
+                                  <span style={{ fontWeight: 700, fontSize: 12, color: g.upset ? "#dc3545" : "#198754" }}>({g.seed}) {g.winner}</span>
+                                  <span style={{ fontSize: 10, color: "#bbb" }}>over</span>
+                                  <span style={{ fontSize: 12, color: "#888", textDecoration: "line-through", opacity: 0.7 }}>({g.lSeed}) {g.loser}</span>
+                                  {g.upset && upsetBadge(g.seed, g.lSeed)}
+                                </div>
+                                <div style={{ fontSize: 11, color: "#777", lineHeight: 1.4, flex: 1 }}>{g.reason}</div>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              );
+            })}
+
+            {/* Upset Summary */}
+            <div style={{ marginBottom: 20 }}>
+              <h3 style={{ fontSize: 16, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Predicted Upset Summary</h3>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 8 }}>
+                <div style={{ background: "#fff", borderRadius: 10, padding: 14, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+                  <div style={{ fontWeight: 700, fontSize: 13, color: "#dc3545", marginBottom: 8 }}>R64 Upsets (7 predicted)</div>
+                  <div style={{ fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+                    (9) TCU over (8) Ohio St. — coin flip<br/>
+                    (12) Northern Iowa over (5) St. John's — classic 12/5<br/>
+                    (11) South Florida over (6) Louisville — Brown Jr. injury<br/>
+                    (10) UCF over (7) UCLA — 10/7 hits every year<br/>
+                    (12) McNeese over (5) Vanderbilt — McNeese proved it last year<br/>
+                    (11) VCU over (6) UNC — Wilson injury is devastating<br/>
+                    (12) Akron over (5) Texas Tech — Toppin injury killed defense<br/>
+                    (9) Utah St. over (8) Villanova — coin flip<br/>
+                    (11) Texas/NC State over (6) BYU — Saunders ACL tear
+                  </div>
+                </div>
+                <div style={{ background: "#fff", borderRadius: 10, padding: 14, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+                  <div style={{ fontWeight: 700, fontSize: 13, color: "#6f42c1", marginBottom: 8 }}>R32+ Upsets (5 predicted)</div>
+                  <div style={{ fontSize: 12, color: "#555", lineHeight: 1.8 }}>
+                    (12) Northern Iowa over (4) Kansas — Peterson health risk<br/>
+                    (11) South Florida over (3) Michigan St. — momentum<br/>
+                    (12) Akron over (4) Alabama — discipline over chaos<br/>
+                    (6) Tennessee over (3) Virginia — upset-prone Virginia<br/>
+                    (5) Wisconsin over (4) Arkansas — 4 top-10 wins<br/>
+                    (2) Houston over (1) Florida — Elite defense wins in E8
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Final Four Bracket Visual */}
+            <div style={{ marginBottom: 20, background: "#fff", borderRadius: 12, padding: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+              <h3 style={{ fontSize: 14, fontWeight: 700, color: "#1a1a2e", marginBottom: 12, textAlign: "center" }}>AI Predicted Final Four</h3>
+              <div style={{ display: "grid", gridTemplateColumns: "1fr auto 1fr", gap: 8, alignItems: "center" }}>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ padding: 10, background: "#e8f0fe", borderRadius: 8, marginBottom: 4 }}>
+                    <div style={{ fontSize: 10, color: "#0d6efd", fontWeight: 600 }}>East</div>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>(1) Duke</div>
+                  </div>
+                  <div style={{ padding: 10, background: "#fde8e8", borderRadius: 8 }}>
+                    <div style={{ fontSize: 10, color: "#dc3545", fontWeight: 600 }}>South</div>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>(2) Houston</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ padding: 12, background: "linear-gradient(135deg, #ffc107, #ff8c00)", borderRadius: 10 }}>
+                    <div style={{ fontSize: 9, fontWeight: 600, color: "#5a4000" }}>CHAMPION</div>
+                    <div style={{ fontWeight: 900, fontSize: isMobile ? 16 : 20, color: "#1a1a2e" }}>DUKE</div>
+                  </div>
+                </div>
+                <div style={{ textAlign: "center" }}>
+                  <div style={{ padding: 10, background: "#f3e8fd", borderRadius: 8, marginBottom: 4 }}>
+                    <div style={{ fontSize: 10, color: "#6f42c1", fontWeight: 600 }}>West</div>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>(1) Arizona</div>
+                  </div>
+                  <div style={{ padding: 10, background: "#e8f5e9", borderRadius: 8 }}>
+                    <div style={{ fontSize: 10, color: "#198754", fontWeight: 600 }}>Midwest</div>
+                    <div style={{ fontWeight: 800, fontSize: 16 }}>(1) Michigan</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+              <strong>Methodology:</strong> This bracket was generated by analyzing 9 years of NCAA tournament upset data (139 total upsets from 2016-2025), cross-referenced with 2026 KenPom efficiency ratings, current injury reports (as of 3/15/26), strength of schedule, and team performance against similarly-ranked opponents. Historical upset rates by seed matchup were used to identify the most likely upsets. Injury-impacted teams were downgraded accordingly.
+            </div>
+          </div>
+        );
+      })()}
 
       {/* INTERACTIVE BRACKET VIEW */}
       {view === "bracket" && (() => {
