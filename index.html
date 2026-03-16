@@ -40,6 +40,44 @@ const ROUND_NAMES = { R64:"Round of 64", R32:"Round of 32", S16:"Sweet 16", E8:"
 const ROUND_COLORS = { R64:"#6c757d", R32:"#0d6efd", S16:"#198754", E8:"#ffc107", FF:"#dc3545", CH:"#6f42c1" };
 const ROUND_BG = { R64:"#f8f9fa", R32:"#e8f4fd", S16:"#d4edda", E8:"#fff3cd", FF:"#f8d7da", CH:"#e2d5f1" };
 
+// === SCORING SYSTEM ===
+// Points per round: doubles each round (R64=10, R32=20, ... CH=320)
+const ROUND_POINTS = { R64: 10, R32: 20, S16: 40, E8: 80, FF: 160, CH: 320 };
+const MAX_SCORE = 32*10 + 16*20 + 8*40 + 4*80 + 2*160 + 1*320; // 1920
+
+// Actual tournament results - auto-updated by ESPN scheduled task
+// "_" = not yet played, "a" = higher seed side won, "b" = lower seed side won
+// Format: East(8+4+2+1) + South(15) + Midwest(15) + West(15) + FF(2) + CH(1) = 63 chars
+const actualResultsCode = "_______________________________________________________________";
+
+// AI Bracket picks encoded as bracket code (precomputed from aiPicks data)
+const AI_BRACKET_CODE = "abbababaaaababaaababaaaabababbaabaaaaaaaababaabaabaaaaabbababaa";
+
+// Hardcoded friend brackets — add entries like { name: "Friend Name", code: "63-char-code" }
+const hardcodedBrackets = [];
+
+// Score any bracket code against actual results
+const scoreBracketCode = (code) => {
+  if (!code || code.length < 63) return { score: 0, correct: 0, possible: 0, total: 0, maxScore: MAX_SCORE };
+  let score = 0, correct = 0, possible = 0, total = 0;
+  const pts = [];
+  for (let r = 0; r < 4; r++) {
+    for (let i = 0; i < 8; i++) pts.push(10);
+    for (let i = 0; i < 4; i++) pts.push(20);
+    for (let i = 0; i < 2; i++) pts.push(40);
+    pts.push(80);
+  }
+  pts.push(160, 160, 320);
+  for (let i = 0; i < 63; i++) {
+    if (actualResultsCode[i] !== "_") {
+      possible += pts[i];
+      total++;
+      if (code[i] === actualResultsCode[i]) { score += pts[i]; correct++; }
+    }
+  }
+  return { score, correct, possible, total, maxScore: MAX_SCORE };
+};
+
 const NUM_TOURNAMENTS = 9;
 const GAMES_PER_SEED_R64 = NUM_TOURNAMENTS * 4;
 
@@ -515,6 +553,65 @@ function App() {
     return count;
   })();
 
+  // === LEADERBOARD STATE ===
+  const [importedBrackets, setImportedBrackets] = useState(() => {
+    try {
+      const saved = localStorage.getItem("mm_leaderboard_2026");
+      return saved ? JSON.parse(saved) : [];
+    } catch(e) { return []; }
+  });
+  const [importInput, setImportInput] = useState("");
+  const [importName, setImportName] = useState("");
+
+  useEffect(() => {
+    try { localStorage.setItem("mm_leaderboard_2026", JSON.stringify(importedBrackets)); } catch(e) {}
+  }, [importedBrackets]);
+
+  const addImportedBracket = () => {
+    let code = importInput.trim();
+    let name = importName.trim() || ("Bracket " + (importedBrackets.length + 1));
+    try {
+      const url = new URL(code);
+      const params = new URLSearchParams(url.search);
+      code = params.get("b") || code;
+      if (params.get("n")) name = decodeURIComponent(params.get("n"));
+    } catch(e) {}
+    if (code.length >= 63 && /^[ab_]+$/.test(code)) {
+      setImportedBrackets(prev => [...prev, { name, code }]);
+      setImportInput("");
+      setImportName("");
+    }
+  };
+
+  const removeImportedBracket = (idx) => {
+    setImportedBrackets(prev => prev.filter((_, i) => i !== idx));
+  };
+
+  // Build the full leaderboard entries list
+  const getLeaderboard = () => {
+    const entries = [];
+    // User's bracket
+    const userCode = encodeBracket(bracket);
+    if (totalPicks > 0) {
+      entries.push({ name: userName || "My Bracket", code: userCode, type: "user", ...scoreBracketCode(userCode) });
+    }
+    // AI bracket
+    entries.push({ name: "AI Prediction", code: AI_BRACKET_CODE, type: "ai", ...scoreBracketCode(AI_BRACKET_CODE) });
+    // Hardcoded brackets
+    hardcodedBrackets.forEach(b => {
+      entries.push({ name: b.name, code: b.code, type: "hardcoded", ...scoreBracketCode(b.code) });
+    });
+    // Imported brackets
+    importedBrackets.forEach(b => {
+      entries.push({ name: b.name, code: b.code, type: "imported", ...scoreBracketCode(b.code) });
+    });
+    // Sort by score desc, then correct picks desc
+    entries.sort((a, b) => b.score - a.score || b.correct - a.correct);
+    return entries;
+  };
+
+  const gamesPlayed = actualResultsCode.replace(/_/g, "").length;
+
   const tabs = [
     { key: "byRound", label: "By Round" },
     { key: "vulnerable", label: "Most Vulnerable" },
@@ -522,6 +619,7 @@ function App() {
     { key: "heatmap", label: "Heatmap" },
     { key: "picks2026", label: "2026 Picks" },
     { key: "aiPredictions", label: "AI Bracket" },
+    { key: "leaderboard", label: "Leaderboard" },
     { key: "bracket", label: "My Bracket" },
   ];
 
@@ -1410,6 +1508,132 @@ function App() {
 
             <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
               <strong>Methodology:</strong> This bracket was generated by analyzing 9 years of NCAA tournament upset data (139 total upsets from 2016-2025), cross-referenced with 2026 KenPom efficiency ratings, current injury reports (as of 3/15/26), strength of schedule, and team performance against similarly-ranked opponents. Historical upset rates by seed matchup were used to identify the most likely upsets. Injury-impacted teams were downgraded accordingly.
+            </div>
+          </div>
+        );
+      })()}
+
+      {/* LEADERBOARD VIEW */}
+      {view === "leaderboard" && (() => {
+        const leaderboard = getLeaderboard();
+        const hasResults = gamesPlayed > 0;
+        const roundBreakdown = [
+          { round: "Round of 64", pts: 10, games: 32, max: 320 },
+          { round: "Round of 32", pts: 20, games: 16, max: 320 },
+          { round: "Sweet 16", pts: 40, games: 8, max: 320 },
+          { round: "Elite 8", pts: 80, games: 4, max: 320 },
+          { round: "Final Four", pts: 160, games: 2, max: 320 },
+          { round: "Championship", pts: 320, games: 1, max: 320 },
+        ];
+
+        return (
+          <div>
+            {/* Scoring System */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Scoring System</h3>
+              <div style={{ display: "grid", gridTemplateColumns: isMobile ? "repeat(3, 1fr)" : "repeat(6, 1fr)", gap: 8 }}>
+                {roundBreakdown.map(r => (
+                  <div key={r.round} style={{ background: "#f8f9fa", borderRadius: 8, padding: 10, textAlign: "center" }}>
+                    <div style={{ fontSize: 10, color: "#666", fontWeight: 600 }}>{r.round}</div>
+                    <div style={{ fontSize: 20, fontWeight: 800, color: "#0d6efd" }}>{r.pts}</div>
+                    <div style={{ fontSize: 9, color: "#999" }}>pts/pick</div>
+                  </div>
+                ))}
+              </div>
+              <div style={{ marginTop: 10, textAlign: "center", fontSize: 13, color: "#555" }}>
+                Maximum possible score: <strong style={{ color: "#0d6efd" }}>{MAX_SCORE}</strong> points (63 correct picks)
+              </div>
+            </div>
+
+            {/* Tournament Progress */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e" }}>Tournament Progress</h3>
+                <span style={{ fontSize: 12, color: "#666" }}>{gamesPlayed}/63 games played</span>
+              </div>
+              <div style={{ background: "#e9ecef", borderRadius: 10, height: 12, overflow: "hidden" }}>
+                <div style={{ background: "linear-gradient(90deg, #0d6efd, #6f42c1)", height: "100%", width: (gamesPlayed / 63 * 100) + "%", borderRadius: 10, transition: "width 0.5s" }} />
+              </div>
+              {!hasResults && (
+                <div style={{ marginTop: 10, padding: 12, background: "#fff3cd", borderRadius: 8, fontSize: 12, color: "#856404", textAlign: "center" }}>
+                  The tournament hasn't started yet! Scores will update automatically as games are played. Results are checked every 10 minutes via ESPN.
+                </div>
+              )}
+            </div>
+
+            {/* Leaderboard Rankings */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Rankings</h3>
+              {leaderboard.length === 0 ? (
+                <div style={{ padding: 20, textAlign: "center", color: "#999", fontSize: 13 }}>No brackets to rank yet. Fill out your bracket or import one below!</div>
+              ) : (
+                <div>
+                  {leaderboard.map((entry, i) => {
+                    const medal = i === 0 ? "#ffd700" : i === 1 ? "#c0c0c0" : i === 2 ? "#cd7f32" : null;
+                    const isUser = entry.type === "user";
+                    const isAI = entry.type === "ai";
+                    return (
+                      <div key={i} style={{
+                        display: "flex", alignItems: "center", padding: "12px 14px", marginBottom: 6,
+                        background: isUser ? "#e8f0fe" : isAI ? "#f3e8fd" : "#f8f9fa",
+                        borderRadius: 10, border: isUser ? "2px solid #0d6efd" : isAI ? "2px solid #6f42c1" : "1px solid #e9ecef",
+                      }}>
+                        {/* Rank */}
+                        <div style={{
+                          width: 32, height: 32, borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center",
+                          background: medal || "#e9ecef", color: medal ? "#fff" : "#666",
+                          fontWeight: 800, fontSize: 14, flexShrink: 0, marginRight: 12,
+                          textShadow: medal ? "0 1px 2px rgba(0,0,0,0.3)" : "none",
+                        }}>
+                          {i + 1}
+                        </div>
+                        {/* Name + Type */}
+                        <div style={{ flex: 1, minWidth: 0 }}>
+                          <div style={{ fontWeight: 700, fontSize: 14, color: "#1a1a2e", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                            {entry.name}
+                            {isUser && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 8, background: "#0d6efd", color: "#fff", marginLeft: 8, fontWeight: 600 }}>YOU</span>}
+                            {isAI && <span style={{ fontSize: 9, padding: "2px 6px", borderRadius: 8, background: "#6f42c1", color: "#fff", marginLeft: 8, fontWeight: 600 }}>AI</span>}
+                          </div>
+                          <div style={{ fontSize: 11, color: "#888", marginTop: 2 }}>
+                            {hasResults ? (entry.correct + "/" + entry.total + " correct") : (entry.code.replace(/_/g, "").length + "/63 picks made")}
+                          </div>
+                        </div>
+                        {/* Score */}
+                        <div style={{ textAlign: "right", flexShrink: 0 }}>
+                          <div style={{ fontWeight: 800, fontSize: 20, color: hasResults ? "#0d6efd" : "#bbb" }}>{hasResults ? entry.score : "-"}</div>
+                          <div style={{ fontSize: 10, color: "#999" }}>{hasResults ? "pts" : "awaiting results"}</div>
+                        </div>
+                        {/* Remove button for imported */}
+                        {entry.type === "imported" && (
+                          <button onClick={() => removeImportedBracket(importedBrackets.findIndex(b => b.code === entry.code))}
+                            style={{ marginLeft: 8, background: "none", border: "none", color: "#dc3545", cursor: "pointer", fontSize: 16, padding: 4 }}>x</button>
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+
+            {/* Import Brackets */}
+            <div style={{ background: "#fff", borderRadius: 12, padding: 16, marginBottom: 16, boxShadow: "0 1px 4px rgba(0,0,0,0.08)" }}>
+              <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 8 }}>Import a Bracket</h3>
+              <p style={{ fontSize: 12, color: "#666", marginBottom: 12 }}>Paste a shared bracket URL (from the My Bracket tab) to add it to the leaderboard.</p>
+              <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", gap: 8 }}>
+                <input value={importName} onChange={e => setImportName(e.target.value)} placeholder="Name (optional)"
+                  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13, width: isMobile ? "100%" : 140 }} />
+                <input value={importInput} onChange={e => setImportInput(e.target.value)} placeholder="Paste bracket URL or code..."
+                  style={{ padding: "8px 12px", borderRadius: 8, border: "1px solid #ddd", fontSize: 13, flex: 1 }} />
+                <button onClick={addImportedBracket}
+                  style={{ padding: "8px 16px", borderRadius: 8, background: "#0d6efd", color: "#fff", border: "none", fontWeight: 700, fontSize: 13, cursor: "pointer", whiteSpace: "nowrap" }}>
+                  Add to Leaderboard
+                </button>
+              </div>
+            </div>
+
+            {/* How It Works */}
+            <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
+              <strong>How it works:</strong> Fill out your bracket in the "My Bracket" tab and share the link with friends. They fill out theirs and share back. Paste their URLs here to track everyone on the leaderboard. Scores update automatically as ESPN results come in every 10 minutes. Points double each round: 10 (R64) → 20 (R32) → 40 (S16) → 80 (E8) → 160 (FF) → 320 (Championship).
             </div>
           </div>
         );
