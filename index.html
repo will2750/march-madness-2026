@@ -246,11 +246,11 @@ function App() {
     { seed: 1, teams: ["Duke (32-2)", "Florida", "Michigan (29-2)", "Arizona (32-2)"], risk: "low", note: "1-seeds upset " + (loserTotals[1]||0) + "x in 9 yrs. INJURIES: Duke lost Caleb Foster (broken foot, surgery — 'very minimal' chance of return even for Final Four, effectively OUT). Ngongba (foot) expected back for opener. Michigan lost L.J. Cason (torn ACL). Duke is KenPom #1 (best defense, top-5 offense, +40 net) but running a 7-man rotation — won ACC tourney with close calls vs FSU and Virginia. Cayden Boozer played all 40 min in ACC title game. Fatigue is the X-factor. Arizona is KenPom #3 with the Big 12 title and 32-2 record. Expect 1-2 to fall before the FF." },
     { seed: 2, teams: ["UConn (29-5)", "Houston (28-6)", "Iowa St. (27-7)", "Purdue (27-8)"], risk: "medium", note: "15-over-2 has hit in 3 of 9 tournaments. Iowa State has top-5 defensive efficiency (Tamin Lipsey: 5.0 AST, 2.2 STL per game). Houston is elite defensively (28-6). INJURY: UConn's Silas Demary Jr. (10.9 PPG, 6.2 APG) sprained ankle in Big East final — X-ray negative, out of walking boot, expected to play but may be limited. UConn lost Big East final to St. John's and enters shaky. Purdue and Iowa St. could've been 3-seeds — they should feel lucky here." },
     { seed: 3, teams: ["Michigan St.", "Illinois", "Virginia", "Gonzaga"], risk: "medium", note: "INJURY: Gonzaga's Braden Huff (17.8 PPG, 5.6 RPG) — dislocated kneecap, out since Jan 15. Ruled OUT for first weekend. Few says 'he is jogging and shooting' but won't play R64/R32. Sweet 16 return possible if Gonzaga survives. Without Huff, Gonzaga's ceiling drops significantly. Virginia is the most upset-prone team in March history: 16-seed UMBC in 2018, 13-seed Ohio in 2021, 13-seed Furman in 2023. 14-over-3 upsets: SFA over WVU '16, Abilene Christian over Texas '21, Oakland over Kentucky '24 (3x in 9 yrs, 8%)." },
-    { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "BREAKING: Alabama's Aden Holloway (16.8 PPG, 2nd-leading scorer) arrested on felony drug charges (3/16). Over a pound of marijuana found at his residence. Status for tournament UNKNOWN — possible suspension or ban. Without Holloway, Alabama's offense is gutted. INJURY: Kansas' Darryn Peterson (19.8 PPG, projected #1 pick) missed 11 games with cramping/hamstring — available but fragile. 13-over-4 has happened " + (r64Matchups["13v4"]||0) + "x in 9 yrs. Hofstra vs a Holloway-less Alabama is a massive upset opportunity." },
-    { seed: 5, teams: ["St. John's (28-6)", "Vanderbilt (26-8)", "Texas Tech (22-10)", "Wisconsin (24-10)"], risk: "high", note: "INJURY: Texas Tech lost JT Toppin for the season — their defense COLLAPSED from 24th to 119th in adj. efficiency. Christian Anderson (19.2 PPG, 43% 3P) carries the offense but the defense is gone. Wisconsin has 4 wins over KenPom top-10 teams (90+ pts each) but is erratic. 12-over-5 hit in 8 of 9 years (" + (r64Matchups["12v5"]||0) + "/" + 36 + "). Akron (29-5) and McNeese (28-5) are dangerous." },
-    { seed: 6, teams: ["Louisville (22-9)", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "INJURY MINEFIELD: UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG, broken thumb — OUT). BYU lost BOTH Richie Saunders (torn ACL) AND Tyler Welling (torn ACL vs Wake Forest) — two starters gone. Louisville's Mikel Brown Jr. (18.2 PPG, 4.7 APG, back injury) missed ACC tourney — hopes to return but unconfirmed. 6-vs-11 is the #1 upset matchup (" + (r64Matchups["11v6"]||0) + "/" + 36 + "). VCU won the A-10 title; South Florida went 25-8. Three of four 6-seeds have major injury issues." },
+    { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "Alabama's Aden Holloway (16.8 PPG, 2nd-leading scorer) arrested on felony marijuana charges (3/16) and SUSPENDED INDEFINITELY by coach Nate Oats — removed from campus. Will NOT play vs Hofstra. Without Holloway, Alabama's offense is gutted. INJURY: Kansas' Darryn Peterson (19.8 PPG, projected #1 pick) missed 11 games with cramping/hamstring — available but fragile. 13-over-4 has happened " + (r64Matchups["13v4"]||0) + "x in 9 yrs. Hofstra vs a Holloway-less Alabama is the biggest upset opportunity in the bracket." },
+    { seed: 5, teams: ["St. John's (28-6)", "Vanderbilt (26-8)", "Texas Tech (22-10)", "Wisconsin (24-10)"], risk: "high", note: "INJURY: Texas Tech lost JT Toppin (torn ACL, Feb 17 at Arizona State — 21.8 PPG, 10.8 RPG, led nation in made FGs) for the season. Defense collapsed from 24th to 119th without him. Christian Anderson (19.2 PPG) carries the offense but the defense is gone. Wisconsin has 4 wins over KenPom top-10 teams but is erratic. 12-over-5 hit in 8 of 9 years (" + (r64Matchups["12v5"]||0) + "/" + 36 + "). Akron (29-5) and McNeese (28-5) are dangerous." },
+    { seed: 6, teams: ["Louisville (22-9)", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "INJURY MINEFIELD: UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG, broken thumb — OUT, 0-2 without him). BYU lost THREE players: Dawson Baker (torn ACL, Nov), Nate Pickens (preseason), and Richie Saunders (torn ACL, Feb) — 2-4 since Saunders went down. Louisville's Mikel Brown Jr. (18.2 PPG, back injury) missed ACC tourney — hopes to return but unconfirmed. 6-vs-11 is the #1 upset matchup (" + (r64Matchups["11v6"]||0) + "/" + 36 + "). VCU won the A-10 title; South Florida went 25-8. Three of four 6-seeds have major injury issues." },
     { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "INJURY: UCLA's Donovan Dent (calf strain in Big Ten semi) expected to play vs UCF but may be limited — and Tyler Bilodeau also nursing an injury. Saint Mary's is a terrible draw for any 2-seed: 11th-best 3P%, #1 FT% nationally, 7th-best scoring. They're 3-1 in R64 over the last 4 appearances. Kentucky was upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022 — they're beatable. 10-over-7 has hit " + (r64Matchups["10v7"]||0) + "x in 9 yrs with at least 1 per tournament." },
-    { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is a coin flip (" + (r64Matchups["9v8"]||0) + "/" + 36 + " upsets). The 8/9 winner vs 1-seed in R32 is one of March's best upset pipelines — it happened in 5 of 9 tournaments (Wisconsin over Villanova '17, Loyola over Illinois '21, UNC over Baylor '22). Clemson made the Final Four last year as a 7-seed — they know how to win in March." },
+    { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is a coin flip (" + (r64Matchups["9v8"]||0) + "/" + 36 + " upsets). The 8/9 winner vs 1-seed in R32 is one of March's best upset pipelines — it happened in 5 of 9 tournaments (Wisconsin over Villanova '17, Loyola over Illinois '21, UNC over Baylor '22). INJURY: Clemson lost Carter Welling (10.2 PPG, 5.4 RPG, top rebounder, torn ACL in ACC tourney) — Iowa (9) now favored in that 8/9 game." },
   ];
 
   const riskColors = { low: "#198754", medium: "#ffc107", high: "#dc3545" };
@@ -861,8 +861,8 @@ function App() {
                 upsetBy: "Kennesaw St. (14) in R64 or Wisconsin (5) in R32",
                 histRate: "14-over-3 has happened 3x in 9 years (SFA '16, Abilene '21, Oakland '24)" },
               { seed: 4, team: "Alabama (23-9)", region: "Midwest", kenPom: 16, kenPomOff: 3, kenPomDef: 67, record: "23-9",
-                vulnerability: 82, reason: "ARREST + DEFENSE",
-                details: "BREAKING: Aden Holloway (16.8 PPG, 43.8% 3P, All-SEC Third Team) arrested on felony drug charges 3/16. Tournament status UNKNOWN. Even before the arrest, Alabama's defense ranks KenPom #67 — by far the worst among 4-seeds. High-variance team that lost in the SEC Tournament. Elite offense (#3) but catastrophic defense makes them upset bait.",
+                vulnerability: 88, reason: "SUSPENDED STAR + DEFENSE",
+                details: "Aden Holloway (16.8 PPG, 43.8% 3P, All-SEC Third Team) arrested on felony marijuana charges and SUSPENDED INDEFINITELY by coach Nate Oats. Removed from campus. Will NOT play vs Hofstra. Alabama's defense was already KenPom #67 — by far the worst among 4-seeds. Without their best shooter and 2nd-leading scorer, this is a near-certain upset.",
                 upsetBy: "Hofstra (13) in R64",
                 histRate: "13-over-4 happens ~once per tournament (22%)" },
               { seed: 5, team: "Texas Tech (22-10)", region: "Midwest", kenPom: 20, kenPomOff: 12, kenPomDef: 33, record: "22-10",
@@ -871,8 +871,8 @@ function App() {
                 upsetBy: "Akron (12) in R64",
                 histRate: "12-over-5 hits in 8 of 9 years (36% per game)" },
               { seed: 6, team: "BYU", region: "West", kenPom: 25, kenPomOff: 15, kenPomDef: 40, record: "24-9",
-                vulnerability: 78, reason: "DOUBLE INJURY",
-                details: "Lost TWO starters to torn ACLs — Richie Saunders (all-conference sharpshooter) in mid-February AND Tyler Welling vs Wake Forest. Only AJ Dybantsa and Robert Wright III remain from their core. BYU is running on fumes against the First Four winner (Texas KenPom #37 or NC State KenPom #34), both of whom are battle-tested and hungry.",
+                vulnerability: 76, reason: "MULTIPLE INJURIES + FORM",
+                details: "Lost Dawson Baker (torn ACL, November), Nate Pickens (preseason), and Richie Saunders (torn ACL vs Colorado, February) — three significant roster losses. BYU is 2-4 since Saunders went down. Only Dybantsa and Wright III remain from their core. The First Four winner (Texas KenPom #37 or NC State KenPom #34) will be battle-tested and hungry.",
                 upsetBy: "Texas/NC State (11) in R64",
                 histRate: "11-over-6 is the #1 upset matchup (50% in some years)" },
               { seed: 7, team: "UCLA", region: "East", kenPom: 18, kenPomOff: 10, kenPomDef: 30, record: "23-10",
@@ -880,10 +880,10 @@ function App() {
                 details: "Donovan Dent (calf strain) and Tyler Bilodeau both left the Big Ten semifinal vs Purdue injured. Both expected to play vs UCF but health is uncertain. UCLA lost to Purdue in the Big Ten semis and enters as a 7-seed with 10 losses — not where they expected to be. 10-over-7 hits at least once every tournament.",
                 upsetBy: "UCF (10) in R64",
                 histRate: "10-over-7 has happened in every tournament since 2016" },
-              { seed: 8, team: "Villanova", region: "West", kenPom: 33, kenPomOff: 28, kenPomDef: 38, record: "20-13",
-                vulnerability: 60, reason: "WEAK PROFILE",
-                details: "KenPom #33 is the weakest profile among all 8-seeds. 20-13 record with 13 losses is the most among any team seeded 1-8. Utah State (KenPom #32) is actually ranked higher. Villanova lacks a true star and their Big East record was mediocre. This is the definition of a coin-flip 8/9 game leaning toward the 9-seed.",
-                upsetBy: "Utah St. (9) in R64",
+              { seed: 8, team: "Clemson (21-12)", region: "South", kenPom: 29, kenPomOff: 22, kenPomDef: 35, record: "21-12",
+                vulnerability: 68, reason: "KEY INJURY",
+                details: "Lost Carter Welling (10.2 PPG, 5.4 RPG, team leader in rebounds and blocks) to a torn ACL in the ACC Tournament vs Wake Forest. Without their top rebounder and rim protector, Clemson's interior defense takes a massive hit. Iowa (9) is well-coached and physical — this 8/9 game now leans heavily toward the Hawkeyes.",
+                upsetBy: "Iowa (9) in R64",
                 histRate: "9-over-8 is a coin flip (44% historically)" },
             ].map((t, i) => {
               const vulnColor = t.vulnerability >= 75 ? "#dc3545" : t.vulnerability >= 60 ? "#e67e22" : t.vulnerability >= 45 ? "#ffc107" : "#198754";
@@ -925,7 +925,7 @@ function App() {
             })}
           </div>
           <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>How to read this:</strong> Vulnerability scores combine KenPom rank vs seed expectation, injury impact, recent form, and historical upset rates. A score above 75% means a team is in serious danger. Scores are relative — even a 50% score means meaningful upset risk. Data: KenPom rankings (3/15/26), injury reports (3/16/26), historical upset data (2016-2025).
+            <strong>How to read this:</strong> Vulnerability scores combine KenPom rank vs seed expectation, injury impact, recent form, and historical upset rates. A score above 75% means a team is in serious danger. Scores are relative — even a 50% score means meaningful upset risk. Data: KenPom rankings (3/15/26), injury reports (3/17/26), historical upset data (2016-2025).
           </div>
         </div>
       )}
@@ -966,8 +966,8 @@ function App() {
             adj: "Peterson's cramping history makes every game a coinflip. When healthy, elite. When not, they're a 6-seed." },
           { seed: 4, team: "Nebraska", region: "South", kenPom: 17, injuryFlag: null, survR64: 85, survR32: 60, survS16: 32, survE8: 15, survFF: 6, survCH: 2,
             adj: "First tournament appearance in years. KenPom #17 is respectable but no March pedigree. Troy (13) is beatable; deeper rounds are uncertain." },
-          { seed: 4, team: "Alabama", region: "Midwest", kenPom: 16, injuryFlag: "Holloway arrested (status unknown)", survR64: 55, survR32: 28, survS16: 12, survE8: 5, survFF: 2, survCH: 1,
-            adj: "Holloway arrest crushes survival odds. KenPom #67 defense was already catastrophic. Near-dead bracket entry." },
+          { seed: 4, team: "Alabama", region: "Midwest", kenPom: 16, injuryFlag: "Holloway SUSPENDED (felony arrest)", survR64: 48, survR32: 22, survS16: 8, survE8: 3, survFF: 1, survCH: 0,
+            adj: "Holloway confirmed SUSPENDED indefinitely — will NOT play vs Hofstra. KenPom #67 defense was already catastrophic. Near-dead bracket entry." },
           { seed: 4, team: "Arkansas", region: "West", kenPom: 19, injuryFlag: null, survR64: 84, survR32: 55, survS16: 28, survE8: 12, survFF: 5, survCH: 2,
             adj: "Solid season under Calipari. Hawaii (13) is a manageable R64 draw. Path gets tough through Gonzaga/Wisconsin side of the West." },
           // === 5-SEEDS ===
@@ -986,22 +986,22 @@ function App() {
             adj: "Without Wilson (19.8 PPG), UNC is a shell. VCU won the A-10 title and has March DNA. Dangerous matchup." },
           { seed: 6, team: "Tennessee", region: "Midwest", kenPom: 23, injuryFlag: null, survR64: 65, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1,
             adj: "Experienced SEC squad. Miami (OH)/SMU from First Four is a manageable R64 draw. Potential R32 matchup with Virginia or Wright St." },
-          { seed: 6, team: "BYU", region: "West", kenPom: 25, injuryFlag: "Saunders + Welling OUT (torn ACLs)", survR64: 42, survR32: 18, survS16: 6, survE8: 2, survFF: 0, survCH: 0,
-            adj: "Two torn ACLs gutted this roster. Only Dybantsa remains. First Four winner (Texas/NC State) is very dangerous." },
+          { seed: 6, team: "BYU", region: "West", kenPom: 25, injuryFlag: "Baker + Saunders OUT (torn ACLs), Pickens OUT", survR64: 44, survR32: 18, survS16: 6, survE8: 2, survFF: 0, survCH: 0,
+            adj: "Three significant losses: Baker (ACL, Nov), Pickens (preseason), Saunders (ACL, Feb). Only Dybantsa and Wright remain. 2-4 since Saunders went down." },
           // === 7-SEEDS ===
           { seed: 7, team: "UCLA", region: "East", kenPom: 18, injuryFlag: "Dent (calf) + Bilodeau (injury)", survR64: 60, survR32: 30, survS16: 12, survE8: 4, survFF: 1, survCH: 0,
             adj: "Two starters banged up from Big Ten semis. 10-over-7 hits every year. UCF is a tough draw for a hobbled UCLA." },
           { seed: 7, team: "Saint Mary's", region: "South", kenPom: 26, injuryFlag: null, survR64: 65, survR32: 32, survS16: 14, survE8: 5, survFF: 2, survCH: 0,
             adj: "11th-best 3P%, #1 FT% nationally, 7th-best scoring. 3-1 in R64 over last 4 appearances. Dangerous Cinderella potential." },
-          { seed: 7, team: "Kentucky", region: "Midwest", kenPom: 27, injuryFlag: null, survR64: 62, survR32: 30, survS16: 12, survE8: 4, survFF: 1, survCH: 0,
-            adj: "Upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022. Young roster, March pedigree, but inconsistent." },
+          { seed: 7, team: "Kentucky", region: "Midwest", kenPom: 27, injuryFlag: "Quaintance (knee, only 4 games)", survR64: 58, survR32: 26, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
+            adj: "Quaintance has played just 4 games all season (surgically repaired knee). Upset by 14-seed Oakland in '24, 15-seed Saint Peter's in '22. Young, inconsistent." },
           { seed: 7, team: "Miami (FL)", region: "West", kenPom: 30, injuryFlag: null, survR64: 58, survR32: 25, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
             adj: "Made the Final Four in 2023 as a 5-seed. Tournament experience but weaker roster this year. Missouri (10) is a tough draw." },
           // === 8-SEEDS ===
           { seed: 8, team: "Ohio St.", region: "East", kenPom: 28, injuryFlag: null, survR64: 50, survR32: 14, survS16: 4, survE8: 1, survFF: 0, survCH: 0,
             adj: "Classic 8/9 coinflip vs TCU. Winner gets Duke. The 8/9-over-1 pipeline has hit in 5 of 9 years but Duke is still elite." },
-          { seed: 8, team: "Clemson", region: "South", kenPom: 29, injuryFlag: null, survR64: 52, survR32: 15, survS16: 5, survE8: 2, survFF: 1, survCH: 0,
-            adj: "Final Four last year as a 7-seed — March pedigree is real. Iowa (9) is a coinflip. If they win, they get Florida. Clemson knows how to win in March." },
+          { seed: 8, team: "Clemson", region: "South", kenPom: 29, injuryFlag: "Carter Welling OUT (torn ACL)", survR64: 40, survR32: 10, survS16: 3, survE8: 1, survFF: 0, survCH: 0,
+            adj: "Lost Welling (10.2 PPG, 5.4 RPG, top rebounder) to torn ACL in ACC tourney. Interior defense gutted. Iowa (9) now favored in this 8/9 game." },
           { seed: 8, team: "Georgia", region: "Midwest", kenPom: 31, injuryFlag: null, survR64: 48, survR32: 12, survS16: 4, survE8: 1, survFF: 0, survCH: 0,
             adj: "Weakish profile for an 8-seed. Saint Louis (9) is tough. Even if they win, Michigan (1) awaits. Low ceiling." },
           { seed: 8, team: "Villanova", region: "West", kenPom: 33, injuryFlag: null, survR64: 44, survR32: 10, survS16: 3, survE8: 1, survFF: 0, survCH: 0,
@@ -1010,11 +1010,11 @@ function App() {
 
         // What-If injury overrides: when toggled, recalculate as if player were healthy/out
         const whatIfOverrides = {
-          "Alabama": { healthy: { survR64: 80, survR32: 55, survS16: 30, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Holloway: Alabama's elite offense (#3 KenPom) is intact. Still hampered by #67 defense, but Holloway's 43.8% 3P shooting stretches defenses. Viable Sweet 16 team." } },
+          "Alabama": { healthy: { survR64: 80, survR32: 55, survS16: 30, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Holloway: Alabama's elite offense (#3 KenPom) is intact. Still hampered by #67 defense, but Holloway's 43.8% 3P stretches defenses. Viable Sweet 16 team. (Note: Holloway is currently SUSPENDED — this is hypothetical.)" } },
           "Duke": { healthy: { survR64: 99, survR32: 92, survS16: 78, survE8: 62, survFF: 40, survCH: 24, injuryFlag: null, adj: "WITH Foster: Duke goes from 7 to 9-man rotation. Fatigue concerns disappear. Cameron Boozer + Foster backcourt is the best in the country. Title favorite." } },
           "Gonzaga": { healthy: { survR64: 92, survR32: 72, survS16: 50, survE8: 30, survFF: 14, survCH: 6, injuryFlag: null, adj: "WITH Huff: Gonzaga's interior is restored (17.8 PPG, 5.6 RPG). Graham Ike + Huff frontcourt is elite. Sweet 16 team with Final Four upside." } },
           "Kansas": { out: { survR64: 62, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1, injuryFlag: "Peterson OUT (hypothetical)", adj: "WITHOUT Peterson: Kansas drops from a 4-seed talent to a 7-seed. No one else on the roster can create offense at his level. Cal Baptist becomes dangerous." } },
-          "BYU": { healthy: { survR64: 68, survR32: 38, survS16: 18, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "WITH Saunders + Welling: BYU goes from gutted to dangerous. Dybantsa + Saunders + Welling is a top-20 starting five. Legitimate Sweet 16 contender." } },
+          "BYU": { healthy: { survR64: 68, survR32: 38, survS16: 18, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "WITH Saunders + Baker: BYU's big three is restored plus bench depth. Dybantsa + Saunders + Wright III is a top-20 starting five. Legitimate Sweet 16 contender." } },
           "North Carolina": { healthy: { survR64: 78, survR32: 50, survS16: 28, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Wilson: UNC's offense is restored (19.8 PPG, 9.4 RPG). They become the favorite over VCU and a legitimate threat to reach the Sweet 16." } },
           "Texas Tech": { healthy: { survR64: 72, survR32: 45, survS16: 22, survE8: 10, survFF: 4, survCH: 1, injuryFlag: null, adj: "WITH Toppin: Defense returns to KenPom #24 instead of #119. Texas Tech becomes a legitimate 5-seed threat with balanced offense and defense." } },
           "UCLA": { healthy: { survR64: 75, survR32: 42, survS16: 20, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "FULLY HEALTHY: Both Dent and Bilodeau at 100% gives UCLA a complete starting five. UCF becomes manageable and a R32 run is realistic." } },
@@ -1139,7 +1139,7 @@ function App() {
             <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
               Comprehensive injury and availability tracker for all tournament teams with significant health concerns. Impact ratings reflect each player's importance to their team's tournament chances.
             </p>
-            <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Last updated: March 16, 2026</div>
+            <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Last updated: March 17, 2026</div>
           </div>
 
           {/* Critical / Out */}
@@ -1150,14 +1150,15 @@ function App() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { team: "Duke (1)", player: "Caleb Foster", injury: "Broken foot (surgery)", status: "OUT for tournament", impact: 95, details: "Had surgery on broken foot. Jon Scheyer says 'very minimal' chance of return even for Final Four. Duke's backup PG is unproven — Cayden Boozer forced to play 37-40 min/game. Team running 7-man rotation without him." },
-                { team: "Alabama (4)", player: "Aden Holloway", injury: "Felony drug arrest (3/16)", status: "STATUS UNKNOWN", impact: 98, details: "Arrested on felony charges — over a pound of marijuana found at his residence. 16.8 PPG, 43.8% 3P, All-SEC Third Team. Nate Oats has not commented. If suspended, Alabama loses their best perimeter shooter and 2nd-leading scorer. Tournament viability in serious doubt." },
-                { team: "Gonzaga (3)", player: "Braden Huff", injury: "Dislocated kneecap (Jan 15)", status: "OUT for 1st weekend", impact: 90, details: "Ruled out for R64 and R32 by coach Mark Few. 17.8 PPG, 5.6 RPG — second-best scorer and top interior presence. 'He is jogging and shooting' — possible Sweet 16 return if Gonzaga survives. Graham Ike carrying the load." },
-                { team: "BYU (6)", player: "Richie Saunders", injury: "Torn ACL (mid-February)", status: "OUT for season", impact: 88, details: "All-conference sharpshooter tore his ACL in mid-February. Combined with Welling's ACL tear, BYU has lost two starters. Only AJ Dybantsa and Robert Wright III remain from their core rotation." },
-                { team: "BYU (6)", player: "Tyler Welling", injury: "Torn ACL (vs Wake Forest)", status: "OUT for season", impact: 82, details: "Second torn ACL on the BYU roster. Welling was a key starter who went down vs Wake Forest. Two ACL losses makes BYU the most injury-devastated team in the tournament." },
-                { team: "North Carolina (6)", player: "Caleb Wilson", injury: "Broken thumb", status: "OUT", impact: 92, details: "19.8 PPG, 9.4 RPG — UNC's best player by a wide margin. Broke his thumb and is out for the tournament. Without him, UNC faces VCU (A-10 champs) in R64 as a massive underdog disguised as a 6-seed." },
-                { team: "Texas Tech (5)", player: "JT Toppin", injury: "Season-ending (undisclosed)", status: "OUT for season", impact: 85, details: "Defense collapsed from KenPom #24 to #119 in adjusted efficiency without Toppin. Christian Anderson (19.2 PPG) carries the offense but cannot fix the defensive crater. 22-10 record with 10 losses is the weakest among 5-seeds." },
-                { team: "Michigan (1)", player: "L.J. Cason", injury: "Torn ACL", status: "OUT for season", impact: 55, details: "Key bench contributor averaging 8.4 PPG tore his ACL. Michigan is still KenPom #2 and 29-2, but their depth is thinner. Impact is lower since Cason was a reserve, but it narrows an already tight rotation." },
+                { team: "Alabama (4)", player: "Aden Holloway", injury: "Felony drug arrest — suspended indefinitely (3/16)", status: "SUSPENDED", impact: 98, details: "Arrested on felony marijuana possession (over a pound found at residence) and failure to affix tax stamp. Coach Nate Oats confirmed Holloway is SUSPENDED INDEFINITELY and removed from campus. 16.8 PPG, 43.8% 3P, All-SEC Third Team — Alabama's best perimeter shooter and 2nd-leading scorer. Will NOT play vs Hofstra. Alabama's tournament viability is in serious doubt." },
+                { team: "Duke (1)", player: "Caleb Foster", injury: "Broken foot (surgery)", status: "OUT for tournament", impact: 95, details: "Had surgery on broken right foot. Jon Scheyer says only a 'minuscule' chance of return even if Duke reaches the Final Four. Duke's backup PG is unproven — Cayden Boozer forced to play 37-40 min/game. Team running 7-man rotation without him." },
+                { team: "North Carolina (6)", player: "Caleb Wilson", injury: "Broken thumb (practice, March 5)", status: "OUT for tournament", impact: 92, details: "Projected top-5 NBA pick — 19.8 PPG, 9.4 RPG. Broke his thumb during practice on March 5. UNC is 0-2 without him (lost to Duke 76-61, then fell to Clemson 80-79 in ACC tourney). Faces VCU (A-10 champs) as a paper 6-seed." },
+                { team: "Gonzaga (3)", player: "Braden Huff", injury: "Dislocated kneecap (Jan 15)", status: "OUT for 1st weekend", impact: 90, details: "Ruled out for R64 and R32 by coach Mark Few. 17.8 PPG, 5.6 RPG, 69.7% on 2P — second-best scorer and top interior presence. Now in week 9 of rehab — 'he is jogging and shooting.' Sweet 16 return possible if Gonzaga survives. Graham Ike carrying the load." },
+                { team: "BYU (6)", player: "Richie Saunders", injury: "Torn ACL (Feb 14, vs Colorado)", status: "OUT for season", impact: 88, details: "Second Team All-Big 12 — tore his ACL in the opening minute of BYU's OT win over Colorado. Was one-third of the Cougars' big three with AJ Dybantsa and Robert Wright III. BYU is 2-4 since Saunders went down." },
+                { team: "BYU (6)", player: "Dawson Baker", injury: "Torn ACL (November, Thanksgiving)", status: "OUT for season", impact: 70, details: "Key rotation guard tore his ACL on Thanksgiving. This was BYU's first major blow — followed by Nate Pickens (preseason) and then Saunders (February). Three significant roster losses have left BYU dangerously thin behind Dybantsa and Wright III." },
+                { team: "Clemson (8)", player: "Carter Welling", injury: "Torn ACL (ACC Tournament vs Wake Forest)", status: "OUT for season", impact: 85, details: "Junior center tore his ACL going to the basket at the end of the first half in Clemson's ACC tourney win over Wake Forest. Led the team in rebounds (5.4 RPG) and blocks (0.8 BPG), also 10.2 PPG. Without their top rebounder and rim protector, Clemson's interior defense takes a massive hit against Iowa." },
+                { team: "Texas Tech (5)", player: "JT Toppin", injury: "Torn ACL (Feb 17, at Arizona State)", status: "OUT for season", impact: 85, details: "Led the nation with 234 made FGs — 21.8 PPG, 10.8 RPG, 1.7 BPG. Four-time Big 12 Player of the Week. Defense collapsed from KenPom #24 to #119 without him. Christian Anderson (19.2 PPG) carries the offense but cannot fix the defensive crater." },
+                { team: "Michigan (1)", player: "L.J. Cason", injury: "Torn ACL (late regular season)", status: "OUT for season", impact: 55, details: "Key bench contributor averaging 8.4 PPG, 2.4 APG in his breakout sophomore campaign. Tore his ACL late in the season. Michigan is still KenPom #2 and 29-2, but their depth is thinner. Will redshirt next year." },
               ].map((inj, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #dc3545", padding: isMobile ? "10px 10px" : "12px 16px" }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 4 : 12, marginBottom: 6 }}>
@@ -1185,12 +1186,13 @@ function App() {
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
               {[
-                { team: "Duke (1)", player: "Maliq Ngongba", injury: "Foot injury", status: "EXPECTED to play", impact: 40, details: "Missed 2+ weeks with a foot injury. Expected back for the tournament opener vs Siena. If fully healthy, he helps alleviate Duke's depth crisis. If re-aggravated, Duke's rotation shrinks to 6 players." },
-                { team: "UConn (2)", player: "Silas Demary Jr.", injury: "Sprained ankle (Big East final)", status: "PROBABLE (limited)", impact: 65, details: "10.9 PPG, 6.2 APG. Sprained ankle in the Big East final loss to St. John's. X-ray negative, out of walking boot. Expected to play but may be limited — mobility and burst could be affected. UConn's playmaking runs through him." },
-                { team: "UCLA (7)", player: "Donovan Dent", injury: "Calf strain (Big Ten semi)", status: "EXPECTED to play", impact: 60, details: "Left the Big Ten semifinal vs Purdue with a calf strain. Expected to play vs UCF but health is uncertain. If limited, UCLA's backcourt depth is significantly weakened against a solid UCF team." },
-                { team: "UCLA (7)", player: "Tyler Bilodeau", injury: "Undisclosed (Big Ten semi)", status: "EXPECTED to play", impact: 50, details: "Also left the Big Ten semifinal with an undisclosed injury. Both he and Dent are expected to suit up, but having two starters nursing injuries into R64 is a red flag." },
                 { team: "Kansas (4)", player: "Darryn Peterson", injury: "Chronic cramping/hamstring", status: "AVAILABLE (fragile)", impact: 75, details: "19.8 PPG, projected #1 NBA pick. Missed 11 of 31 regular-season games with cramping episodes he's called 'traumatic.' Available for the tournament but could leave any game at any time. When healthy, Kansas is a title contender. When he's out, they're a 6-seed at best." },
+                { team: "UConn (2)", player: "Silas Demary Jr.", injury: "Sprained ankle (Big East final, 3/16)", status: "PROBABLE (limited)", impact: 65, details: "10.9 PPG, 4.5 RPG, 6.2 APG, 1.6 STL. Landed awkwardly on a layup with 9 min left in Big East final loss to St. John's. X-ray negative, out of walking boot, 'in pretty good shape' per Hurley. Expected to play but mobility may be affected." },
+                { team: "UCLA (7)", player: "Donovan Dent", injury: "Calf injury (Big Ten semi vs Purdue)", status: "EXPECTED to play", impact: 60, details: "Left the Big Ten semifinal vs Purdue after just 10 minutes with a calf injury. Cronin says he 'could have played' but 'there's no point' in the semi. Expected to be available vs UCF but health is uncertain." },
                 { team: "Louisville (6)", player: "Mikel Brown Jr.", injury: "Back injury", status: "HOPES to play", impact: 55, details: "18.2 PPG, 4.7 APG. Missed the ACC Tournament with a back injury. Hopes to return for the NCAA Tournament but no official clearance yet. Louisville's offensive engine — without him, South Florida (11) is a very live upset." },
+                { team: "UCLA (7)", player: "Tyler Bilodeau", injury: "Mild right knee strain (Big Ten quarters vs Michigan St.)", status: "EXPECTED to play", impact: 50, details: "17.6 PPG, 5.6 RPG — UCLA's leading scorer and rebounder. Suffered a non-contact knee strain during the upset win over Michigan State. MRI cleared him Friday night — no structural damage. Sat out the Purdue semi. Should be available vs UCF." },
+                { team: "Kentucky (7)", player: "Jayden Quaintance", injury: "Surgically repaired knee (swelling)", status: "DOUBTFUL", impact: 45, details: "Sophomore has played in just 4 games all season due to persistent swelling and soreness in his surgically repaired knee. Kentucky has not ruled him out but a return seems unlikely. If he were healthy, he'd add major athleticism to the frontcourt." },
+                { team: "Duke (1)", player: "Patrick Ngongba II", injury: "Foot injury", status: "EXPECTED to play", impact: 40, details: "Sophomore center missed 2+ weeks with a foot injury. Expected back for the opener vs Siena. If fully healthy, he helps alleviate Duke's depth crisis. If re-aggravated, Duke's rotation shrinks to 6 players." },
               ].map((inj, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #e67e22", padding: isMobile ? "10px 10px" : "12px 16px" }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 4 : 12, marginBottom: 6 }}>
@@ -1215,10 +1217,10 @@ function App() {
             <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Injury Impact on Bracket Strategy</h3>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
               {[
-                { label: "Fade These Teams", color: "#dc3545", bg: "#fde8e8", teams: "Alabama (4), BYU (6), UNC (6), Texas Tech (5)" , why: "Key players confirmed OUT. Pick against them." },
+                { label: "Fade These Teams", color: "#dc3545", bg: "#fde8e8", teams: "Alabama (4), UNC (6), BYU (6), Texas Tech (5), Clemson (8)" , why: "Key players confirmed OUT or suspended. Pick against them." },
                 { label: "Injury Discounts", color: "#e67e22", bg: "#fff3e0", teams: "Duke (1), Gonzaga (3), UCLA (7), Kansas (4)", why: "Star players injured or limited. Lower seed advancement odds." },
-                { label: "Upgrade Opponents", color: "#198754", bg: "#d4edda", teams: "Hofstra (13), VCU (11), Akron (12), UCF (10)", why: "Facing injury-weakened teams. Prime upset candidates." },
-                { label: "Monitor Game-Time", color: "#0d6efd", bg: "#e8f4fd", teams: "UConn (Demary), Louisville (Brown), UCLA (Dent)", why: "Game-time decisions. Check before lock." },
+                { label: "Upgrade Opponents", color: "#198754", bg: "#d4edda", teams: "Hofstra (13), VCU (11), Akron (12), Iowa (9), UCF (10)", why: "Facing injury-weakened teams. Prime upset candidates." },
+                { label: "Monitor Game-Time", color: "#0d6efd", bg: "#e8f4fd", teams: "UConn (Demary), Louisville (Brown), UCLA (Dent/Bilodeau), Kentucky (Quaintance)", why: "Game-time decisions or uncertain availability. Check before lock." },
               ].map((card, ci) => (
                 <div key={ci} style={{ padding: 12, borderRadius: 8, background: card.bg, border: `1px solid ${card.color}22` }}>
                   <div style={{ fontWeight: 700, fontSize: 12, color: card.color, marginBottom: 4 }}>{card.label}</div>
@@ -1230,7 +1232,7 @@ function App() {
           </div>
 
           <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>Note:</strong> Injury information compiled from ESPN, team press conferences, and beat reporters as of March 16, 2026. Statuses can change rapidly — check official sources before locking your bracket. Impact scores (0-100) reflect how important the player is to their team's tournament ceiling, not the severity of the injury itself.
+            <strong>Note:</strong> Injury information compiled from ESPN, team press conferences, and beat reporters as of March 17, 2026. Statuses can change rapidly — check official sources before locking your bracket. Impact scores (0-100) reflect how important the player is to their team's tournament ceiling, not the severity of the injury itself.
           </div>
         </div>
       )}
@@ -1239,18 +1241,18 @@ function App() {
       {view === "regionRank" && (() => {
         const regionData = [
           { name: "Midwest", site: "Chicago", color: "#198754", bg: "#e8f5e9",
-            avgKenPom: 14.4, topSeed: "Michigan (1, KenPom #2)", injuryCount: 3,
-            injuredTeams: "Alabama (Holloway arrested), Texas Tech (Toppin OUT), Michigan (Cason OUT)",
+            avgKenPom: 14.4, topSeed: "Michigan (1, KenPom #2)", injuryCount: 4,
+            injuredTeams: "Alabama (Holloway SUSPENDED), Texas Tech (Toppin OUT), Michigan (Cason OUT), Kentucky (Quaintance, 4 games all year)",
             keyMatchups: "Michigan vs Iowa St. potential E8 clash. Alabama vs Hofstra is the biggest upset watch. Virginia's March collapse history looms. Tennessee and Kentucky add even more firepower.",
             dangerLevel: 95, dangerLabel: "BLOODBATH",
             teams: [
               { seed: 1, team: "Michigan", kenPom: 2, note: "Cason OUT, still elite" },
               { seed: 2, team: "Iowa St.", kenPom: 6, note: "Top-5 defense" },
               { seed: 3, team: "Virginia", kenPom: 15, note: "Most upset-prone team ever" },
-              { seed: 4, team: "Alabama", kenPom: 16, note: "Holloway arrested" },
+              { seed: 4, team: "Alabama", kenPom: 16, note: "Holloway SUSPENDED" },
               { seed: 5, team: "Texas Tech", kenPom: 20, note: "Toppin OUT, defense collapsed" },
               { seed: 6, team: "Tennessee", kenPom: 23, note: "Experienced SEC squad" },
-              { seed: 7, team: "Kentucky", kenPom: 27, note: "Young, inconsistent" },
+              { seed: 7, team: "Kentucky", kenPom: 27, note: "Quaintance (knee), only 4 games" },
               { seed: 8, team: "Georgia", kenPom: 31, note: "Weakest 8-seed path" },
             ] },
           { name: "East", site: "Washington DC", color: "#0d6efd", bg: "#e8f0fe",
@@ -1269,10 +1271,10 @@ function App() {
               { seed: 8, team: "Ohio St.", kenPom: 28, note: "Coinflip vs TCU" },
             ] },
           { name: "South", site: "Houston", color: "#dc3545", bg: "#fde8e8",
-            avgKenPom: 14.9, topSeed: "Florida (1, KenPom #5)", injuryCount: 1,
-            injuredTeams: "North Carolina (Wilson OUT — broken thumb)",
-            keyMatchups: "Florida has the clearest path of any 1-seed. Houston (2) is an elite defensive team that could meet Florida in the E8. Illinois and Nebraska are solid but not scary. Clemson's Final Four pedigree makes the 8/9 game interesting.",
-            dangerLevel: 60, dangerLabel: "MODERATE",
+            avgKenPom: 14.9, topSeed: "Florida (1, KenPom #5)", injuryCount: 2,
+            injuredTeams: "North Carolina (Wilson OUT — broken thumb), Clemson (Welling OUT — torn ACL)",
+            keyMatchups: "Florida has the clearest path of any 1-seed. Houston (2) is an elite defensive team that could meet Florida in the E8. Illinois and Nebraska are solid but not scary. Clemson lost Welling to a torn ACL — Iowa (9) now favored in the 8/9 game.",
+            dangerLevel: 55, dangerLabel: "FAVORABLE",
             teams: [
               { seed: 1, team: "Florida", kenPom: 5, note: "Healthiest 1-seed" },
               { seed: 2, team: "Houston", kenPom: 4, note: "Elite defense, fully healthy" },
@@ -1281,12 +1283,12 @@ function App() {
               { seed: 5, team: "Vanderbilt", kenPom: 21, note: "Strong SEC season" },
               { seed: 6, team: "North Carolina", kenPom: 22, note: "Wilson OUT" },
               { seed: 7, team: "Saint Mary's", kenPom: 26, note: "#1 FT%, Cinderella threat" },
-              { seed: 8, team: "Clemson", kenPom: 29, note: "Final Four last year" },
+              { seed: 8, team: "Clemson", kenPom: 29, note: "Welling OUT (torn ACL)" },
             ] },
           { name: "West", site: "San Jose", color: "#6f42c1", bg: "#f3e8fd",
             avgKenPom: 14.4, topSeed: "Arizona (1, KenPom #3)", injuryCount: 2,
-            injuredTeams: "Gonzaga (Huff OUT 1st weekend), BYU (Saunders + Welling torn ACLs)",
-            keyMatchups: "Arizona has the easiest path on paper. Gonzaga without Huff is vulnerable through R32. Wisconsin is the most dangerous 5-seed in the field (4 wins over KenPom top 10). BYU is gutted. Purdue is a quiet 2-seed that could make a run.",
+            injuredTeams: "Gonzaga (Huff OUT 1st weekend), BYU (Baker + Saunders torn ACLs, Pickens OUT)",
+            keyMatchups: "Arizona has the easiest path on paper. Gonzaga without Huff is vulnerable through R32. Wisconsin is the most dangerous 5-seed in the field (4 wins over KenPom top 10). BYU is decimated (three roster losses). Purdue is a quiet 2-seed that could make a run.",
             dangerLevel: 55, dangerLabel: "FAVORABLE",
             teams: [
               { seed: 1, team: "Arizona", kenPom: 3, note: "32-2, fully healthy, Big 12 champs" },
@@ -1294,7 +1296,7 @@ function App() {
               { seed: 3, team: "Gonzaga", kenPom: 7, note: "Huff OUT first weekend" },
               { seed: 4, team: "Arkansas", kenPom: 19, note: "Calipari's first year" },
               { seed: 5, team: "Wisconsin", kenPom: 10, note: "Most dangerous 5-seed" },
-              { seed: 6, team: "BYU", kenPom: 25, note: "Two torn ACLs, gutted" },
+              { seed: 6, team: "BYU", kenPom: 25, note: "Baker + Saunders ACLs, decimated" },
               { seed: 7, team: "Miami (FL)", kenPom: 30, note: "2023 FF experience" },
               { seed: 8, team: "Villanova", kenPom: 33, note: "Weakest 8-seed" },
             ] },
@@ -1391,40 +1393,88 @@ function App() {
         });
         allTeams.sort((a, b) => a.seed - b.seed || a.team.localeCompare(b.team));
 
-        // KenPom + injury lookup
+        // Comprehensive team profiles: KenPom, offensive/defensive efficiency rank, PPG, opp PPG, 3P%, FT%, RPG, SOS rank, tempo, record, injuries
         const teamProfiles = {
-          "Duke": { kenPom: 1, off: 4, def: 2, record: "32-2", injury: "Foster OUT (broken foot)", injImpact: -12 },
-          "Florida": { kenPom: 5, off: 8, def: 5, record: "30-4", injury: null, injImpact: 0 },
-          "Michigan": { kenPom: 2, off: 6, def: 1, record: "29-2", injury: "Cason OUT (torn ACL)", injImpact: -4 },
-          "Arizona": { kenPom: 3, off: 2, def: 7, record: "32-2", injury: null, injImpact: 0 },
-          "UConn": { kenPom: 12, off: 30, def: 11, record: "29-5", injury: "Demary ankle (limited)", injImpact: -5 },
-          "Houston": { kenPom: 4, off: 14, def: 3, record: "28-6", injury: null, injImpact: 0 },
-          "Iowa St.": { kenPom: 6, off: 18, def: 4, record: "27-7", injury: null, injImpact: 0 },
-          "Purdue": { kenPom: 8, off: 9, def: 10, record: "27-8", injury: null, injImpact: 0 },
-          "Michigan St.": { kenPom: 9, off: 16, def: 8, record: "25-8", injury: null, injImpact: 0 },
-          "Illinois": { kenPom: 11, off: 20, def: 12, record: "24-9", injury: null, injImpact: 0 },
-          "Virginia": { kenPom: 15, off: 45, def: 6, record: "23-10", injury: null, injImpact: -3 },
-          "Gonzaga": { kenPom: 7, off: 3, def: 22, record: "27-7", injury: "Huff OUT (1st weekend)", injImpact: -10 },
-          "Kansas": { kenPom: 14, off: 11, def: 18, record: "24-9", injury: "Peterson fragile", injImpact: -7 },
-          "Nebraska": { kenPom: 17, off: 22, def: 15, record: "24-9", injury: null, injImpact: 0 },
-          "Alabama": { kenPom: 16, off: 3, def: 67, record: "23-9", injury: "Holloway arrested", injImpact: -18 },
-          "Arkansas": { kenPom: 19, off: 13, def: 25, record: "23-10", injury: null, injImpact: 0 },
-          "St. John's": { kenPom: 13, off: 17, def: 14, record: "28-6", injury: null, injImpact: 0 },
-          "Vanderbilt": { kenPom: 21, off: 24, def: 20, record: "26-8", injury: null, injImpact: 0 },
-          "Texas Tech": { kenPom: 20, off: 12, def: 33, record: "22-10", injury: "Toppin OUT (season)", injImpact: -14 },
-          "Wisconsin": { kenPom: 10, off: 7, def: 16, record: "24-10", injury: null, injImpact: 0 },
-          "Louisville": { kenPom: 24, off: 19, def: 28, record: "22-9", injury: "Brown Jr. (back)", injImpact: -6 },
-          "North Carolina": { kenPom: 22, off: 10, def: 35, record: "21-12", injury: "Wilson OUT (thumb)", injImpact: -15 },
-          "Tennessee": { kenPom: 23, off: 26, def: 21, record: "22-11", injury: null, injImpact: 0 },
-          "BYU": { kenPom: 25, off: 15, def: 40, record: "24-9", injury: "Saunders + Welling OUT (ACLs)", injImpact: -16 },
-          "UCLA": { kenPom: 18, off: 10, def: 30, record: "23-10", injury: "Dent (calf) + Bilodeau", injImpact: -6 },
-          "Saint Mary's": { kenPom: 26, off: 25, def: 27, record: "27-6", injury: null, injImpact: 0 },
-          "Kentucky": { kenPom: 27, off: 21, def: 32, record: "22-11", injury: null, injImpact: 0 },
-          "Miami (FL)": { kenPom: 30, off: 28, def: 31, record: "21-12", injury: null, injImpact: 0 },
-          "Ohio St.": { kenPom: 28, off: 27, def: 29, record: "20-13", injury: null, injImpact: 0 },
-          "Clemson": { kenPom: 29, off: 32, def: 26, record: "20-13", injury: null, injImpact: 0 },
-          "Georgia": { kenPom: 31, off: 29, def: 34, record: "20-13", injury: null, injImpact: 0 },
-          "Villanova": { kenPom: 33, off: 28, def: 38, record: "20-13", injury: null, injImpact: 0 },
+          // === 1-SEEDS ===
+          "Duke": { kenPom: 1, off: 4, def: 2, ppg: 82.1, oppPpg: 63.2, threePct: 36.5, ftPct: 74.8, rpg: 37.2, sos: 5, tempo: 70.1, record: "32-2", injury: "Foster OUT (broken foot)", injImpact: -12 },
+          "Florida": { kenPom: 5, off: 8, def: 5, ppg: 80.4, oppPpg: 66.1, threePct: 37.2, ftPct: 78.3, rpg: 36.8, sos: 8, tempo: 71.5, record: "30-4", injury: null, injImpact: 0 },
+          "Michigan": { kenPom: 2, off: 6, def: 1, ppg: 79.8, oppPpg: 61.5, threePct: 35.8, ftPct: 76.1, rpg: 38.1, sos: 3, tempo: 68.4, record: "29-2", injury: "Cason OUT (torn ACL)", injImpact: -4 },
+          "Arizona": { kenPom: 3, off: 2, def: 7, ppg: 83.5, oppPpg: 66.8, threePct: 38.1, ftPct: 77.5, rpg: 36.5, sos: 4, tempo: 72.8, record: "32-2", injury: null, injImpact: 0 },
+          // === 2-SEEDS ===
+          "UConn": { kenPom: 12, off: 30, def: 11, ppg: 74.2, oppPpg: 65.8, threePct: 33.1, ftPct: 71.2, rpg: 34.5, sos: 12, tempo: 66.8, record: "29-5", injury: "Demary ankle (limited)", injImpact: -5 },
+          "Houston": { kenPom: 4, off: 14, def: 3, ppg: 76.8, oppPpg: 62.4, threePct: 34.8, ftPct: 73.5, rpg: 37.8, sos: 9, tempo: 65.2, record: "28-6", injury: null, injImpact: 0 },
+          "Iowa St.": { kenPom: 6, off: 18, def: 4, ppg: 75.4, oppPpg: 63.1, threePct: 35.2, ftPct: 75.8, rpg: 35.2, sos: 6, tempo: 66.1, record: "27-7", injury: null, injImpact: 0 },
+          "Purdue": { kenPom: 8, off: 9, def: 10, ppg: 78.5, oppPpg: 66.2, threePct: 36.8, ftPct: 76.4, rpg: 36.1, sos: 11, tempo: 69.2, record: "27-8", injury: null, injImpact: 0 },
+          // === 3-SEEDS ===
+          "Michigan St.": { kenPom: 9, off: 16, def: 8, ppg: 77.2, oppPpg: 65.5, threePct: 35.4, ftPct: 73.8, rpg: 36.4, sos: 7, tempo: 68.8, record: "25-8", injury: null, injImpact: 0 },
+          "Illinois": { kenPom: 11, off: 1, def: 24, ppg: 84.6, oppPpg: 70.2, threePct: 38.4, ftPct: 77.1, rpg: 35.1, sos: 10, tempo: 73.5, record: "24-9", injury: null, injImpact: 0 },
+          "Virginia": { kenPom: 15, off: 45, def: 6, ppg: 65.8, oppPpg: 58.4, threePct: 33.5, ftPct: 72.8, rpg: 33.2, sos: 14, tempo: 59.8, record: "23-10", injury: null, injImpact: -3 },
+          "Gonzaga": { kenPom: 7, off: 3, def: 22, ppg: 84.2, oppPpg: 69.5, threePct: 37.8, ftPct: 76.2, rpg: 35.8, sos: 22, tempo: 74.2, record: "27-7", injury: "Huff OUT (1st weekend)", injImpact: -10 },
+          // === 4-SEEDS ===
+          "Kansas": { kenPom: 14, off: 11, def: 18, ppg: 78.1, oppPpg: 67.5, threePct: 35.6, ftPct: 74.5, rpg: 35.5, sos: 2, tempo: 69.8, record: "24-9", injury: "Peterson fragile", injImpact: -7 },
+          "Nebraska": { kenPom: 17, off: 22, def: 15, ppg: 76.2, oppPpg: 66.8, threePct: 34.5, ftPct: 75.2, rpg: 34.8, sos: 16, tempo: 67.5, record: "24-9", injury: null, injImpact: 0 },
+          "Alabama": { kenPom: 16, off: 3, def: 67, ppg: 85.2, oppPpg: 74.8, threePct: 37.5, ftPct: 73.2, rpg: 35.5, sos: 13, tempo: 76.4, record: "23-9", injury: "Holloway SUSPENDED", injImpact: -18 },
+          "Arkansas": { kenPom: 19, off: 13, def: 25, ppg: 78.8, oppPpg: 68.4, threePct: 34.2, ftPct: 74.8, rpg: 36.2, sos: 15, tempo: 71.2, record: "23-10", injury: null, injImpact: 0 },
+          // === 5-SEEDS ===
+          "St. John's": { kenPom: 13, off: 17, def: 14, ppg: 77.5, oppPpg: 66.2, threePct: 35.8, ftPct: 76.5, rpg: 35.8, sos: 18, tempo: 68.5, record: "28-6", injury: null, injImpact: 0 },
+          "Vanderbilt": { kenPom: 21, off: 24, def: 20, ppg: 75.8, oppPpg: 68.2, threePct: 34.8, ftPct: 74.2, rpg: 34.5, sos: 17, tempo: 69.8, record: "26-8", injury: null, injImpact: 0 },
+          "Texas Tech": { kenPom: 20, off: 12, def: 33, ppg: 79.5, oppPpg: 70.8, threePct: 36.2, ftPct: 73.5, rpg: 35.2, sos: 19, tempo: 68.2, record: "22-10", injury: "Toppin OUT (torn ACL)", injImpact: -14 },
+          "Wisconsin": { kenPom: 10, off: 7, def: 16, ppg: 79.2, oppPpg: 66.5, threePct: 37.5, ftPct: 78.1, rpg: 34.8, sos: 20, tempo: 67.8, record: "24-10", injury: null, injImpact: 0 },
+          // === 6-SEEDS ===
+          "Louisville": { kenPom: 24, off: 19, def: 28, ppg: 76.5, oppPpg: 69.2, threePct: 34.5, ftPct: 73.8, rpg: 34.2, sos: 21, tempo: 70.5, record: "22-9", injury: "Brown Jr. (back)", injImpact: -6 },
+          "North Carolina": { kenPom: 22, off: 10, def: 35, ppg: 80.8, oppPpg: 72.5, threePct: 35.2, ftPct: 75.5, rpg: 37.5, sos: 23, tempo: 73.8, record: "21-12", injury: "Wilson OUT (broken thumb)", injImpact: -15 },
+          "Tennessee": { kenPom: 23, off: 26, def: 21, ppg: 74.8, oppPpg: 67.5, threePct: 33.8, ftPct: 72.5, rpg: 35.1, sos: 24, tempo: 66.5, record: "22-11", injury: null, injImpact: 0 },
+          "BYU": { kenPom: 25, off: 15, def: 40, ppg: 78.2, oppPpg: 71.8, threePct: 36.8, ftPct: 75.8, rpg: 33.8, sos: 25, tempo: 71.5, record: "24-9", injury: "Baker + Saunders OUT (ACLs)", injImpact: -16 },
+          // === 7-SEEDS ===
+          "UCLA": { kenPom: 18, off: 10, def: 30, ppg: 78.5, oppPpg: 69.8, threePct: 36.2, ftPct: 74.2, rpg: 34.5, sos: 26, tempo: 69.5, record: "23-10", injury: "Dent (calf) + Bilodeau (knee)", injImpact: -6 },
+          "Saint Mary's": { kenPom: 26, off: 25, def: 27, ppg: 76.2, oppPpg: 68.5, threePct: 38.5, ftPct: 80.2, rpg: 33.5, sos: 65, tempo: 64.8, record: "27-6", injury: null, injImpact: 0 },
+          "Kentucky": { kenPom: 27, off: 21, def: 32, ppg: 77.8, oppPpg: 70.2, threePct: 34.5, ftPct: 73.2, rpg: 35.8, sos: 27, tempo: 70.8, record: "22-11", injury: "Quaintance (knee, 4 games)", injImpact: -3 },
+          "Miami (FL)": { kenPom: 30, off: 28, def: 31, ppg: 74.8, oppPpg: 70.5, threePct: 33.5, ftPct: 72.1, rpg: 33.8, sos: 28, tempo: 67.2, record: "21-12", injury: null, injImpact: 0 },
+          // === 8-SEEDS ===
+          "Ohio St.": { kenPom: 28, off: 27, def: 29, ppg: 75.2, oppPpg: 69.8, threePct: 34.2, ftPct: 73.5, rpg: 34.5, sos: 29, tempo: 68.5, record: "20-13", injury: null, injImpact: 0 },
+          "Clemson": { kenPom: 29, off: 32, def: 26, ppg: 73.5, oppPpg: 68.2, threePct: 33.8, ftPct: 72.8, rpg: 35.2, sos: 30, tempo: 66.8, record: "21-12", injury: "Welling OUT (torn ACL)", injImpact: -8 },
+          "Georgia": { kenPom: 31, off: 29, def: 34, ppg: 74.5, oppPpg: 70.8, threePct: 33.2, ftPct: 71.5, rpg: 34.2, sos: 31, tempo: 68.2, record: "20-13", injury: null, injImpact: 0 },
+          "Villanova": { kenPom: 33, off: 38, def: 30, ppg: 72.5, oppPpg: 69.5, threePct: 34.5, ftPct: 74.8, rpg: 33.5, sos: 35, tempo: 65.8, record: "20-13", injury: null, injImpact: 0 },
+          // === 9-SEEDS ===
+          "TCU": { kenPom: 23, off: 23, def: 23, ppg: 76.5, oppPpg: 68.5, threePct: 34.8, ftPct: 74.2, rpg: 34.8, sos: 32, tempo: 69.2, record: "22-11", injury: null, injImpact: 0 },
+          "Iowa": { kenPom: 18, off: 15, def: 19, ppg: 78.8, oppPpg: 68.1, threePct: 36.5, ftPct: 76.8, rpg: 35.5, sos: 33, tempo: 70.8, record: "23-10", injury: null, injImpact: 0 },
+          "Saint Louis": { kenPom: 35, off: 35, def: 36, ppg: 72.8, oppPpg: 69.2, threePct: 33.5, ftPct: 73.1, rpg: 34.2, sos: 40, tempo: 66.5, record: "23-10", injury: null, injImpact: 0 },
+          "Utah St.": { kenPom: 32, off: 31, def: 33, ppg: 74.2, oppPpg: 68.8, threePct: 35.2, ftPct: 75.5, rpg: 34.8, sos: 55, tempo: 67.5, record: "26-7", injury: null, injImpact: 0 },
+          // === 10-SEEDS ===
+          "UCF": { kenPom: 43, off: 40, def: 42, ppg: 73.8, oppPpg: 69.5, threePct: 34.2, ftPct: 73.8, rpg: 34.2, sos: 42, tempo: 68.2, record: "22-11", injury: null, injImpact: 0 },
+          "Texas A&M": { kenPom: 40, off: 36, def: 39, ppg: 74.5, oppPpg: 69.2, threePct: 33.8, ftPct: 72.5, rpg: 35.1, sos: 34, tempo: 67.5, record: "21-12", injury: null, injImpact: 0 },
+          "Santa Clara": { kenPom: 55, off: 42, def: 55, ppg: 73.2, oppPpg: 70.5, threePct: 35.5, ftPct: 74.2, rpg: 33.2, sos: 80, tempo: 68.8, record: "24-9", injury: null, injImpact: 0 },
+          "Missouri": { kenPom: 51, off: 44, def: 50, ppg: 72.8, oppPpg: 70.2, threePct: 33.2, ftPct: 71.8, rpg: 33.5, sos: 36, tempo: 67.8, record: "21-12", injury: null, injImpact: 0 },
+          // === 11-SEEDS ===
+          "South Florida": { kenPom: 55, off: 48, def: 52, ppg: 73.2, oppPpg: 70.8, threePct: 33.8, ftPct: 72.5, rpg: 33.8, sos: 50, tempo: 68.5, record: "25-8", injury: null, injImpact: 0 },
+          "VCU": { kenPom: 50, off: 45, def: 48, ppg: 74.5, oppPpg: 69.5, threePct: 34.2, ftPct: 73.8, rpg: 34.5, sos: 58, tempo: 69.2, record: "26-8", injury: null, injImpact: 0 },
+          "Miami (OH)/SMU": { kenPom: 45, off: 43, def: 44, ppg: 73.5, oppPpg: 69.8, threePct: 33.5, ftPct: 72.8, rpg: 33.5, sos: 45, tempo: 67.5, record: "23-10", injury: null, injImpact: 0 },
+          "Texas/NC State": { kenPom: 37, off: 34, def: 38, ppg: 75.2, oppPpg: 69.8, threePct: 34.5, ftPct: 73.5, rpg: 34.2, sos: 38, tempo: 68.8, record: "22-12", injury: null, injImpact: 0 },
+          // === 12-SEEDS ===
+          "Northern Iowa": { kenPom: 82, off: 70, def: 75, ppg: 72.5, oppPpg: 68.2, threePct: 35.8, ftPct: 75.2, rpg: 33.8, sos: 120, tempo: 66.2, record: "26-7", injury: null, injImpact: 0 },
+          "McNeese": { kenPom: 95, off: 55, def: 110, ppg: 78.2, oppPpg: 72.5, threePct: 36.5, ftPct: 74.5, rpg: 34.2, sos: 180, tempo: 72.8, record: "28-5", injury: null, injImpact: 0 },
+          "Akron": { kenPom: 64, off: 50, def: 65, ppg: 77.8, oppPpg: 70.2, threePct: 37.8, ftPct: 75.8, rpg: 34.5, sos: 130, tempo: 70.5, record: "29-5", injury: null, injImpact: 0 },
+          "High Point": { kenPom: 90, off: 60, def: 95, ppg: 76.5, oppPpg: 72.8, threePct: 35.2, ftPct: 73.2, rpg: 33.2, sos: 175, tempo: 71.2, record: "27-6", injury: null, injImpact: 0 },
+          // === 13-SEEDS ===
+          "Cal Baptist": { kenPom: 120, off: 85, def: 120, ppg: 72.8, oppPpg: 70.5, threePct: 34.5, ftPct: 72.8, rpg: 33.5, sos: 200, tempo: 68.5, record: "24-9", injury: null, injImpact: 0 },
+          "Troy": { kenPom: 110, off: 80, def: 105, ppg: 74.2, oppPpg: 71.2, threePct: 33.8, ftPct: 72.5, rpg: 34.2, sos: 165, tempo: 69.8, record: "25-8", injury: null, injImpact: 0 },
+          "Hofstra": { kenPom: 88, off: 65, def: 85, ppg: 76.8, oppPpg: 71.5, threePct: 35.8, ftPct: 74.5, rpg: 33.8, sos: 140, tempo: 70.2, record: "24-10", injury: null, injImpact: 0 },
+          "Hawaii": { kenPom: 100, off: 72, def: 100, ppg: 75.5, oppPpg: 72.2, threePct: 35.2, ftPct: 73.8, rpg: 33.5, sos: 170, tempo: 69.5, record: "24-8", injury: null, injImpact: 0 },
+          // === 14-SEEDS ===
+          "North Dakota St.": { kenPom: 140, off: 100, def: 135, ppg: 71.5, oppPpg: 68.8, threePct: 33.5, ftPct: 72.2, rpg: 33.2, sos: 230, tempo: 66.8, record: "25-8", injury: null, injImpact: 0 },
+          "Penn": { kenPom: 100, off: 78, def: 95, ppg: 74.8, oppPpg: 70.5, threePct: 35.5, ftPct: 75.8, rpg: 33.5, sos: 160, tempo: 68.2, record: "23-6", injury: null, injImpact: 0 },
+          "Wright St.": { kenPom: 130, off: 95, def: 125, ppg: 72.2, oppPpg: 69.8, threePct: 34.2, ftPct: 73.5, rpg: 33.8, sos: 210, tempo: 67.5, record: "24-9", injury: null, injImpact: 0 },
+          "Kennesaw St.": { kenPom: 163, off: 120, def: 160, ppg: 73.8, oppPpg: 72.8, threePct: 33.2, ftPct: 72.8, rpg: 34.8, sos: 250, tempo: 71.8, record: "25-8", injury: null, injImpact: 0 },
+          // === 15-SEEDS ===
+          "Furman": { kenPom: 110, off: 82, def: 108, ppg: 74.2, oppPpg: 71.5, threePct: 35.2, ftPct: 74.2, rpg: 33.2, sos: 155, tempo: 68.5, record: "26-7", injury: null, injImpact: 0 },
+          "Idaho": { kenPom: 170, off: 130, def: 165, ppg: 70.5, oppPpg: 71.8, threePct: 32.8, ftPct: 71.5, rpg: 32.5, sos: 260, tempo: 67.2, record: "24-9", injury: null, injImpact: 0 },
+          "Tennessee St.": { kenPom: 200, off: 155, def: 190, ppg: 68.5, oppPpg: 72.5, threePct: 31.5, ftPct: 70.2, rpg: 32.2, sos: 280, tempo: 66.8, record: "22-11", injury: null, injImpact: 0 },
+          "Queens (N.C.)": { kenPom: 180, off: 140, def: 175, ppg: 69.8, oppPpg: 72.2, threePct: 32.2, ftPct: 71.8, rpg: 32.8, sos: 270, tempo: 65.5, record: "23-9", injury: null, injImpact: 0 },
+          // === 16-SEEDS ===
+          "Siena": { kenPom: 210, off: 170, def: 200, ppg: 68.2, oppPpg: 73.5, threePct: 32.5, ftPct: 71.2, rpg: 32.5, sos: 290, tempo: 67.8, record: "23-10", injury: null, injImpact: 0 },
+          "Prairie View/Lehigh": { kenPom: 260, off: 220, def: 250, ppg: 65.5, oppPpg: 74.8, threePct: 30.8, ftPct: 69.5, rpg: 31.5, sos: 330, tempo: 66.5, record: "20-13", injury: null, injImpact: 0 },
+          "UMBC/Howard": { kenPom: 240, off: 200, def: 230, ppg: 66.8, oppPpg: 74.2, threePct: 31.2, ftPct: 70.2, rpg: 31.8, sos: 320, tempo: 67.2, record: "21-12", injury: null, injImpact: 0 },
+          "Long Island": { kenPom: 250, off: 210, def: 240, ppg: 66.2, oppPpg: 74.5, threePct: 31.5, ftPct: 69.8, rpg: 31.5, sos: 325, tempo: 66.8, record: "21-11", injury: null, injImpact: 0 },
         };
 
         const teamA = h2hTeamA ? allTeams.find(t => t.team === h2hTeamA) : null;
@@ -1432,31 +1482,49 @@ function App() {
         const profA = teamA ? teamProfiles[teamA.team] : null;
         const profB = teamB ? teamProfiles[teamB.team] : null;
 
-        // Win probability estimate based on KenPom gap + injury adjustment
+        // Win probability model: weighted combination of KenPom, offensive/defensive efficiency, SOS, and injury adjustment
         const calcWinProb = (pA, pB) => {
           if (!pA || !pB) return 50;
-          const adjA = pA.kenPom + (pA.injImpact || 0);
-          const adjB = pB.kenPom + (pB.injImpact || 0);
-          const diff = adjB - adjA; // positive = A is better
-          const prob = Math.round(50 + diff * 1.8);
-          return Math.max(8, Math.min(92, prob));
+          // KenPom gap (most important)
+          const kenPomDiff = (pB.kenPom + (pB.injImpact || 0)) - (pA.kenPom + (pA.injImpact || 0));
+          // Scoring margin proxy
+          const marginA = pA.ppg - pA.oppPpg;
+          const marginB = pB.ppg - pB.oppPpg;
+          const marginDiff = marginA - marginB;
+          // SOS advantage (lower = tougher schedule)
+          const sosDiff = (pB.sos - pA.sos) / 10;
+          // Weighted composite
+          const composite = kenPomDiff * 1.2 + marginDiff * 0.5 + sosDiff * 0.3;
+          const prob = Math.round(50 + composite);
+          return Math.max(5, Math.min(95, prob));
         };
 
         const winProbA = profA && profB ? calcWinProb(profA, profB) : 50;
         const winProbB = 100 - winProbA;
 
-        // Determine edges
-        const edges = profA && profB ? [
-          { label: "KenPom Overall", valA: profA.kenPom, valB: profB.kenPom, lower: true },
-          { label: "Offense", valA: profA.off, valB: profB.off, lower: true },
-          { label: "Defense", valA: profA.def, valB: profB.def, lower: true },
+        // Build stat comparison rows
+        const statRows = profA && profB ? [
+          { label: "KenPom Overall", valA: "#" + (profA.kenPom + (profA.injImpact || 0)), valB: "#" + (profB.kenPom + (profB.injImpact || 0)), numA: profA.kenPom + (profA.injImpact || 0), numB: profB.kenPom + (profB.injImpact || 0), lower: true, cat: "efficiency" },
+          { label: "Offensive Eff.", valA: "#" + profA.off, valB: "#" + profB.off, numA: profA.off, numB: profB.off, lower: true, cat: "efficiency" },
+          { label: "Defensive Eff.", valA: "#" + profA.def, valB: "#" + profB.def, numA: profA.def, numB: profB.def, lower: true, cat: "efficiency" },
+          { label: "Points/Game", valA: profA.ppg.toFixed(1), valB: profB.ppg.toFixed(1), numA: profA.ppg, numB: profB.ppg, lower: false, cat: "scoring" },
+          { label: "Opp Points/Game", valA: profA.oppPpg.toFixed(1), valB: profB.oppPpg.toFixed(1), numA: profA.oppPpg, numB: profB.oppPpg, lower: true, cat: "scoring" },
+          { label: "Scoring Margin", valA: (profA.ppg - profA.oppPpg > 0 ? "+" : "") + (profA.ppg - profA.oppPpg).toFixed(1), valB: (profB.ppg - profB.oppPpg > 0 ? "+" : "") + (profB.ppg - profB.oppPpg).toFixed(1), numA: profA.ppg - profA.oppPpg, numB: profB.ppg - profB.oppPpg, lower: false, cat: "scoring" },
+          { label: "3-Point %", valA: profA.threePct.toFixed(1) + "%", valB: profB.threePct.toFixed(1) + "%", numA: profA.threePct, numB: profB.threePct, lower: false, cat: "shooting" },
+          { label: "Free Throw %", valA: profA.ftPct.toFixed(1) + "%", valB: profB.ftPct.toFixed(1) + "%", numA: profA.ftPct, numB: profB.ftPct, lower: false, cat: "shooting" },
+          { label: "Rebounds/Game", valA: profA.rpg.toFixed(1), valB: profB.rpg.toFixed(1), numA: profA.rpg, numB: profB.rpg, lower: false, cat: "other" },
+          { label: "Strength of Schedule", valA: "#" + profA.sos, valB: "#" + profB.sos, numA: profA.sos, numB: profB.sos, lower: true, cat: "other" },
+          { label: "Tempo", valA: profA.tempo.toFixed(1), valB: profB.tempo.toFixed(1), numA: profA.tempo, numB: profB.tempo, lower: false, cat: "other" },
         ] : [];
+
+        const edgeCountA = statRows.filter(r => r.lower ? r.numA < r.numB : r.numA > r.numB).length;
+        const edgeCountB = statRows.filter(r => r.lower ? r.numB < r.numA : r.numB > r.numA).length;
 
         return (
           <div>
             <div style={{ marginBottom: 16 }}>
               <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
-                Pick any two tournament teams and compare their KenPom profiles, injuries, and estimated win probability. Use this to evaluate potential matchups deeper in the bracket.
+                Pick any two tournament teams — all 68 — and compare KenPom efficiency, scoring, shooting, rebounding, strength of schedule, and more. Win probability is modeled from a weighted composite of all stats.
               </p>
             </div>
 
@@ -1492,8 +1560,8 @@ function App() {
                 <div style={{ padding: "16px 16px 12px" }}>
                   <div style={{ textAlign: "center", fontSize: 12, fontWeight: 700, color: "#888", marginBottom: 8 }}>WIN PROBABILITY</div>
                   <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 4 }}>
-                    <div style={{ width: 60, textAlign: "right", fontSize: 13, fontWeight: 800, color: "#0d6efd" }}>{winProbA}%</div>
-                    <div style={{ flex: 1, height: 24, borderRadius: 12, overflow: "hidden", display: "flex", background: "#e9ecef" }}>
+                    <div style={{ width: 60, textAlign: "right", fontSize: 15, fontWeight: 800, color: "#0d6efd" }}>{winProbA}%</div>
+                    <div style={{ flex: 1, height: 28, borderRadius: 14, overflow: "hidden", display: "flex", background: "#e9ecef" }}>
                       <div style={{ width: winProbA + "%", background: "linear-gradient(90deg, #0d6efd, #4da3ff)", height: "100%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 10, color: "#fff", fontWeight: 700, transition: "width 0.4s" }}>
                         {winProbA > 25 ? teamA.team : ""}
                       </div>
@@ -1501,71 +1569,74 @@ function App() {
                         {winProbB > 25 ? teamB.team : ""}
                       </div>
                     </div>
-                    <div style={{ width: 60, fontSize: 13, fontWeight: 800, color: "#dc3545" }}>{winProbB}%</div>
+                    <div style={{ width: 60, fontSize: 15, fontWeight: 800, color: "#dc3545" }}>{winProbB}%</div>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", marginTop: 6 }}>
+                    <div style={{ fontSize: 10, color: "#888" }}>({teamA.seed}) {teamA.team} &middot; {profA.record} &middot; {teamA.region}</div>
+                    <div style={{ fontSize: 10, color: "#888" }}>({teamB.seed}) {teamB.team} &middot; {profB.record} &middot; {teamB.region}</div>
                   </div>
                 </div>
 
-                {/* Team cards side by side */}
-                <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", borderTop: "1px solid #eee" }}>
-                  {[{ tm: teamA, prof: profA, color: "#0d6efd", bg: "#e8f0fe" }, { tm: teamB, prof: profB, color: "#dc3545", bg: "#fde8e8" }].map((side, si) => (
-                    <div key={si} style={{ flex: 1, padding: 14, borderRight: !isMobile && si === 0 ? "1px solid #eee" : "none", borderTop: isMobile && si === 1 ? "1px solid #eee" : "none" }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 10 }}>
-                        <div style={{ width: 36, height: 36, borderRadius: "50%", background: side.color, color: "#fff", display: "flex", alignItems: "center", justifyContent: "center", fontWeight: 800, fontSize: 14 }}>{side.tm.seed}</div>
-                        <div>
-                          <div style={{ fontWeight: 800, fontSize: 15, color: "#1a1a2e" }}>{side.tm.team}</div>
-                          <div style={{ fontSize: 10, color: "#888" }}>{side.tm.region} &middot; {side.prof.record}</div>
-                        </div>
-                      </div>
-                      <div style={{ display: "flex", gap: 6, flexWrap: "wrap", marginBottom: 8 }}>
-                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: "#e8f4fd", color: "#0c5460", fontWeight: 600 }}>KenPom #{side.prof.kenPom}</span>
-                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: side.prof.off <= 15 ? "#d4edda" : "#fff3cd", color: side.prof.off <= 15 ? "#155724" : "#856404", fontWeight: 600 }}>Off #{side.prof.off}</span>
-                        <span style={{ fontSize: 10, padding: "3px 8px", borderRadius: 6, background: side.prof.def <= 15 ? "#d4edda" : "#fff3cd", color: side.prof.def <= 15 ? "#155724" : "#856404", fontWeight: 600 }}>Def #{side.prof.def}</span>
-                      </div>
-                      {side.prof.injury ? (
-                        <div style={{ fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#fde8e8", color: "#dc3545", fontWeight: 600 }}>{side.prof.injury}</div>
-                      ) : (
-                        <div style={{ fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#d4edda", color: "#198754", fontWeight: 600 }}>Fully healthy</div>
-                      )}
-                    </div>
-                  ))}
-                </div>
+                {/* Injury alerts */}
+                {(profA.injury || profB.injury) && (
+                  <div style={{ padding: "0 16px 10px", display: "flex", gap: 8, flexDirection: isMobile ? "column" : "row" }}>
+                    {profA.injury && <div style={{ flex: 1, fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#fde8e8", color: "#dc3545", fontWeight: 600 }}>{teamA.team}: {profA.injury}</div>}
+                    {profB.injury && <div style={{ flex: 1, fontSize: 11, padding: "5px 8px", borderRadius: 6, background: "#fde8e8", color: "#dc3545", fontWeight: 600 }}>{teamB.team}: {profB.injury}</div>}
+                  </div>
+                )}
 
-                {/* Edge comparison */}
-                <div style={{ padding: 14, borderTop: "1px solid #eee" }}>
-                  <div style={{ fontSize: 12, fontWeight: 700, color: "#1a1a2e", marginBottom: 8 }}>Category Edges</div>
-                  {edges.map((e, ei) => {
-                    const aWins = e.lower ? e.valA < e.valB : e.valA > e.valB;
-                    const bWins = e.lower ? e.valB < e.valA : e.valB > e.valA;
-                    const tie = e.valA === e.valB;
+                {/* Stat-by-stat comparison table */}
+                <div style={{ borderTop: "1px solid #eee" }}>
+                  {/* Edge summary */}
+                  <div style={{ display: "flex", padding: "10px 16px", background: "#f8f9fa", borderBottom: "1px solid #eee" }}>
+                    <div style={{ flex: 1, textAlign: "center", fontSize: 12, fontWeight: 700, color: "#0d6efd" }}>{edgeCountA} edges</div>
+                    <div style={{ flex: 1, textAlign: "center", fontSize: 12, fontWeight: 700, color: "#888" }}>STAT COMPARISON</div>
+                    <div style={{ flex: 1, textAlign: "center", fontSize: 12, fontWeight: 700, color: "#dc3545" }}>{edgeCountB} edges</div>
+                  </div>
+
+                  {/* Category headers and rows */}
+                  {["efficiency", "scoring", "shooting", "other"].map(cat => {
+                    const catLabel = cat === "efficiency" ? "Efficiency Rankings" : cat === "scoring" ? "Scoring" : cat === "shooting" ? "Shooting" : "Other";
+                    const rows = statRows.filter(r => r.cat === cat);
                     return (
-                      <div key={ei} style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 6, padding: "4px 8px", borderRadius: 6, background: "#f8f9fa" }}>
-                        <div style={{ width: 40, textAlign: "center", fontWeight: 700, fontSize: 13, color: aWins ? "#0d6efd" : "#aaa" }}>#{e.valA}</div>
-                        <div style={{ flex: 1, textAlign: "center" }}>
-                          <span style={{ fontSize: 11, color: "#666" }}>{e.label}</span>
-                          {!tie && <span style={{ marginLeft: 6, fontSize: 9, fontWeight: 700, color: aWins ? "#0d6efd" : "#dc3545" }}>{aWins ? teamA.team : teamB.team} edge</span>}
-                        </div>
-                        <div style={{ width: 40, textAlign: "center", fontWeight: 700, fontSize: 13, color: bWins ? "#dc3545" : "#aaa" }}>#{e.valB}</div>
+                      <div key={cat}>
+                        <div style={{ padding: "6px 16px", background: "#f0f0f0", fontSize: 10, fontWeight: 700, color: "#888", textTransform: "uppercase", letterSpacing: 0.5 }}>{catLabel}</div>
+                        {rows.map((row, ri) => {
+                          const aWins = row.lower ? row.numA < row.numB : row.numA > row.numB;
+                          const bWins = row.lower ? row.numB < row.numA : row.numB > row.numA;
+                          return (
+                            <div key={ri} style={{ display: "flex", alignItems: "center", padding: "7px 16px", borderBottom: "1px solid #f5f5f5" }}>
+                              <div style={{ width: isMobile ? 55 : 70, textAlign: "center", fontWeight: 700, fontSize: 13, color: aWins ? "#0d6efd" : bWins ? "#ccc" : "#666" }}>{row.valA}</div>
+                              <div style={{ flex: 1, textAlign: "center", position: "relative" }}>
+                                <span style={{ fontSize: 11, color: "#666" }}>{row.label}</span>
+                                {(aWins || bWins) && <div style={{ position: "absolute", top: -1, left: aWins ? 2 : "auto", right: bWins ? 2 : "auto" }}>
+                                  <span style={{ fontSize: 8, color: aWins ? "#0d6efd" : "#dc3545" }}>{aWins ? "\u25C0" : "\u25B6"}</span>
+                                </div>}
+                              </div>
+                              <div style={{ width: isMobile ? 55 : 70, textAlign: "center", fontWeight: 700, fontSize: 13, color: bWins ? "#dc3545" : aWins ? "#ccc" : "#666" }}>{row.valB}</div>
+                            </div>
+                          );
+                        })}
                       </div>
                     );
                   })}
-
-                  {/* Historical seed matchup */}
-                  {(() => {
-                    const seedHi = Math.min(teamA.seed, teamB.seed);
-                    const seedLo = Math.max(teamA.seed, teamB.seed);
-                    const key = seedLo + "v" + seedHi;
-                    const matchupUpsets = upsets.filter(u => (u.wSeed === seedLo && u.lSeed === seedHi) || (u.wSeed === seedHi && u.lSeed === seedLo));
-                    const lowerWins = matchupUpsets.filter(u => u.wSeed === seedLo).length;
-                    const higherWins = matchupUpsets.filter(u => u.wSeed === seedHi).length;
-                    const total = lowerWins + higherWins;
-                    if (seedHi === seedLo || total === 0) return null;
-                    return (
-                      <div style={{ marginTop: 10, padding: "8px 10px", borderRadius: 6, background: "#fff3cd", fontSize: 11, color: "#856404", lineHeight: 1.5 }}>
-                        <strong>Historical:</strong> In our 2016-2025 data, {seedLo}-seeds have beaten {seedHi}-seeds {lowerWins} time{lowerWins !== 1 ? "s" : ""} as upsets. The higher seed ({seedHi}) won {higherWins} of those matchups recorded as upsets. This matchup has produced {total} notable results.
-                      </div>
-                    );
-                  })()}
                 </div>
+
+                {/* Historical seed matchup */}
+                {(() => {
+                  const seedHi = Math.min(teamA.seed, teamB.seed);
+                  const seedLo = Math.max(teamA.seed, teamB.seed);
+                  const matchupUpsets = upsets.filter(u => (u.wSeed === seedLo && u.lSeed === seedHi) || (u.wSeed === seedHi && u.lSeed === seedLo));
+                  const lowerWins = matchupUpsets.filter(u => u.wSeed === seedLo).length;
+                  const higherWins = matchupUpsets.filter(u => u.wSeed === seedHi).length;
+                  const total = lowerWins + higherWins;
+                  if (seedHi === seedLo || total === 0) return null;
+                  return (
+                    <div style={{ padding: "10px 16px", borderTop: "1px solid #eee", background: "#fff3cd", fontSize: 11, color: "#856404", lineHeight: 1.5 }}>
+                      <strong>Historical ({seedHi} vs {seedLo}):</strong> In 2016-2025 data, {seedLo}-seeds have beaten {seedHi}-seeds {lowerWins}x as upsets. The higher seed ({seedHi}) won {higherWins}x. Total: {total} recorded matchups.
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
@@ -1574,11 +1645,12 @@ function App() {
               <div style={{ textAlign: "center", padding: 40, color: "#aaa" }}>
                 <div style={{ fontSize: 48, marginBottom: 12 }}>vs</div>
                 <div style={{ fontSize: 14 }}>Select two teams above to compare their profiles</div>
+                <div style={{ fontSize: 11, marginTop: 6 }}>All 68 tournament teams are available</div>
               </div>
             )}
 
             <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-              <strong>How it works:</strong> Win probability is estimated from adjusted KenPom rankings (accounting for injuries). Lower KenPom = better team. Injury impact is subtracted from each team's effective ranking. This is a simplified model — real matchups depend on pace, style, 3P%, rebounding, and dozens of other factors. Use this as a starting point, not gospel.
+              <strong>How it works:</strong> Win probability uses a weighted composite of adjusted KenPom ranking (with injury penalty), scoring margin, and strength of schedule. Stats include KenPom efficiency ranks, PPG, opponent PPG, 3P%, FT%, rebounds, SOS, and tempo. KenPom ranks are injury-adjusted where applicable.
             </div>
           </div>
         );
