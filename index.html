@@ -243,13 +243,13 @@ function App() {
 
   // Seed line summary — enriched with real 2026 injuries, KenPom, and SOS data
   const projected2026 = [
-    { seed: 1, teams: ["Duke (32-2)", "Florida", "Michigan (29-2)", "Arizona (32-2)"], risk: "low", note: "1-seeds upset " + (loserTotals[1]||0) + "x in 9 yrs. INJURIES: Duke lost Caleb Foster (broken foot, surgery — 'very minimal' chance of return even for Final Four, effectively OUT). Ngongba (foot) expected back for opener. Michigan lost L.J. Cason (torn ACL). Duke is KenPom #1 (best defense, top-5 offense, +40 net) but running a 7-man rotation — won ACC tourney with close calls vs FSU and Virginia. Cayden Boozer played all 40 min in ACC title game. Fatigue is the X-factor. Arizona is KenPom #3 with the Big 12 title and 32-2 record. Expect 1-2 to fall before the FF." },
+    { seed: 1, teams: ["Duke (32-2)", "Florida", "Michigan (29-2)", "Arizona (32-2)"], risk: "low", note: "1-seeds upset " + (loserTotals[1]||0) + "x in 9 yrs. INJURIES: Duke lost Foster (broken foot, surgery — effectively OUT) AND Ngongba (foot) is 'very unlikely' for R64, could miss the weekend — Duke may be down to 6 players. Michigan lost L.J. Cason (torn ACL). Duke is KenPom #1 but fatigue risk is now critical. Arizona is KenPom #3 with Big 12 title and 32-2 record. Expect 1-2 to fall before the FF." },
     { seed: 2, teams: ["UConn (29-5)", "Houston (28-6)", "Iowa St. (27-7)", "Purdue (27-8)"], risk: "medium", note: "15-over-2 has hit in 3 of 9 tournaments. Iowa State has top-5 defensive efficiency (Tamin Lipsey: 5.0 AST, 2.2 STL per game). Houston is elite defensively (28-6). INJURY: UConn's Silas Demary Jr. (10.9 PPG, 6.2 APG) sprained ankle in Big East final — X-ray negative, out of walking boot, expected to play but may be limited. UConn lost Big East final to St. John's and enters shaky. Purdue and Iowa St. could've been 3-seeds — they should feel lucky here." },
     { seed: 3, teams: ["Michigan St.", "Illinois", "Virginia", "Gonzaga"], risk: "medium", note: "INJURY: Gonzaga's Braden Huff (17.8 PPG, 5.6 RPG) — dislocated kneecap, out since Jan 15. Ruled OUT for first weekend. Few says 'he is jogging and shooting' but won't play R64/R32. Sweet 16 return possible if Gonzaga survives. Without Huff, Gonzaga's ceiling drops significantly. Virginia is the most upset-prone team in March history: 16-seed UMBC in 2018, 13-seed Ohio in 2021, 13-seed Furman in 2023. 14-over-3 upsets: SFA over WVU '16, Abilene Christian over Texas '21, Oakland over Kentucky '24 (3x in 9 yrs, 8%)." },
     { seed: 4, teams: ["Kansas", "Nebraska", "Alabama", "Arkansas"], risk: "high", note: "Alabama's Aden Holloway (16.8 PPG, 2nd-leading scorer) arrested on felony marijuana charges (3/16) and SUSPENDED INDEFINITELY by coach Nate Oats — removed from campus. Will NOT play vs Hofstra. Without Holloway, Alabama's offense is gutted. INJURY: Kansas' Darryn Peterson (19.8 PPG, projected #1 pick) missed 11 games with cramping/hamstring — available but fragile. 13-over-4 has happened " + (r64Matchups["13v4"]||0) + "x in 9 yrs. Hofstra vs a Holloway-less Alabama is the biggest upset opportunity in the bracket." },
     { seed: 5, teams: ["St. John's (28-6)", "Vanderbilt (26-8)", "Texas Tech (22-10)", "Wisconsin (24-10)"], risk: "high", note: "INJURY: Texas Tech lost JT Toppin (torn ACL, Feb 17 at Arizona State — 21.8 PPG, 10.8 RPG, led nation in made FGs) for the season. Defense collapsed from 24th to 119th without him. Christian Anderson (19.2 PPG) carries the offense but the defense is gone. Wisconsin has 4 wins over KenPom top-10 teams but is erratic. 12-over-5 hit in 8 of 9 years (" + (r64Matchups["12v5"]||0) + "/" + 36 + "). Akron (29-5) and McNeese (28-5) are dangerous." },
-    { seed: 6, teams: ["Louisville (22-9)", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "INJURY MINEFIELD: UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG, broken thumb — OUT, 0-2 without him). BYU lost THREE players: Dawson Baker (torn ACL, Nov), Nate Pickens (preseason), and Richie Saunders (torn ACL, Feb) — 2-4 since Saunders went down. Louisville's Mikel Brown Jr. (18.2 PPG, back injury) missed ACC tourney — hopes to return but unconfirmed. 6-vs-11 is the #1 upset matchup (" + (r64Matchups["11v6"]||0) + "/" + 36 + "). VCU won the A-10 title; South Florida went 25-8. Three of four 6-seeds have major injury issues." },
-    { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "INJURY: UCLA's Donovan Dent (calf strain in Big Ten semi) expected to play vs UCF but may be limited — and Tyler Bilodeau also nursing an injury. Saint Mary's is a terrible draw for any 2-seed: 11th-best 3P%, #1 FT% nationally, 7th-best scoring. They're 3-1 in R64 over the last 4 appearances. Kentucky was upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022 — they're beatable. 10-over-7 has hit " + (r64Matchups["10v7"]||0) + "x in 9 yrs with at least 1 per tournament." },
+    { seed: 6, teams: ["Louisville (23-10)", "North Carolina", "Tennessee", "BYU"], risk: "high", note: "INJURY MINEFIELD: Louisville's Mikel Brown Jr. (18.2 PPG, 4.7 APG) confirmed OUT for opening weekend — hasn't played since Feb 28. UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG, broken thumb — OUT, 0-2 without him). BYU lost THREE players: Baker (ACL, Nov), Pickens (preseason), Saunders (ACL, Feb) — 2-4 since Saunders went down. 6-vs-11 is the #1 upset matchup (" + (r64Matchups["11v6"]||0) + "/" + 36 + "). South Florida (25-8) and VCU (A-10 champs) are primed. Three of four 6-seeds have major injury issues." },
+    { seed: 7, teams: ["UCLA", "Saint Mary's", "Kentucky", "Miami (FL)"], risk: "medium", note: "INJURY UPDATE: UCLA's Dent says he's '100%' and Bilodeau is expected to play — health picture much improved. Kentucky's Quaintance (knee, 4 games all year) not expected back. Saint Mary's is a terrible draw for any 2-seed: 11th-best 3P%, #1 FT% nationally, 7th-best scoring. They're 3-1 in R64 over the last 4 appearances. Kentucky upset by 14-seed Oakland in 2024 and 15-seed Saint Peter's in 2022. 10-over-7 has hit " + (r64Matchups["10v7"]||0) + "x in 9 yrs with at least 1 per tournament." },
     { seed: 8, teams: ["Ohio St.", "Clemson", "Georgia", "Villanova"], risk: "high", note: "8 vs 9 is a coin flip (" + (r64Matchups["9v8"]||0) + "/" + 36 + " upsets). The 8/9 winner vs 1-seed in R32 is one of March's best upset pipelines — it happened in 5 of 9 tournaments (Wisconsin over Villanova '17, Loyola over Illinois '21, UNC over Baylor '22). INJURY: Clemson lost Carter Welling (10.2 PPG, 5.4 RPG, top rebounder, torn ACL in ACC tourney) — Iowa (9) now favored in that 8/9 game." },
   ];
 
@@ -846,8 +846,8 @@ function App() {
           <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
             {[
               { seed: 1, team: "Duke (32-2)", region: "East", kenPom: 1, kenPomOff: 4, kenPomDef: 2, record: "32-2",
-                vulnerability: 62, reason: "INJURIES",
-                details: "Caleb Foster (broken foot, surgery) is effectively OUT for the tournament. Running a 7-man rotation with Cayden Boozer logging 37-40 min/game. Won ACC tourney but barely escaped FSU and Virginia. Fatigue is the X-factor in a 6-game tournament. Cameron Boozer is the best player alive but depth is dangerously thin.",
+                vulnerability: 68, reason: "INJURIES (2 starters)",
+                details: "Caleb Foster (broken foot, surgery) is effectively OUT for the tournament. Now Patrick Ngongba (starting C, 10.7 PPG, 6.0 RPG) is 'very unlikely' to play in the opener and could miss the weekend. Duke may be down to a 6-man rotation. Won ACC tourney but barely escaped FSU and Virginia. Fatigue is the X-factor. Cameron Boozer is the best player alive but depth is critically thin.",
                 upsetBy: "TCU/Ohio St. (8/9 winner) in R32",
                 histRate: "1-seeds upset 5x in R32 in 9 years (from 8/9 winner pipeline)" },
               { seed: 2, team: "UConn (29-5)", region: "East", kenPom: 12, kenPomOff: 30, kenPomDef: 11, record: "29-5",
@@ -870,14 +870,19 @@ function App() {
                 details: "Lost JT Toppin for the season — defense COLLAPSED from KenPom #24 to #119 in adjusted efficiency without him. Christian Anderson (19.2 PPG, 43% 3P) carries the offense but cannot fix the defense alone. 22-10 record with 10 losses is the weakest among 5-seeds. Akron (29-5) is a dangerous opponent.",
                 upsetBy: "Akron (12) in R64",
                 histRate: "12-over-5 hits in 8 of 9 years (36% per game)" },
+              { seed: 6, team: "Louisville (23-10)", region: "East", kenPom: 24, kenPomOff: 18, kenPomDef: 28, record: "23-10",
+                vulnerability: 78, reason: "STAR CONFIRMED OUT",
+                details: "Mikel Brown Jr. (18.2 PPG, 4.7 APG) confirmed OUT for opening weekend with a back injury — hasn't played since Feb 28 and has missed 12 games total. Louisville is 7-5 and averages 81.7 PPG without him (vs 88.1 with). He scored a program-tying 45 points vs NC State. Without their offensive engine, South Florida (25-8, 11-seed) has a clear path to an upset.",
+                upsetBy: "South Florida (11) in R64",
+                histRate: "11-over-6 is the #1 upset matchup (50% in some years)" },
               { seed: 6, team: "BYU", region: "West", kenPom: 25, kenPomOff: 15, kenPomDef: 40, record: "24-9",
                 vulnerability: 76, reason: "MULTIPLE INJURIES + FORM",
                 details: "Lost Dawson Baker (torn ACL, November), Nate Pickens (preseason), and Richie Saunders (torn ACL vs Colorado, February) — three significant roster losses. BYU is 2-4 since Saunders went down. Only Dybantsa and Wright III remain from their core. The First Four winner (Texas KenPom #37 or NC State KenPom #34) will be battle-tested and hungry.",
                 upsetBy: "Texas/NC State (11) in R64",
                 histRate: "11-over-6 is the #1 upset matchup (50% in some years)" },
               { seed: 7, team: "UCLA", region: "East", kenPom: 18, kenPomOff: 10, kenPomDef: 30, record: "23-10",
-                vulnerability: 55, reason: "INJURIES + FORM",
-                details: "Donovan Dent (calf strain) and Tyler Bilodeau both left the Big Ten semifinal vs Purdue injured. Both expected to play vs UCF but health is uncertain. UCLA lost to Purdue in the Big Ten semis and enters as a 7-seed with 10 losses — not where they expected to be. 10-over-7 hits at least once every tournament.",
+                vulnerability: 48, reason: "FORM (injuries improving)",
+                details: "Good news: Donovan Dent says he's '100%' after the calf scare and Bilodeau is expected to play. UCLA's health picture has improved significantly. However, they still enter as a 7-seed with 10 losses after losing to Purdue in the Big Ten semis. UCF (10) is a tough draw and 10-over-7 hits at least once every tournament.",
                 upsetBy: "UCF (10) in R64",
                 histRate: "10-over-7 has happened in every tournament since 2016" },
               { seed: 8, team: "Clemson (21-12)", region: "South", kenPom: 29, kenPomOff: 22, kenPomDef: 35, record: "21-12",
@@ -925,7 +930,7 @@ function App() {
             })}
           </div>
           <div style={{ marginTop: 16, padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>How to read this:</strong> Vulnerability scores combine KenPom rank vs seed expectation, injury impact, recent form, and historical upset rates. A score above 75% means a team is in serious danger. Scores are relative — even a 50% score means meaningful upset risk. Data: KenPom rankings (3/15/26), injury reports (3/17/26), historical upset data (2016-2025).
+            <strong>How to read this:</strong> Vulnerability scores combine KenPom rank vs seed expectation, injury impact, recent form, and historical upset rates. A score above 75% means a team is in serious danger. Scores are relative — even a 50% score means meaningful upset risk. Data: KenPom rankings (3/15/26), injury reports (3/18/26), historical upset data (2016-2025).
           </div>
         </div>
       )}
@@ -935,8 +940,8 @@ function App() {
         // Historical survival rates by seed through each round (from 2016-2025 data, 4 teams per seed per year, 9 years = 36 teams)
         const survivalData = [
           // === 1-SEEDS ===
-          { seed: 1, team: "Duke", region: "East", kenPom: 1, injuryFlag: "Caleb Foster OUT (broken foot)", survR64: 99, survR32: 85, survS16: 68, survE8: 50, survFF: 28, survCH: 15,
-            adj: "Running 7-man rotation without Foster. Fatigue risk compounds each round. Cameron Boozer is transcendent but depth is razor-thin." },
+          { seed: 1, team: "Duke", region: "East", kenPom: 1, injuryFlag: "Foster OUT, Ngongba very unlikely for R64", survR64: 97, survR32: 78, survS16: 62, survE8: 44, survFF: 24, survCH: 12,
+            adj: "Foster OUT (surgery) AND Ngongba 'very unlikely' for R64 — could miss the weekend. Duke may be running a 6-man rotation. Fatigue risk is now critical. Cameron Boozer is transcendent but this is unsustainable for 6 games." },
           { seed: 1, team: "Florida", region: "South", kenPom: 5, injuryFlag: null, survR64: 99, survR32: 88, survS16: 72, survE8: 55, survFF: 32, survCH: 18,
             adj: "Healthiest 1-seed. Walter Clayton Jr. and Alex Condon form an elite duo. No major concerns — slight edge over other 1s." },
           { seed: 1, team: "Michigan", region: "Midwest", kenPom: 2, injuryFlag: "L.J. Cason OUT (torn ACL)", survR64: 99, survR32: 86, survS16: 70, survE8: 52, survFF: 30, survCH: 16,
@@ -980,8 +985,8 @@ function App() {
           { seed: 5, team: "Wisconsin", region: "West", kenPom: 10, injuryFlag: null, survR64: 75, survR32: 52, survS16: 30, survE8: 15, survFF: 6, survCH: 2,
             adj: "4 wins over KenPom top-10 teams (90+ each). High ceiling, inconsistent floor. Could beat anyone or lose early." },
           // === 6-SEEDS ===
-          { seed: 6, team: "Louisville", region: "East", kenPom: 24, injuryFlag: "Mikel Brown Jr. (back, hopes to play)", survR64: 58, survR32: 28, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
-            adj: "Brown Jr. (18.2 PPG) missed ACC tourney with back injury. If he plays, Louisville is a solid 6. If not, South Florida (11) feasts." },
+          { seed: 6, team: "Louisville", region: "East", kenPom: 24, injuryFlag: "Mikel Brown Jr. OUT (back, 1st weekend)", survR64: 42, survR32: 16, survS16: 5, survE8: 1, survFF: 0, survCH: 0,
+            adj: "Brown Jr. (18.2 PPG, 4.7 APG) confirmed OUT for opening weekend. Hasn't played since Feb 28 — missed 12 games. Louisville is 7-5 without him. South Florida (11, 25-8) is now a heavy upset pick." },
           { seed: 6, team: "North Carolina", region: "South", kenPom: 22, injuryFlag: "Caleb Wilson OUT (broken thumb)", survR64: 52, survR32: 25, survS16: 10, survE8: 4, survFF: 1, survCH: 0,
             adj: "Without Wilson (19.8 PPG), UNC is a shell. VCU won the A-10 title and has March DNA. Dangerous matchup." },
           { seed: 6, team: "Tennessee", region: "Midwest", kenPom: 23, injuryFlag: null, survR64: 65, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1,
@@ -989,8 +994,8 @@ function App() {
           { seed: 6, team: "BYU", region: "West", kenPom: 25, injuryFlag: "Baker + Saunders OUT (torn ACLs), Pickens OUT", survR64: 44, survR32: 18, survS16: 6, survE8: 2, survFF: 0, survCH: 0,
             adj: "Three significant losses: Baker (ACL, Nov), Pickens (preseason), Saunders (ACL, Feb). Only Dybantsa and Wright remain. 2-4 since Saunders went down." },
           // === 7-SEEDS ===
-          { seed: 7, team: "UCLA", region: "East", kenPom: 18, injuryFlag: "Dent (calf) + Bilodeau (injury)", survR64: 60, survR32: 30, survS16: 12, survE8: 4, survFF: 1, survCH: 0,
-            adj: "Two starters banged up from Big Ten semis. 10-over-7 hits every year. UCF is a tough draw for a hobbled UCLA." },
+          { seed: 7, team: "UCLA", region: "East", kenPom: 18, injuryFlag: "Dent 100%, Bilodeau expected", survR64: 68, survR32: 36, survS16: 16, survE8: 6, survFF: 2, survCH: 1,
+            adj: "Good news: Dent says he's '100%' and Bilodeau expected to play. Health picture much improved. Still a 7-seed with 10 losses — UCF is a tough draw but UCLA is no longer hobbled." },
           { seed: 7, team: "Saint Mary's", region: "South", kenPom: 26, injuryFlag: null, survR64: 65, survR32: 32, survS16: 14, survE8: 5, survFF: 2, survCH: 0,
             adj: "11th-best 3P%, #1 FT% nationally, 7th-best scoring. 3-1 in R64 over last 4 appearances. Dangerous Cinderella potential." },
           { seed: 7, team: "Kentucky", region: "Midwest", kenPom: 27, injuryFlag: "Quaintance (knee, only 4 games)", survR64: 58, survR32: 26, survS16: 10, survE8: 3, survFF: 1, survCH: 0,
@@ -1011,12 +1016,13 @@ function App() {
         // What-If injury overrides: when toggled, recalculate as if player were healthy/out
         const whatIfOverrides = {
           "Alabama": { healthy: { survR64: 80, survR32: 55, survS16: 30, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Holloway: Alabama's elite offense (#3 KenPom) is intact. Still hampered by #67 defense, but Holloway's 43.8% 3P stretches defenses. Viable Sweet 16 team. (Note: Holloway is currently SUSPENDED — this is hypothetical.)" } },
-          "Duke": { healthy: { survR64: 99, survR32: 92, survS16: 78, survE8: 62, survFF: 40, survCH: 24, injuryFlag: null, adj: "WITH Foster: Duke goes from 7 to 9-man rotation. Fatigue concerns disappear. Cameron Boozer + Foster backcourt is the best in the country. Title favorite." } },
+          "Duke": { healthy: { survR64: 99, survR32: 92, survS16: 78, survE8: 62, survFF: 40, survCH: 24, injuryFlag: null, adj: "WITH Foster + Ngongba: Duke goes from 6 to 9-man rotation. Fatigue concerns disappear. Cameron Boozer + Foster backcourt + Ngongba interior is the best lineup in the country. Title favorite." } },
           "Gonzaga": { healthy: { survR64: 92, survR32: 72, survS16: 50, survE8: 30, survFF: 14, survCH: 6, injuryFlag: null, adj: "WITH Huff: Gonzaga's interior is restored (17.8 PPG, 5.6 RPG). Graham Ike + Huff frontcourt is elite. Sweet 16 team with Final Four upside." } },
           "Kansas": { out: { survR64: 62, survR32: 35, survS16: 15, survE8: 6, survFF: 2, survCH: 1, injuryFlag: "Peterson OUT (hypothetical)", adj: "WITHOUT Peterson: Kansas drops from a 4-seed talent to a 7-seed. No one else on the roster can create offense at his level. Cal Baptist becomes dangerous." } },
           "BYU": { healthy: { survR64: 68, survR32: 38, survS16: 18, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "WITH Saunders + Baker: BYU's big three is restored plus bench depth. Dybantsa + Saunders + Wright III is a top-20 starting five. Legitimate Sweet 16 contender." } },
           "North Carolina": { healthy: { survR64: 78, survR32: 50, survS16: 28, survE8: 14, survFF: 6, survCH: 2, injuryFlag: null, adj: "WITH Wilson: UNC's offense is restored (19.8 PPG, 9.4 RPG). They become the favorite over VCU and a legitimate threat to reach the Sweet 16." } },
           "Texas Tech": { healthy: { survR64: 72, survR32: 45, survS16: 22, survE8: 10, survFF: 4, survCH: 1, injuryFlag: null, adj: "WITH Toppin: Defense returns to KenPom #24 instead of #119. Texas Tech becomes a legitimate 5-seed threat with balanced offense and defense." } },
+          "Louisville": { healthy: { survR64: 72, survR32: 40, survS16: 18, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "WITH Brown Jr.: Louisville's offense returns to 88.1 PPG. Brown Jr.'s 18.2 PPG and 4.7 APG make them a legitimate 6-seed with Sweet 16 upside. (Note: Brown Jr. is currently OUT for opening weekend — this is hypothetical.)" } },
           "UCLA": { healthy: { survR64: 75, survR32: 42, survS16: 20, survE8: 8, survFF: 3, survCH: 1, injuryFlag: null, adj: "FULLY HEALTHY: Both Dent and Bilodeau at 100% gives UCLA a complete starting five. UCF becomes manageable and a R32 run is realistic." } },
         };
 
@@ -1139,7 +1145,7 @@ function App() {
             <p style={{ fontSize: 13, color: "#666", lineHeight: 1.6 }}>
               Comprehensive injury and availability tracker for all tournament teams with significant health concerns. Impact ratings reflect each player's importance to their team's tournament chances.
             </p>
-            <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Last updated: March 17, 2026</div>
+            <div style={{ fontSize: 11, color: "#999", marginTop: 4 }}>Last updated: March 18, 2026</div>
           </div>
 
           {/* Critical / Out */}
@@ -1158,6 +1164,7 @@ function App() {
                 { team: "BYU (6)", player: "Dawson Baker", injury: "Torn ACL (November, Thanksgiving)", status: "OUT for season", impact: 70, details: "Key rotation guard tore his ACL on Thanksgiving. This was BYU's first major blow — followed by Nate Pickens (preseason) and then Saunders (February). Three significant roster losses have left BYU dangerously thin behind Dybantsa and Wright III." },
                 { team: "Clemson (8)", player: "Carter Welling", injury: "Torn ACL (ACC Tournament vs Wake Forest)", status: "OUT for season", impact: 85, details: "Junior center tore his ACL going to the basket at the end of the first half in Clemson's ACC tourney win over Wake Forest. Led the team in rebounds (5.4 RPG) and blocks (0.8 BPG), also 10.2 PPG. Without their top rebounder and rim protector, Clemson's interior defense takes a massive hit against Iowa." },
                 { team: "Texas Tech (5)", player: "JT Toppin", injury: "Torn ACL (Feb 17, at Arizona State)", status: "OUT for season", impact: 85, details: "Led the nation with 234 made FGs — 21.8 PPG, 10.8 RPG, 1.7 BPG. Four-time Big 12 Player of the Week. Defense collapsed from KenPom #24 to #119 without him. Christian Anderson (19.2 PPG) carries the offense but cannot fix the defensive crater." },
+                { team: "Louisville (6)", player: "Mikel Brown Jr.", injury: "Back injury (hasn't played since Feb 28)", status: "OUT for 1st weekend", impact: 88, details: "Confirmed OUT for NCAA Tournament opener and potential second-round game. 18.2 PPG, 4.7 APG — second-leading scorer and assists leader. Set program record tying 45-point game vs NC State. Louisville is 7-5 without him (averaging 81.7 PPG vs 88.1 with him). Missed 12 games this season. Without their offensive engine, South Florida (11) is a very live upset." },
                 { team: "Michigan (1)", player: "L.J. Cason", injury: "Torn ACL (late regular season)", status: "OUT for season", impact: 55, details: "Key bench contributor averaging 8.4 PPG, 2.4 APG in his breakout sophomore campaign. Tore his ACL late in the season. Michigan is still KenPom #2 and 29-2, but their depth is thinner. Will redshirt next year." },
               ].map((inj, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #dc3545", padding: isMobile ? "10px 10px" : "12px 16px" }}>
@@ -1188,11 +1195,10 @@ function App() {
               {[
                 { team: "Kansas (4)", player: "Darryn Peterson", injury: "Chronic cramping/hamstring", status: "AVAILABLE (fragile)", impact: 75, details: "19.8 PPG, projected #1 NBA pick. Missed 11 of 31 regular-season games with cramping episodes he's called 'traumatic.' Available for the tournament but could leave any game at any time. When healthy, Kansas is a title contender. When he's out, they're a 6-seed at best." },
                 { team: "UConn (2)", player: "Silas Demary Jr.", injury: "Sprained ankle (Big East final, 3/16)", status: "PROBABLE (limited)", impact: 65, details: "10.9 PPG, 4.5 RPG, 6.2 APG, 1.6 STL. Landed awkwardly on a layup with 9 min left in Big East final loss to St. John's. X-ray negative, out of walking boot, 'in pretty good shape' per Hurley. Expected to play but mobility may be affected." },
-                { team: "UCLA (7)", player: "Donovan Dent", injury: "Calf injury (Big Ten semi vs Purdue)", status: "EXPECTED to play", impact: 60, details: "Left the Big Ten semifinal vs Purdue after just 10 minutes with a calf injury. Cronin says he 'could have played' but 'there's no point' in the semi. Expected to be available vs UCF but health is uncertain." },
-                { team: "Louisville (6)", player: "Mikel Brown Jr.", injury: "Back injury", status: "HOPES to play", impact: 55, details: "18.2 PPG, 4.7 APG. Missed the ACC Tournament with a back injury. Hopes to return for the NCAA Tournament but no official clearance yet. Louisville's offensive engine — without him, South Florida (11) is a very live upset." },
-                { team: "UCLA (7)", player: "Tyler Bilodeau", injury: "Mild right knee strain (Big Ten quarters vs Michigan St.)", status: "EXPECTED to play", impact: 50, details: "17.6 PPG, 5.6 RPG — UCLA's leading scorer and rebounder. Suffered a non-contact knee strain during the upset win over Michigan State. MRI cleared him Friday night — no structural damage. Sat out the Purdue semi. Should be available vs UCF." },
-                { team: "Kentucky (7)", player: "Jayden Quaintance", injury: "Surgically repaired knee (swelling)", status: "DOUBTFUL", impact: 45, details: "Sophomore has played in just 4 games all season due to persistent swelling and soreness in his surgically repaired knee. Kentucky has not ruled him out but a return seems unlikely. If he were healthy, he'd add major athleticism to the frontcourt." },
-                { team: "Duke (1)", player: "Patrick Ngongba II", injury: "Foot injury", status: "EXPECTED to play", impact: 40, details: "Sophomore center missed 2+ weeks with a foot injury. Expected back for the opener vs Siena. If fully healthy, he helps alleviate Duke's depth crisis. If re-aggravated, Duke's rotation shrinks to 6 players." },
+                { team: "Duke (1)", player: "Patrick Ngongba II", injury: "Right foot soreness (missed 4 games)", status: "VERY UNLIKELY for R64", impact: 72, details: "10.7 PPG, 6.0 RPG — starting center has missed Duke's last 4 games with right foot soreness. Coach Scheyer said he is 'very unlikely' to play vs Siena and could miss the entire first weekend. Without Ngongba, Duke's 7-man rotation may shrink to 6. His absence compounds the Foster loss significantly." },
+                { team: "UCLA (7)", player: "Donovan Dent", injury: "Calf injury (Big Ten semi vs Purdue)", status: "100% — WILL PLAY", impact: 20, details: "Left the Big Ten semifinal vs Purdue after just 10 minutes with a calf injury. Good news: Dent told reporters he feels '100%' and is fully cleared for the tournament. Confirmed to play vs UCF. The calf scare appears to be behind him." },
+                { team: "UCLA (7)", player: "Tyler Bilodeau", injury: "Mild right knee strain (Big Ten quarters vs Michigan St.)", status: "EXPECTED to play", impact: 35, details: "17.6 PPG, 5.6 RPG — UCLA's leading scorer and rebounder. Suffered a non-contact knee strain during the upset win over Michigan State. MRI cleared him Friday night — no structural damage. Sat out the Purdue semi. Expected to play vs UCF per source close to the program." },
+                { team: "Kentucky (7)", player: "Jayden Quaintance", injury: "Surgically repaired knee (swelling)", status: "DOUBTFUL", impact: 45, details: "Sophomore has played in just 4 games all season due to persistent swelling and soreness in his surgically repaired knee. Not expected to be ready for opening round vs Santa Clara. If he were healthy, he'd add major athleticism to the frontcourt." },
               ].map((inj, i) => (
                 <div key={i} style={{ background: "#fff", borderRadius: 10, boxShadow: "0 1px 4px rgba(0,0,0,0.06)", borderLeft: "4px solid #e67e22", padding: isMobile ? "10px 10px" : "12px 16px" }}>
                   <div style={{ display: "flex", flexDirection: isMobile ? "column" : "row", alignItems: isMobile ? "flex-start" : "center", gap: isMobile ? 4 : 12, marginBottom: 6 }}>
@@ -1217,10 +1223,10 @@ function App() {
             <h3 style={{ fontSize: 15, fontWeight: 700, color: "#1a1a2e", marginBottom: 12 }}>Injury Impact on Bracket Strategy</h3>
             <div style={{ display: "grid", gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr", gap: 10 }}>
               {[
-                { label: "Fade These Teams", color: "#dc3545", bg: "#fde8e8", teams: "Alabama (4), UNC (6), BYU (6), Texas Tech (5), Clemson (8)" , why: "Key players confirmed OUT or suspended. Pick against them." },
-                { label: "Injury Discounts", color: "#e67e22", bg: "#fff3e0", teams: "Duke (1), Gonzaga (3), UCLA (7), Kansas (4)", why: "Star players injured or limited. Lower seed advancement odds." },
-                { label: "Upgrade Opponents", color: "#198754", bg: "#d4edda", teams: "Hofstra (13), VCU (11), Akron (12), Iowa (9), UCF (10)", why: "Facing injury-weakened teams. Prime upset candidates." },
-                { label: "Monitor Game-Time", color: "#0d6efd", bg: "#e8f4fd", teams: "UConn (Demary), Louisville (Brown), UCLA (Dent/Bilodeau), Kentucky (Quaintance)", why: "Game-time decisions or uncertain availability. Check before lock." },
+                { label: "Fade These Teams", color: "#dc3545", bg: "#fde8e8", teams: "Alabama (4), Louisville (6), UNC (6), BYU (6), Texas Tech (5), Clemson (8)" , why: "Key players confirmed OUT or suspended. Pick against them." },
+                { label: "Injury Discounts", color: "#e67e22", bg: "#fff3e0", teams: "Duke (1, Ngongba very unlikely), Gonzaga (3), Kansas (4)", why: "Star players injured or limited. Lower seed advancement odds." },
+                { label: "Upgrade Opponents", color: "#198754", bg: "#d4edda", teams: "Hofstra (13), South Florida (11), VCU (11), Akron (12), Iowa (9)", why: "Facing injury-weakened teams. Prime upset candidates." },
+                { label: "Monitor Game-Time", color: "#0d6efd", bg: "#e8f4fd", teams: "UConn (Demary ankle), UCLA (Bilodeau knee), Kentucky (Quaintance knee)", why: "Questionable or limited availability. Check before lock." },
               ].map((card, ci) => (
                 <div key={ci} style={{ padding: 12, borderRadius: 8, background: card.bg, border: `1px solid ${card.color}22` }}>
                   <div style={{ fontWeight: 700, fontSize: 12, color: card.color, marginBottom: 4 }}>{card.label}</div>
@@ -1232,7 +1238,7 @@ function App() {
           </div>
 
           <div style={{ padding: 14, background: "#e8f4fd", borderRadius: 10, fontSize: 12, lineHeight: 1.6, color: "#0c5460" }}>
-            <strong>Note:</strong> Injury information compiled from ESPN, team press conferences, and beat reporters as of March 17, 2026. Statuses can change rapidly — check official sources before locking your bracket. Impact scores (0-100) reflect how important the player is to their team's tournament ceiling, not the severity of the injury itself.
+            <strong>Note:</strong> Injury information compiled from ESPN, CBS Sports, team press conferences, and beat reporters as of March 18, 2026. Statuses can change rapidly — check official sources before locking your bracket. Impact scores (0-100) reflect how important the player is to their team's tournament ceiling, not the severity of the injury itself.
           </div>
         </div>
       )}
@@ -1256,18 +1262,18 @@ function App() {
               { seed: 8, team: "Georgia", kenPom: 31, note: "Weakest 8-seed path" },
             ] },
           { name: "East", site: "Washington DC", color: "#0d6efd", bg: "#e8f0fe",
-            avgKenPom: 13.1, topSeed: "Duke (1, KenPom #1)", injuryCount: 3,
-            injuredTeams: "Duke (Foster OUT), Kansas (Peterson fragile), UCLA (Dent + Bilodeau banged up)",
-            keyMatchups: "Duke's 7-man rotation vs the 8/9 winner in R32 is the marquee upset watch. St. John's (Big East champs) could make noise. UConn with a hobbled Demary faces Furman's March pedigree.",
-            dangerLevel: 80, dangerLabel: "LOADED",
+            avgKenPom: 13.1, topSeed: "Duke (1, KenPom #1)", injuryCount: 4,
+            injuredTeams: "Duke (Foster OUT, Ngongba very unlikely), Louisville (Brown Jr. OUT 1st weekend), Kansas (Peterson fragile), UConn (Demary ankle)",
+            keyMatchups: "Duke's 6-man rotation (Ngongba very unlikely) vs the 8/9 winner in R32 is the marquee upset watch. Louisville without Brown Jr. is prime for a South Florida upset. St. John's could make noise. UConn with a hobbled Demary faces Furman's March pedigree.",
+            dangerLevel: 85, dangerLabel: "LOADED",
             teams: [
-              { seed: 1, team: "Duke", kenPom: 1, note: "Foster OUT, 7-man rotation" },
+              { seed: 1, team: "Duke", kenPom: 1, note: "Foster OUT, Ngongba very unlikely" },
               { seed: 2, team: "UConn", kenPom: 12, note: "Demary ankle, lost BE final" },
               { seed: 3, team: "Michigan St.", kenPom: 9, note: "Izzo in March" },
               { seed: 4, team: "Kansas", kenPom: 14, note: "Peterson health fragile" },
               { seed: 5, team: "St. John's", kenPom: 13, note: "Beat UConn in BE final" },
-              { seed: 6, team: "Louisville", kenPom: 24, note: "Brown Jr. back injury" },
-              { seed: 7, team: "UCLA", kenPom: 18, note: "Two starters banged up" },
+              { seed: 6, team: "Louisville", kenPom: 24, note: "Brown Jr. OUT 1st weekend" },
+              { seed: 7, team: "UCLA", kenPom: 18, note: "Dent 100%, Bilodeau expected" },
               { seed: 8, team: "Ohio St.", kenPom: 28, note: "Coinflip vs TCU" },
             ] },
           { name: "South", site: "Houston", color: "#dc3545", bg: "#fde8e8",
@@ -1396,7 +1402,7 @@ function App() {
         // Comprehensive team profiles: KenPom, offensive/defensive efficiency rank, PPG, opp PPG, 3P%, FT%, RPG, SOS rank, tempo, record, injuries
         const teamProfiles = {
           // === 1-SEEDS ===
-          "Duke": { kenPom: 1, off: 4, def: 2, ppg: 82.1, oppPpg: 63.2, threePct: 36.5, ftPct: 74.8, rpg: 37.2, sos: 5, tempo: 70.1, record: "32-2", injury: "Foster OUT (broken foot)", injImpact: -12 },
+          "Duke": { kenPom: 1, off: 4, def: 2, ppg: 82.1, oppPpg: 63.2, threePct: 36.5, ftPct: 74.8, rpg: 37.2, sos: 5, tempo: 70.1, record: "32-2", injury: "Foster OUT, Ngongba very unlikely", injImpact: -16 },
           "Florida": { kenPom: 5, off: 8, def: 5, ppg: 80.4, oppPpg: 66.1, threePct: 37.2, ftPct: 78.3, rpg: 36.8, sos: 8, tempo: 71.5, record: "30-4", injury: null, injImpact: 0 },
           "Michigan": { kenPom: 2, off: 6, def: 1, ppg: 79.8, oppPpg: 61.5, threePct: 35.8, ftPct: 76.1, rpg: 38.1, sos: 3, tempo: 68.4, record: "29-2", injury: "Cason OUT (torn ACL)", injImpact: -4 },
           "Arizona": { kenPom: 3, off: 2, def: 7, ppg: 83.5, oppPpg: 66.8, threePct: 38.1, ftPct: 77.5, rpg: 36.5, sos: 4, tempo: 72.8, record: "32-2", injury: null, injImpact: 0 },
@@ -1421,12 +1427,12 @@ function App() {
           "Texas Tech": { kenPom: 20, off: 12, def: 33, ppg: 79.5, oppPpg: 70.8, threePct: 36.2, ftPct: 73.5, rpg: 35.2, sos: 19, tempo: 68.2, record: "22-10", injury: "Toppin OUT (torn ACL)", injImpact: -14 },
           "Wisconsin": { kenPom: 10, off: 7, def: 16, ppg: 79.2, oppPpg: 66.5, threePct: 37.5, ftPct: 78.1, rpg: 34.8, sos: 20, tempo: 67.8, record: "24-10", injury: null, injImpact: 0 },
           // === 6-SEEDS ===
-          "Louisville": { kenPom: 24, off: 19, def: 28, ppg: 76.5, oppPpg: 69.2, threePct: 34.5, ftPct: 73.8, rpg: 34.2, sos: 21, tempo: 70.5, record: "22-9", injury: "Brown Jr. (back)", injImpact: -6 },
+          "Louisville": { kenPom: 24, off: 19, def: 28, ppg: 76.5, oppPpg: 69.2, threePct: 34.5, ftPct: 73.8, rpg: 34.2, sos: 21, tempo: 70.5, record: "23-10", injury: "Brown Jr. OUT (1st weekend)", injImpact: -14 },
           "North Carolina": { kenPom: 22, off: 10, def: 35, ppg: 80.8, oppPpg: 72.5, threePct: 35.2, ftPct: 75.5, rpg: 37.5, sos: 23, tempo: 73.8, record: "21-12", injury: "Wilson OUT (broken thumb)", injImpact: -15 },
           "Tennessee": { kenPom: 23, off: 26, def: 21, ppg: 74.8, oppPpg: 67.5, threePct: 33.8, ftPct: 72.5, rpg: 35.1, sos: 24, tempo: 66.5, record: "22-11", injury: null, injImpact: 0 },
           "BYU": { kenPom: 25, off: 15, def: 40, ppg: 78.2, oppPpg: 71.8, threePct: 36.8, ftPct: 75.8, rpg: 33.8, sos: 25, tempo: 71.5, record: "24-9", injury: "Baker + Saunders OUT (ACLs)", injImpact: -16 },
           // === 7-SEEDS ===
-          "UCLA": { kenPom: 18, off: 10, def: 30, ppg: 78.5, oppPpg: 69.8, threePct: 36.2, ftPct: 74.2, rpg: 34.5, sos: 26, tempo: 69.5, record: "23-10", injury: "Dent (calf) + Bilodeau (knee)", injImpact: -6 },
+          "UCLA": { kenPom: 18, off: 10, def: 30, ppg: 78.5, oppPpg: 69.8, threePct: 36.2, ftPct: 74.2, rpg: 34.5, sos: 26, tempo: 69.5, record: "23-10", injury: "Dent 100%, Bilodeau expected", injImpact: -2 },
           "Saint Mary's": { kenPom: 26, off: 25, def: 27, ppg: 76.2, oppPpg: 68.5, threePct: 38.5, ftPct: 80.2, rpg: 33.5, sos: 65, tempo: 64.8, record: "27-6", injury: null, injImpact: 0 },
           "Kentucky": { kenPom: 27, off: 21, def: 32, ppg: 77.8, oppPpg: 70.2, threePct: 34.5, ftPct: 73.2, rpg: 35.8, sos: 27, tempo: 70.8, record: "22-11", injury: "Quaintance (knee, 4 games)", injImpact: -3 },
           "Miami (FL)": { kenPom: 30, off: 28, def: 31, ppg: 74.8, oppPpg: 70.5, threePct: 33.5, ftPct: 72.1, rpg: 33.8, sos: 28, tempo: 67.2, record: "21-12", injury: null, injImpact: 0 },
