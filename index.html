@@ -48,10 +48,10 @@ const MAX_SCORE = 32*10 + 16*20 + 8*40 + 4*80 + 2*160 + 1*320; // 1920
 // Actual tournament results - auto-updated by ESPN scheduled task
 // "_" = not yet played, "a" = higher seed side won, "b" = lower seed side won
 // Format: East(8+4+2+1) + South(15) + Midwest(15) + West(15) + FF(2) + CH(1) = 63 chars
-const actualResultsCode = "_______________________________________________________________";
+const actualResultsCode = "ab__aa___________aababa_______abaaaaaa_______a_baba____________";
 
 // AI Bracket picks encoded as bracket code (precomputed from aiPicks data)
-const AI_BRACKET_CODE = "abbababaaaababaaababaaaabababbaabaaaaaaaababaabaabaaaaabbababaa";
+const AI_BRACKET_CODE = "abbabaaaaaababaabbabaaaabababbaabaaaaaaaababaabaabaaaaabbababaa";
 
 // Hardcoded friend brackets — add entries like { name: "Friend Name", code: "63-char-code" }
 const hardcodedBrackets = [];
@@ -2102,29 +2102,29 @@ function App() {
               { winner: "TCU", seed: 9, loser: "Ohio St.", lSeed: 8, upset: true, reason: "9-over-8 is a coin flip. TCU has more tournament experience this decade and a slight edge in tempo control." },
               { winner: "Northern Iowa", seed: 12, loser: "St. John's", lSeed: 5, upset: true, reason: "12-over-5 hits 36% of the time. Northern Iowa plays the 2nd-slowest tempo in the country and has a top-25 defense. St. John's just lost the Big East final — potential letdown." },
               { winner: "Kansas", seed: 4, loser: "Cal Baptist", lSeed: 13, upset: false, reason: "If Darryn Peterson (19.8 PPG) is healthy, Kansas is too talented. Peterson's availability is the risk." },
-              { winner: "South Florida", seed: 11, loser: "Louisville", lSeed: 6, upset: true, reason: "Louisville's Mikel Brown Jr. (back) missed the ACC tourney. 11-over-6 is the highest upset rate in the tournament (50%). South Florida went 25-8 with AAC toughness." },
+              { winner: "South Florida", seed: 11, loser: "Louisville", lSeed: 6, upset: true, reason: "Louisville's Mikel Brown Jr. (18.2 PPG, 4.7 APG) confirmed OUT for the opening weekend. Louisville is 7-5 without him. 11-over-6 is the highest upset rate in the tournament (50%). South Florida went 25-8 with AAC toughness." },
               { winner: "Michigan St.", seed: 3, loser: "North Dakota St.", lSeed: 14, upset: false, reason: "Michigan State's tournament experience under Tom Izzo is a massive edge. Izzo is 34-14 in R64/R32 games." },
-              { winner: "UCF", seed: 10, loser: "UCLA", lSeed: 7, upset: true, reason: "10-over-7 hits 36% of the time with at least one per tournament. UCF has AAC experience and UCLA enters with Donovan Dent (calf strain) and Tyler Bilodeau both nursing injuries from the Big Ten semi. Both expected to play but may be limited." },
+              { winner: "UCLA", seed: 7, loser: "UCF", lSeed: 10, upset: false, reason: "Great news for UCLA: Dent says he's '100%' and Bilodeau is expected to play. With both starters healthy, UCLA's talent advantage is restored. 10-over-7 hits often but UCLA's injury scare has passed — they have the better roster when healthy." },
               { winner: "UConn", seed: 2, loser: "Furman", lSeed: 15, upset: false, reason: "UConn survives despite Big East final loss and Demary's ankle sprain (X-ray negative, expected to play but limited). Too talented for Furman, but this is closer than the seed line suggests." },
             ],
             R32: [
-              { winner: "Duke", seed: 1, loser: "TCU", lSeed: 9, upset: false, reason: "Duke without Foster is vulnerable and running a 7-man rotation, but Cameron Boozer (22.7/10.2) is the best player in the tournament. Ngongba expected back for opener. The thin margin here — Cayden Boozer playing 37-40 min/game — makes this the most dangerous R32 game for any 1-seed." },
+              { winner: "Duke", seed: 1, loser: "TCU", lSeed: 9, upset: false, reason: "Duke is now missing both Foster (broken foot) AND Ngongba ('very unlikely' for R64, could miss the weekend). Running a potential 6-man rotation. Cameron Boozer (22.7/10.2) is the best player in the tournament but the fatigue factor is extreme. This is the most dangerous R32 game for any 1-seed." },
               { winner: "Northern Iowa", seed: 12, loser: "Kansas", lSeed: 4, upset: true, reason: "Bold pick: Peterson's health is fragile (missed 11 games). If he cramps out, Northern Iowa's defense suffocates Kansas. Cinderella run begins." },
               { winner: "South Florida", seed: 11, loser: "Michigan St.", lSeed: 3, upset: true, reason: "USF carries momentum from the Louisville upset. Izzo struggles against athletic, high-pressure defenses. The Cinderella S16 run." },
-              { winner: "UConn", seed: 2, loser: "UCF", lSeed: 10, upset: false, reason: "UConn's two-time championship experience (2023, 2024) gives them the edge. If Demary's ankle holds up, their depth and talent overwhelm UCF." },
+              { winner: "UConn", seed: 2, loser: "UCLA", lSeed: 7, upset: false, reason: "UConn's two-time championship experience (2023, 2024) gives them the edge. If Demary's ankle holds up, their depth and talent overwhelm a UCLA team that's healthy but entered as a 7-seed with 10 losses." },
             ],
             S16: [
               { winner: "Duke", seed: 1, loser: "Northern Iowa", lSeed: 12, upset: false, reason: "Duke's defense eventually wears down the Cinderella. Boozer is too dominant in the paint." },
               { winner: "UConn", seed: 2, loser: "South Florida", lSeed: 11, upset: false, reason: "UConn has the depth and experience to handle another AAC team. South Florida's run ends here." },
             ],
             E8: [
-              { winner: "Duke", seed: 1, loser: "UConn", lSeed: 2, upset: false, reason: "Duke's KenPom #1 defense contains UConn's offense. Boozer's double-double machine carries them to the Final Four — but the 7-man rotation fatigue factor makes this a genuine coin flip. UConn has the depth advantage. Duke survives on sheer talent." },
+              { winner: "Duke", seed: 1, loser: "UConn", lSeed: 2, upset: false, reason: "Duke's KenPom #1 defense contains UConn's offense. Boozer's double-double machine carries them to the Final Four — but the 6-man rotation fatigue factor (Foster and Ngongba both out) makes this a genuine coin flip. UConn has the depth advantage. Duke survives on sheer talent." },
             ],
           },
           South: {
             R64: [
               { winner: "Florida", seed: 1, loser: "Prairie View/Lehigh", lSeed: 16, upset: false, reason: "Defending national champions don't lose to 16-seeds. Florida's depth is overwhelming." },
-              { winner: "Clemson", seed: 8, loser: "Iowa", lSeed: 9, upset: false, reason: "Clemson made the Final Four last year as a 7-seed. They know how to win in March. Experience matters in 8-9 games." },
+              { winner: "Iowa", seed: 9, loser: "Clemson", lSeed: 8, upset: true, reason: "Clemson lost Carter Welling (10.2 PPG, 5.4 RPG, top rebounder and rim protector) to a torn ACL in the ACC tourney. Without their interior anchor, Clemson's defense is gutted. Iowa's physicality and coaching exploit the mismatch. The 8/9 game flips to the Hawkeyes." },
               { winner: "McNeese", seed: 12, loser: "Vanderbilt", lSeed: 5, upset: true, reason: "McNeese (28-5) already pulled a 12-over-5 in 2025, beating Clemson 69-67. Vanderbilt has zero recent NCAA tournament experience." },
               { winner: "Nebraska", seed: 4, loser: "Troy", lSeed: 13, upset: false, reason: "Nebraska's Big Ten experience gives them the edge, but Troy is a live underdog at 22%." },
               { winner: "VCU", seed: 11, loser: "North Carolina", lSeed: 6, upset: true, reason: "UNC lost Caleb Wilson (19.8 PPG, 9.4 RPG) to a broken thumb. VCU won the A-10 title and has 2011 Final Four DNA. The strongest injury-backed upset in the bracket." },
@@ -2133,7 +2133,7 @@ function App() {
               { winner: "Houston", seed: 2, loser: "Idaho", lSeed: 15, upset: false, reason: "Houston's elite defense (28-6) is too stifling for Idaho. Not this year for the 15-over-2." },
             ],
             R32: [
-              { winner: "Florida", seed: 1, loser: "Clemson", lSeed: 8, upset: false, reason: "Clemson's magic from last year's FF run is hard to replicate. Florida's defending champs are too deep." },
+              { winner: "Florida", seed: 1, loser: "Iowa", lSeed: 9, upset: false, reason: "Iowa pulled the 8/9 upset over an injured Clemson but Florida is a different beast. The defending champs are too deep and too talented for the Hawkeyes." },
               { winner: "Nebraska", seed: 4, loser: "McNeese", lSeed: 12, upset: false, reason: "McNeese's Cinderella moment ends here. Nebraska's Big Ten physicality and experience wear down the Southland champs in a grind-it-out R32 game." },
               { winner: "VCU", seed: 11, loser: "Illinois", lSeed: 3, upset: true, reason: "VCU's Cinderella run continues! After beating an injured UNC, they carry momentum into R32. Illinois plays down to their competition, and VCU's A-10 toughness and March pedigree (2011 Final Four) fuel a second straight upset." },
               { winner: "Houston", seed: 2, loser: "Saint Mary's", lSeed: 7, upset: false, reason: "Houston's defense is the equalizer. Saint Mary's elite shooting gets slowed down by Houston's suffocating pressure defense." },
@@ -2151,7 +2151,7 @@ function App() {
               { winner: "Michigan", seed: 1, loser: "UMBC/Howard", lSeed: 16, upset: false, reason: "Michigan is KenPom #2 with elite defense. First Four teams are exhausted from their play-in game." },
               { winner: "Georgia", seed: 8, loser: "Saint Louis", lSeed: 9, upset: false, reason: "Georgia's SEC experience gives them a slight edge. Coin flip game but SEC toughness wins out." },
               { winner: "Akron", seed: 12, loser: "Texas Tech", lSeed: 5, upset: true, reason: "Texas Tech lost JT Toppin for the season — defense dropped from 24th to 119th. Akron is 29-5 and won the MAC title. Classic injury-fueled 12-over-5." },
-              { winner: "Hofstra", seed: 13, loser: "Alabama", lSeed: 4, upset: true, reason: "BREAKING: Aden Holloway (16.8 PPG, 43.8% 3P) arrested on felony drug charges 3/16. If suspended, Alabama loses their 2nd-leading scorer and best shooter. Even if he plays, the distraction and off-court chaos derails an already inconsistent team. Hofstra capitalizes on the turmoil." },
+              { winner: "Hofstra", seed: 13, loser: "Alabama", lSeed: 4, upset: true, reason: "Aden Holloway (16.8 PPG, 43.8% 3P) arrested on felony drug charges and SUSPENDED INDEFINITELY by coach Oats — removed from campus. Alabama loses their 2nd-leading scorer and best shooter. KenPom #67 defense was already the worst among 4-seeds. Near-certain upset." },
               { winner: "Tennessee", seed: 6, loser: "Miami (OH)/SMU", lSeed: 11, upset: false, reason: "Tennessee's SEC-level defense is too much for a First Four survivor. Tennessee is a dark horse Sweet 16 team." },
               { winner: "Virginia", seed: 3, loser: "Wright St.", lSeed: 14, upset: false, reason: "Despite Virginia's upset history, they're still more talented. Wright St. is live but Virginia's slow tempo works against smaller opponents." },
               { winner: "Kentucky", seed: 7, loser: "Santa Clara", lSeed: 10, upset: false, reason: "Coin flip matchup, but Kentucky's talent and name recognition gives them an edge. Santa Clara's WCC style could trouble them though." },
@@ -2177,7 +2177,7 @@ function App() {
               { winner: "Utah St.", seed: 9, loser: "Villanova", lSeed: 8, upset: true, reason: "Utah State's Mountain West experience and 9-over-8 coin flip. They play a grinding, physical style that Villanova struggles with." },
               { winner: "Wisconsin", seed: 5, loser: "High Point", lSeed: 12, upset: false, reason: "Wisconsin (24-10) has 4 wins over KenPom top-10 teams scoring 90+ each time. When locked in, they're a Sweet 16 team." },
               { winner: "Arkansas", seed: 4, loser: "Hawaii", lSeed: 13, upset: false, reason: "Arkansas's SEC athleticism overwhelms Hawaii. Travel fatigue (Hawaii to mainland) is a real factor." },
-              { winner: "Texas/NC State", seed: 11, loser: "BYU", lSeed: 6, upset: true, reason: "BYU lost TWO starters to torn ACLs — Saunders and Welling. Only Dybantsa and Wright III remain from their core. The First Four winner comes in battle-tested from a do-or-die game. NC State made the Elite 8 as an 11 in 2024. BYU is the most injury-devastated team in the field." },
+              { winner: "Texas/NC State", seed: 11, loser: "BYU", lSeed: 6, upset: true, reason: "BYU lost THREE players: Baker (torn ACL, Nov), Pickens (preseason), Saunders (torn ACL, Feb). Only Dybantsa and Wright III remain from their core. 2-4 since Saunders went down. The First Four winner comes in battle-tested. NC State made the Elite 8 as an 11 in 2024. BYU is the most injury-devastated team in the field." },
               { winner: "Gonzaga", seed: 3, loser: "Kennesaw St.", lSeed: 14, upset: false, reason: "Even without Huff (confirmed OUT for first weekend), Gonzaga's Graham Ike and Mark Few's system survive R64. But the margin is slim — Kennesaw St. could make it interesting." },
               { winner: "Miami (FL)", seed: 7, loser: "Missouri", lSeed: 10, upset: false, reason: "Miami's ACC tournament experience and Jim Larrañaga's March coaching give them the edge in a tight game." },
               { winner: "Purdue", seed: 2, loser: "Queens (N.C.)", lSeed: 15, upset: false, reason: "Purdue is too big and too talented. Queens (N.C.) is making their first tournament appearance." },
@@ -2197,11 +2197,11 @@ function App() {
             ],
           },
           FinalFour: [
-            { winner: "Duke", seed: 1, loser: "Houston", lSeed: 2, region: "East vs South", reason: "Duke's offense finally cracks Houston's defense. Cameron Boozer has a 30-point masterclass. The 7-man rotation has survived 5 games at this point — fatigue is real but Boozer rises to the occasion. Foster will not return." },
+            { winner: "Duke", seed: 1, loser: "Houston", lSeed: 2, region: "East vs South", reason: "Duke's offense finally cracks Houston's defense. Cameron Boozer has a 30-point masterclass. The 6-man rotation (Foster and Ngongba both out) has somehow survived 5 games — fatigue is at its peak but Boozer rises to the occasion in the biggest game of the year." },
             { winner: "Arizona", seed: 1, loser: "Michigan", lSeed: 1, region: "West vs Midwest", reason: "Battle of 1-seeds. Arizona's tempo and depth wear down Michigan in a classic. Arizona's Big 12 schedule prepared them for this moment." },
           ],
           Championship: {
-            winner: "Duke", seed: 1, loser: "Arizona", lSeed: 1, reason: "Duke's KenPom #1 defense meets Arizona's KenPom #3 offense. Cameron Boozer finishes as MOP with a dominant championship performance despite playing 38+ minutes in every tournament game. The 7-man rotation held together just long enough. Duke's first national title since 2015 and Coach Scheyer's first — earned the hard way without Foster."
+            winner: "Duke", seed: 1, loser: "Arizona", lSeed: 1, reason: "Duke's KenPom #1 defense meets Arizona's KenPom #3 offense. Cameron Boozer finishes as MOP with a dominant championship performance despite playing 38+ minutes in every tournament game. The depleted 6-man rotation (no Foster, no Ngongba) held together just long enough. Duke's first title since 2015 and Coach Scheyer's first — earned the hardest way possible."
           },
         };
 
@@ -2226,7 +2226,7 @@ function App() {
             <div style={{ padding: "16px 18px", background: "linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%)", borderRadius: 12, marginBottom: 20, color: "#fff" }}>
               <div style={{ fontSize: isMobile ? 16 : 20, fontWeight: 800, marginBottom: 4 }}>AI Tournament Prediction Bracket</div>
               <div style={{ fontSize: 12, opacity: 0.8, lineHeight: 1.5 }}>
-                Predicted by analyzing: 9 years of upset data (2016-2025), KenPom efficiency ratings, strength of schedule, current injuries (Foster OUT, Ngongba back, Wilson OUT, Huff OUT first weekend, Toppin OUT, Saunders + Welling ACL tears, Brown Jr. uncertain, Demary ankle, Dent calf), Alabama Holloway arrest, and fatigue risk. Updated 3/16/26.
+                Predicted by analyzing: 9 years of upset data (2016-2025), KenPom efficiency ratings, strength of schedule, current injuries (Foster OUT, Ngongba very unlikely, Wilson OUT, Huff OUT 1st weekend, Toppin OUT, BYU 3 losses, Brown Jr. OUT, Welling torn ACL, Demary ankle, Dent 100%), Alabama Holloway suspension, and fatigue risk. Updated 3/18/26.
               </div>
               <div style={{ display: "flex", gap: 12, marginTop: 10, flexWrap: "wrap" }}>
                 <div style={{ padding: "4px 10px", borderRadius: 8, background: "rgba(255,255,255,0.15)", fontSize: 11, fontWeight: 600 }}>Champion: (1) Duke</div>
